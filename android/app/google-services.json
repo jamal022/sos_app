@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "978575002175",
+    "project_id": "sos-app-9e30f",
+    "storage_bucket": "sos-app-9e30f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978575002175:android:8e1c611727f4e15594068a",
+        "android_client_info": {
+          "package_name": "com.example.sos_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978575002175-dodv4cci211bnbo2mqiesiek3dqqkkav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sos_app",
+            "certificate_hash": "9a8d4dc45beaad581066e586df76e0422a9a2d82"
+          }
+        },
+        {
+          "client_id": "978575002175-kj1r70b5jahom32760h0fq3343vagogq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUw-OcdBi_HCmgl8h1MAyFSNI7TM9G9aE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978575002175-kj1r70b5jahom32760h0fq3343vagogq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
