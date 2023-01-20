@@ -65,24 +65,16 @@ class _DoctorsScreen extends State<DoctorsScreen> {
           : Container(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
+                  childAspectRatio: 8.0 / 10.0,
+                  crossAxisCount: 2,
+                ),
                 itemBuilder: (_, index) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DoctorCardWidget(
-                      field: doctorsList[index].field,
-                      name: doctorsList[index].username,
-                      image: doctorsList[index].image),
+                    doctor: doctorsList[index],
+                  ),
                 ),
                 itemCount: doctorsList.length,
-
-                // children: <Widget>[
-                //   for (var i = 0; i < doctorsList.length; i++)
-                //     DoctorCardWidget(
-                //       field: doctorsList[i].field,
-                //       image: doctorsList[i].image,
-                //       name: doctorsList[i].username,
-                //     ),
-                // ],
               ),
             ),
     );

@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
 import '../../Data/Models/doctor.dart';
-import '../PatientScreens/Home/doctors_screen.dart';
+import '../PatientScreens/Doctors/doctors_screen.dart';
 
 class HomeCardWidget extends StatelessWidget {
   final text;
