@@ -9,10 +9,10 @@ class DoctorHomeScreen extends StatefulWidget {
   State<DoctorHomeScreen> createState() => _DoctorHomeScreen();
 }
 
-List<String> texts = ["Q/A Community", "Appointments", "Schedule", "Articles"];
+List<String> texts = ["Community", "Appointments", "Schedule", "Articles"];
 
 List<IconData> listIcons = [
-  Icons.chat_bubble_outline_outlined,
+  Icons.question_answer_outlined,
   Icons.calendar_month_outlined,
   Icons.edit_calendar_outlined,
   Icons.newspaper_outlined

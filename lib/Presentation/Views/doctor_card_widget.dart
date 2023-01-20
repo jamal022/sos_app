@@ -20,72 +20,73 @@ class DoctorCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: InkWell(
+          onTap: () {},
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                  child: Image.network(
+                    image,
+                    height: 90,
+                    width: 90,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ), //Textstyle
+                ), //Text
+                const SizedBox(
+                  height: 5,
+                ), //SizedBox
+                Text(
+                  field,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    color: Color.fromARGB(255, 90, 84, 84),
+                  ), //Textstyle
+                ), //Text
+                const SizedBox(
+                  height: 5,
+                ),
+
+                RatingBar(
+                    initialRating: 0,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 4,
+                    ratingWidget: RatingWidget(
+                        full: const Icon(Icons.star, color: primaryColor),
+                        half: const Icon(
+                          Icons.star_half,
+                          color: primaryColor,
+                        ),
+                        empty: const Icon(
+                          Icons.star_outline,
+                          color: primaryColor,
+                        )),
+                    onRatingUpdate: (value) {}),
+              ]),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: InkWell(
-            onTap: () {},
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                    child: Image.network(
-                      image,
-                      height: 90,
-                      width: 90,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ), //Textstyle
-                  ), //Text
-                  const SizedBox(
-                    height: 5,
-                  ), //SizedBox
-                  Text(
-                    field,
-                    style: const TextStyle(
-                      fontSize: 17,
-                      color: Color.fromARGB(255, 90, 84, 84),
-                    ), //Textstyle
-                  ), //Text
-                  const SizedBox(
-                    height: 5,
-                  ),
-
-                  RatingBar(
-                      initialRating: 0,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 4,
-                      ratingWidget: RatingWidget(
-                          full: const Icon(Icons.star, color: primaryColor),
-                          half: const Icon(
-                            Icons.star_half,
-                            color: primaryColor,
-                          ),
-                          empty: const Icon(
-                            Icons.star_outline,
-                            color: primaryColor,
-                          )),
-                      onRatingUpdate: (value) {}),
-                ]),
-          ),
-        ));
+      ),
+    );
   }
 }
 

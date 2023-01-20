@@ -28,6 +28,7 @@ savePatientPrefs(name, email, password, age, gender, phone, image) async {
   prefs.setString("Age", age);
   prefs.setString("Gender", gender);
   prefs.setString("Image", image);
+  prefs.setString("Role", "Patient");
 }
 
 saveDoctorPrefs(
@@ -58,6 +59,7 @@ saveDoctorPrefs(
   prefs.setString("Bio", bio);
   prefs.setString("AddressLatitude", addLat);
   prefs.setString("AddressLongitude", addLong);
+  prefs.setString("Role", "Doctor");
 }
 
 void route(id, context) async {

@@ -23,7 +23,6 @@ getdocslist() async {
 class _DoctorsScreen extends State<DoctorsScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getdocslist();
   }
@@ -64,19 +63,26 @@ class _DoctorsScreen extends State<DoctorsScreen> {
               child: Text("There is no doctors"),
             )
           : Container(
-              child: GridView.extent(
-                primary: false,
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
-                crossAxisSpacing: 20,
-                maxCrossAxisExtent: 250.0,
-                children: <Widget>[
-                  for (var i = 0; i < doctorsList.length; i++)
-                    DoctorCardWidget(
-                      field: doctorsList[i].field,
-                      image: doctorsList[i].image,
-                      name: doctorsList[i].username,
-                    ),
-                ],
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemBuilder: (_, index) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DoctorCardWidget(
+                      field: doctorsList[index].field,
+                      name: doctorsList[index].username,
+                      image: doctorsList[index].image),
+                ),
+                itemCount: doctorsList.length,
+
+                // children: <Widget>[
+                //   for (var i = 0; i < doctorsList.length; i++)
+                //     DoctorCardWidget(
+                //       field: doctorsList[i].field,
+                //       image: doctorsList[i].image,
+                //       name: doctorsList[i].username,
+                //     ),
+                // ],
               ),
             ),
     );

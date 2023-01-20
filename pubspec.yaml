@@ -54,6 +54,7 @@ dependencies:
   toggle_list: ^0.2.1
   shared_preferences: ^2.0.16
   flutter_rating_bar: ^4.0.1
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:

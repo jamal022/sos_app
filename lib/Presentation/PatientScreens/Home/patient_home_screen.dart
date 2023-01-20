@@ -18,7 +18,7 @@ class PatientHomeScreen extends StatefulWidget {
 List<String> texts = [
   "Detect",
   "Appointments",
-  "Q/A Community",
+  "Community",
   "Articles",
   "Doctors",
   "Hospitals"
@@ -27,7 +27,7 @@ List<String> texts = [
 List<IconData> listIcons = [
   Icons.camera_alt_outlined,
   Icons.calendar_month_outlined,
-  Icons.chat_bubble_outline_outlined,
+  Icons.question_answer_outlined,
   Icons.newspaper_outlined,
   Icons.medical_services_outlined,
   Icons.factory_outlined
