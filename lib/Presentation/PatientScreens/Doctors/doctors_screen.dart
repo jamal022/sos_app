@@ -13,7 +13,7 @@ class DoctorsScreen extends StatefulWidget {
   State<DoctorsScreen> createState() => _DoctorsScreen();
 }
 
-late List<Doctor> doctorsList;
+List<Doctor> doctorsList = [];
 
 getdocslist() async {
   doctorsList = await getDoctors();
@@ -24,10 +24,12 @@ class _DoctorsScreen extends State<DoctorsScreen> {
   @override
   void initState() {
     super.initState();
-    getdocslist();
+    () async {
+      await getdocslist();
+      setState(() {});
+    }();
   }
 
-  var searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

@@ -145,9 +145,7 @@ class SplashScreen extends StatelessWidget {
                                       : DoctorHomeScreen(),
                                   NotificationsScreen(),
                                   role == "Patient"
-                                      ? PatientProfileScreen(
-                                          patient: patient,
-                                        )
+                                      ? PatientProfileScreen()
                                       : DoctorProfileScreen(
                                           doctor: doctor,
                                         ),

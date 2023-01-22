@@ -4,19 +4,6 @@ import 'package:flutter/material.dart';
 import '../../Data/Models/doctor.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-// Demo list to show querying
-  List<String> searchTerms = [
-    "Apple",
-    "Banana",
-    "Mango",
-    "Pear",
-    "Watermelons",
-    "Blueberries",
-    "Pineapples",
-    "Strawberries"
-  ];
-
-// first overwrite to
 // clear the search text
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -25,41 +12,39 @@ class CustomSearchDelegate extends SearchDelegate {
         onPressed: () {
           query = '';
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       ),
     ];
   }
 
-  late List<Doctor> doctorsList;
-  getSearchResult(query) async {
-    List<Doctor> doctors = [];
-    await FirebaseFirestore.instance
-        .collection("Doctors")
-        .where("Username", isEqualTo: query)
-        .get()
-        .then((value) {
-      for (var i = 0; i < value.docs.length; i++) {
-        Doctor dr = Doctor(
-          username: value.docs[i].data()['FullName'],
-          email: value.docs[i].data()['Email'],
-          phoneNumber: value.docs[i].data()['PhoneNumber'],
-          password: value.docs[i].data()['Password'],
-          age: value.docs[i].data()['Age'],
-          gender: value.docs[i].data()['Gender'],
-          image: value.docs[i].data()['Image'],
-          field: value.docs[i].data()['Field'],
-          addressLat: value.docs[i].data()['AddressLatitude'],
-          addressLong: value.docs[i].data()['AddressLongitude'],
-          bio: value.docs[i].data()['Bio'],
-          experience: value.docs[i].data()['YearsOfExperience'],
-          price: value.docs[i].data()['TicketPrice'],
-        );
+  // List<Doctor> doctorsList = [];
+  // getSearchResult(query) async {
+  //   await FirebaseFirestore.instance
+  //       .collection("Doctors")
+  //       .where("FullName", isEqualTo: query)
+  //       .get()
+  //       .then((value) {
+  //     for (var i = 0; i < value.docs.length; i++) {
+  //       Doctor dr = Doctor(
+  //         username: value.docs[i].data()['FullName'],
+  //         email: value.docs[i].data()['Email'],
+  //         phoneNumber: value.docs[i].data()['PhoneNumber'],
+  //         password: value.docs[i].data()['Password'],
+  //         age: value.docs[i].data()['Age'],
+  //         gender: value.docs[i].data()['Gender'],
+  //         image: value.docs[i].data()['Image'],
+  //         field: value.docs[i].data()['Field'],
+  //         addressLat: value.docs[i].data()['AddressLatitude'],
+  //         addressLong: value.docs[i].data()['AddressLongitude'],
+  //         bio: value.docs[i].data()['Bio'],
+  //         experience: value.docs[i].data()['YearsOfExperience'],
+  //         price: value.docs[i].data()['TicketPrice'],
+  //       );
 
-        doctors.add(dr);
-      }
-    });
-    return doctors;
-  }
+  //       doctorsList.add(dr);
+  //     }
+  //   });
+  // }
 
 // second overwrite to pop out of search menu
   @override
@@ -75,37 +60,31 @@ class CustomSearchDelegate extends SearchDelegate {
 // third overwrite to show query result
   @override
   Widget buildResults(BuildContext context) {
-    doctorsList = getSearchResult(query);
-    return ListView.builder(
-      itemCount: doctorsList.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(doctorsList[index].username),
-          onTap: () {},
-        );
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection("Doctors")
+          .where("FullName".toLowerCase(), isEqualTo: query.toLowerCase())
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const Text('Loading...');
+        var results = snapshot.data!.docs;
+
+        return ListView(
+            children: results
+                .map<Widget>(
+                  (element) => ListTile(
+                    title: Text(element.data()['FullName']),
+                    onTap: () {},
+                  ),
+                )
+                .toList());
       },
     );
   }
 
-// last overwrite to show the
 // querying process at the runtime
   @override
   Widget buildSuggestions(BuildContext context) {
-    // List<String> matchQuery = [];
-    // for (var fruit in searchTerms) {
-    //   if (fruit.toLowerCase().contains(query.toLowerCase())) {
-    //     matchQuery.add(fruit);
-    //   }
-    // }
-    // return ListView.builder(
-    //   itemCount: matchQuery.length,
-    //   itemBuilder: (context, index) {
-    //     var result = matchQuery[index];
-    //     return ListTile(
-    //       title: Text(result),
-    //     );
-    //   },
-    // );
     return Container();
   }
 }

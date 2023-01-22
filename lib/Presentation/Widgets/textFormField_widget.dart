@@ -5,15 +5,16 @@ class TextFormFieldWidget extends StatefulWidget {
   final hintText;
   final icon;
   final type;
-  final textController;
+  var textController;
   final validator;
-  const TextFormFieldWidget(
-      {super.key,
-      @required this.hintText,
-      @required this.icon,
-      @required this.type,
-      @required this.textController,
-      @required this.validator});
+  TextFormFieldWidget({
+    super.key,
+    @required this.hintText,
+    @required this.icon,
+    @required this.type,
+    @required this.textController,
+    @required this.validator,
+  });
 
   @override
   State<TextFormFieldWidget> createState() => _TextFormFieldWidgetState();
@@ -34,8 +35,6 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             ? true
             : false,
         keyboardType: widget.type,
-        onFieldSubmitted: (value) => {},
-        onChanged: (value) => {},
         validator: widget.validator,
         decoration: InputDecoration(
           filled: true,

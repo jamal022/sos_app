@@ -34,61 +34,61 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
           child: Column(
             children: <Widget>[
               const SizedBox(height: 30),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: 'Doctor Name',
                 icon: Icons.person_rounded,
                 type: TextInputType.name,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: 'DoctorEmail@gmail.com',
                 icon: Icons.email,
                 type: TextInputType.emailAddress,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: '**',
                 icon: Icons.lock,
                 type: TextInputType.visiblePassword,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: '**',
                 icon: Icons.lock,
                 type: TextInputType.visiblePassword,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: 'Age',
                 icon: Icons.numbers,
                 type: TextInputType.number,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: '012345678912',
                 icon: Icons.phone,
                 type: TextInputType.phone,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: 'Doctor Field',
                 icon: Icons.pages,
                 type: TextInputType.name,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: 'Ticket Price',
                 icon: Icons.price_change_outlined,
                 type: TextInputType.number,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: 'Years of Experience',
                 icon: Icons.numbers_outlined,
                 type: TextInputType.number,
               ),
               const SizedBox(height: 10),
-              const TextFormFieldWidget(
+              TextFormFieldWidget(
                 hintText: 'Address',
                 icon: Icons.home,
                 type: TextInputType.name,

@@ -89,12 +89,10 @@ void route(id, context) async {
 
       List<Widget> patientScreens = [
         const SettingScreen(),
-        const ChatsScreen(),
+        ChatsScreen(),
         const PatientHomeScreen(),
-        const NotificationsScreen(),
-        PatientProfileScreen(
-          patient: patient,
-        ),
+        NotificationsScreen(),
+        PatientProfileScreen(),
       ];
       Navigator.pushAndRemoveUntil(
         context,
@@ -143,9 +141,9 @@ void route(id, context) async {
 
       List<Widget> doctorScreens = [
         const SettingScreen(),
-        const ChatsScreen(),
+        ChatsScreen(),
         const DoctorHomeScreen(),
-        const NotificationsScreen(),
+        NotificationsScreen(),
         DoctorProfileScreen(
           doctor: doctor,
         ),
