@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:sos_app/Presentation/PatientScreens/Doctors/doctor_page_screen.dart';
+import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/doctor_page_screen.dart';
 
 import '../../Data/Models/doctor.dart';
 import '../Styles/colors.dart';

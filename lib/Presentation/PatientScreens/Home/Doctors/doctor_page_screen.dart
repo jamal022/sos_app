@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Authentication/login.dart';
-import '../../../Data/Models/doctor.dart';
-import '../../Styles/colors.dart';
+import '../../../../Data/Models/doctor.dart';
+import '../../../Styles/colors.dart';
 
 class DoctorPageScreen extends StatefulWidget {
   Doctor doctor;
