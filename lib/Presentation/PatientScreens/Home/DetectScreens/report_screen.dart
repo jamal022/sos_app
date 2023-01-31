@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/recommended_doctors_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 
+import '../../../../Data/Models/ReportModel.dart';
 import '../../../Constants/app_assets.dart';
 import '../../../Screens/App_Layout/bottom_nav_bar.dart';
 import '../../../Screens/Chats/chats_screen.dart';
@@ -12,26 +13,9 @@ import '../../Profile/patient_profile_screen.dart';
 import '../patient_home_screen.dart';
 
 class ReportScreen extends StatefulWidget {
-  final name;
-  final age;
-  final gender;
-  final phone;
-  final diabetes;
-  final pressure;
-  final causeOfBurn;
-  final degree;
+  Report report;
 
-  const ReportScreen(
-      {Key? key,
-      @required this.name,
-      @required this.age,
-      @required this.causeOfBurn,
-      @required this.degree,
-      @required this.diabetes,
-      @required this.gender,
-      @required this.phone,
-      @required this.pressure})
-      : super(key: key);
+  ReportScreen({Key? key, required this.report}) : super(key: key);
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();
@@ -67,8 +51,8 @@ class _ReportScreenState extends State<ReportScreen> {
                     child: Center(
                       child: Padding(
                           padding: const EdgeInsets.all(10.5),
-                          child: Image.asset(
-                            sosLogoImage,
+                          child: Image.network(
+                            widget.report.image,
                             width: size.width / 2,
                             height: size.height / 4,
                           )),
@@ -85,7 +69,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 style: TextStyle(
                                     fontSize: fontfonty,
                                     fontWeight: FontWeight.bold)),
-                            Text("   ${widget.degree}",
+                            Text("   ${widget.report.burnDegree}",
                                 style: const TextStyle(
                                     fontSize: fontfonty,
                                     fontWeight: FontWeight.bold,
@@ -96,7 +80,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           Row(children: <Widget>[
                             const Text('Patient Name:',
                                 style: TextStyle(fontSize: fontfonty)),
-                            Text("   ${widget.name}",
+                            Text("   ${widget.report.name}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
                           ]),
@@ -105,7 +89,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           Row(children: <Widget>[
                             const Text('Age:',
                                 style: TextStyle(fontSize: fontfonty)),
-                            Text("   ${widget.age}",
+                            Text("   ${widget.report.age}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
                           ]),
@@ -114,7 +98,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           Row(children: <Widget>[
                             const Text('Gender:',
                                 style: TextStyle(fontSize: fontfonty)),
-                            Text("   ${widget.gender}",
+                            Text("   ${widget.report.gender}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
                           ]),
@@ -123,7 +107,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           Row(children: <Widget>[
                             const Text('Phone Number:',
                                 style: TextStyle(fontSize: fontfonty)),
-                            Text("   ${widget.phone}",
+                            Text("   ${widget.report.phoneNumber}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
                           ]),
@@ -133,7 +117,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           Row(children: <Widget>[
                             const Text('Diabetes:',
                                 style: TextStyle(fontSize: fontfonty)),
-                            Text("   ${widget.diabetes}",
+                            Text("   ${widget.report.diabates}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
                           ]),
@@ -142,7 +126,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           Row(children: <Widget>[
                             const Text('Blood Pressure:',
                                 style: TextStyle(fontSize: fontfonty)),
-                            Text("   ${widget.pressure}",
+                            Text("   ${widget.report.pressure}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
                           ]),
@@ -152,7 +136,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             Text('Cause of burn:',
                                 style: TextStyle(fontSize: fontfonty)),
                           ]),
-                          Text("   ${widget.causeOfBurn}",
+                          Text("   ${widget.report.causeOfBurn}",
                               style: const TextStyle(
                                   fontSize: fontfonty, color: Colors.grey)),
                           const SizedBox(height: 10),

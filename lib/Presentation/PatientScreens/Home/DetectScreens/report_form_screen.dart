@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/report_screen.dart';
 import 'package:sos_app/Presentation/Screens/Login/login_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
-
+import 'package:sos_app/Presentation/Widgets/uploadBurnPhoto_widget.dart';
+import 'package:date_format/date_format.dart';
+import '../../../../Data/Models/ReportModel.dart';
 import '../../../../Data/Models/patient.dart';
 import '../../../Styles/fonts.dart';
 
@@ -221,8 +224,9 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                       borderSide: BorderSide.none,
                     ),
                     onPressed: () async {
+                      final f = new DateFormat('yyyy-MM-dd hh:mm');
                       Patient patient = Patient();
-
+                      String burnImage = await addBurnImage();
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       patient.username = prefs.getString("FullName");
@@ -233,25 +237,21 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                       patient.gender = prefs.getString("Gender");
                       patient.image = prefs.getString("Image");
 
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ReportScreen(
-                                  age: patient.age,
-                                  causeOfBurn: causeController.text,
-                                  degree: "2nd degree",
-                                  diabetes: isDiabetes == false ? "No" : "Yes",
-                                  pressure: isPresure == true
-                                      ? (isLowPresure == true
-                                          ? "Hypotension"
-                                          : "Hypertension")
-                                      : "No",
-                                  gender: patient.gender,
-                                  name: patient.username,
-                                  phone: patient.phoneNumber,
-                                )),
-                        (Route<dynamic> route) => false,
-                      );
+                      Report report = Report(
+                          image: burnImage,
+                          age: patient.age,
+                          causeOfBurn: causeController.text,
+                          burnDegree: "2nd degree",
+                          diabates: isDiabetes == false ? "No" : "Yes",
+                          pressure: isPresure == true
+                              ? "Hypertension"
+                              : (isLowPresure == true ? "Hypotension" : "No"),
+                          gender: patient.gender,
+                          name: patient.username,
+                          phoneNumber: patient.phoneNumber,
+                          Date: formatDate(
+                              DateTime.now(), [dd, '/', mm, '/', yyyy]));
+                      await report.AddReport(report, context);
                     },
                     child: const Text(
                       'Go To Report',

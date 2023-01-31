@@ -22,20 +22,20 @@ Reference? ref;
 File? file;
 String? imageurl;
 
-addImage() async {
-  // if (picker != null) {
-  //   file = File(image!.path);
-  //   var rand = Random().nextInt(100000);
-  //   var imagename = "$rand" + basename(image!.path);
-  //   ref = FirebaseStorage.instance.ref("images").child("$imagename");
-  //   await ref!.putFile(file!);
-  //   imageurl = await ref!.getDownloadURL();
-  //   image = null;
-  //   ref = null;
-  //   file = null;
+addBurnImage() async {
+  if (picker != null) {
+    file = File(image!.path);
+    var rand = Random().nextInt(100000);
+    var imagename = "$rand" + basename(image!.path);
+    ref = FirebaseStorage.instance.ref("burnPhotos").child("$imagename");
+    await ref!.putFile(file!);
+    imageurl = await ref!.getDownloadURL();
+    image = null;
+    ref = null;
+    file = null;
 
-  //   return imageurl;
-  // }
+    return imageurl;
+  }
 }
 
 class _UploadBurnPhotoWidgetState extends State<UploadBurnPhotoWidget> {
