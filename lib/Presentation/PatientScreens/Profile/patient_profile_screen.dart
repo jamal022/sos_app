@@ -10,33 +10,14 @@ import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
 
 class PatientProfileScreen extends StatefulWidget {
-  const PatientProfileScreen({Key? key}) : super(key: key);
+  Patient? patient;
+  PatientProfileScreen({Key? key, required this.patient}) : super(key: key);
 
   @override
   State<PatientProfileScreen> createState() => _PatientProfileScreen();
 }
 
 class _PatientProfileScreen extends State<PatientProfileScreen> {
-  Patient patient = Patient();
-
-  @override
-  void initState() {
-    () async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      patient.username = prefs.getString("FullName");
-      patient.email = prefs.getString("Email");
-      patient.phoneNumber = prefs.getString("PhoneNumber");
-      patient.password = prefs.getString("Password");
-      patient.age = prefs.getString("Age");
-      patient.gender = prefs.getString("Gender");
-      patient.image = prefs.getString("Image");
-
-      setState(() {});
-    }();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -63,10 +44,10 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                       child: CircleAvatar(
                         maxRadius: 100,
                         backgroundImage: NetworkImage(
-                          patient.image,
+                          widget.patient!.image,
                         ),
                       )),
-                  Text(patient.username,
+                  Text(widget.patient!.username,
                       style: const TextStyle(
                         color: black,
                         fontSize: 25,
@@ -74,7 +55,7 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                       )),
                   SizedBox(height: size.height / 50),
                   Text(
-                    patient.email,
+                    widget.patient!.email,
                     style: const TextStyle(
                       color: black,
                       fontSize: 25,
@@ -94,7 +75,7 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PatientEditScreen(
-                                  patient: patient,
+                                  patient: widget.patient!,
                                 )),
                       );
                     },
@@ -143,7 +124,7 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                       ),
                       onPressed: () async {
                         List<Report> reports =
-                            await GetReports(patient, context);
+                            await GetReports(widget.patient!, context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../Data/Authentication/login.dart';
+import '../../../Data/Models/doctor.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
 import 'doctor_edit_screen.dart';
@@ -63,8 +65,9 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DoctorEditScreen()),
+                                      builder: (context) => DoctorEditScreen(
+                                            doctor: widget.doctor,
+                                          )),
                                 );
                               },
                               child: const Text(

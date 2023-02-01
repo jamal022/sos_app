@@ -92,7 +92,9 @@ void route(id, context) async {
         ChatsScreen(),
         const PatientHomeScreen(),
         NotificationsScreen(),
-        PatientProfileScreen(),
+        PatientProfileScreen(
+          patient: patient,
+        ),
       ];
       Navigator.pushAndRemoveUntil(
         context,
