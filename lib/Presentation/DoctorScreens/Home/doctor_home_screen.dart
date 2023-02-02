@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/Schedule/Schedule_screen.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/appointments_screen.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/articles_screen.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
+import 'package:sos_app/Presentation/PatientScreens/Home/commuinty_screen.dart';
+import 'package:sos_app/Presentation/Screens/App_Layout/bottom_nav_bar.dart';
+import 'package:sos_app/Presentation/Screens/Chats/chats_screen.dart';
+import 'package:sos_app/Presentation/Screens/Notifications/notifications_screen.dart';
+import 'package:sos_app/Presentation/Screens/Settings/settings_screen.dart';
+import '../../Constants/app_assets.dart';
 import '../../Styles/colors.dart';
 import '../../Views/home_card_widget.dart';
 
@@ -16,6 +26,13 @@ List<IconData> listIcons = [
   Icons.calendar_month_outlined,
   Icons.edit_calendar_outlined,
   Icons.newspaper_outlined
+];
+
+List<Widget> screens = [
+  CommunityScreen(),
+  AppointmentsScreen(),
+  ScheduleScreen(),
+  ArticlesScreen(),
 ];
 
 class _DoctorHomeScreen extends State<DoctorHomeScreen> {
@@ -40,6 +57,7 @@ class _DoctorHomeScreen extends State<DoctorHomeScreen> {
                   children: <Widget>[
                     for (var i = 0; i < 4; i++)
                       HomeCardWidget(
+                        screen: screens[i],
                         text: texts[i],
                         cardIcon: listIcons[i],
                       ),
