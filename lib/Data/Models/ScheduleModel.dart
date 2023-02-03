@@ -96,3 +96,20 @@ GetSchedules() async {
   });
   return schedules;
 }
+
+DeleteSchedule(Schedule sc) async {
+  await FirebaseFirestore.instance
+      .collection("Schedules")
+      .where("DoctorId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where("Day", isEqualTo: sc.day)
+      .where("Month", isEqualTo: sc.month)
+      .where("Year", isEqualTo: sc.year)
+      .get()
+      .then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Schedules")
+        .doc(value.docs.first.id)
+        .delete();
+  });
+  return "deleted";
+}

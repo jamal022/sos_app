@@ -19,17 +19,9 @@ class ScheduleScreen extends StatefulWidget {
 
 List<Schedule> schedules = [];
 var _fromTime, _fromPeriod, _toTime, _toPeriod, _date;
+late Schedule schedule;
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  // @override
-  // void initState() {
-  //   Future.delayed(Duration.zero, () async {
-  //     schedules = await GetSchedules();
-  //   });
-
-  //   super.initState();
-  // }
-
   DateTime today = DateTime.now();
   void _onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
@@ -77,9 +69,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       context: context,
                       barrierColor: splashBack,
                       builder: (ctx) => AlertDialog(
-                        content: const Text(
-                            "Are you sure,you want to delete this date?",
-                            style: TextStyle(
+                        content: Text(
+                            "Are you sure,you want to delete this date ${schedule.day}/${schedule.month}/${schedule.year}?",
+                            style: const TextStyle(
                               fontSize: contentFont,
                             )),
                         actions: [
@@ -112,13 +104,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                   child: MaterialButton(
                                     elevation: 6.0,
                                     color: Colors.redAccent,
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const NewScheduleScreen(),
-                                          ));
+                                    onPressed: () async {
+                                      var result =
+                                          await DeleteSchedule(schedule);
+                                      if (result == "deleted") {
+                                        Navigator.pop(ctx);
+                                      }
                                     },
                                     child: const Text(
                                       'Delete',
@@ -178,6 +169,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               schedules[i].month == value.month &&
                               schedules[i].year == value.year) {
                             setState(() {
+                              schedule = schedules[i];
                               _fromTime = schedules[i].fromTime;
                               _fromPeriod = schedules[i].fromPeriod;
                               _toTime = schedules[i].toTime;
