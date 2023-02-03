@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Presentation/Styles/colors.dart';
 
 import '../../Data/Models/doctor.dart';
 
@@ -63,17 +64,30 @@ class CustomSearchDelegate extends SearchDelegate {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("Doctors")
-          .where("FullName".toLowerCase(), isEqualTo: query.toLowerCase())
+          .where("FullName", isEqualTo: query)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Text('Loading...');
-        var results = snapshot.data!.docs;
-
+        var results;
+        if (snapshot.data!.docs.isNotEmpty) {
+          results = snapshot.data!.docs;
+        } else {
+          return const Center(
+              child: Text(
+            'This doctor does not exist',
+            style: TextStyle(
+              fontSize: 20,
+              color: primaryColor,
+            ),
+          ));
+        }
         return ListView(
             children: results
                 .map<Widget>(
                   (element) => ListTile(
-                    title: Text(element.data()['FullName']),
+                    title: Text(
+                      element.data()['FullName'],
+                      style: const TextStyle(fontSize: 20),
+                    ),
                     onTap: () {},
                   ),
                 )

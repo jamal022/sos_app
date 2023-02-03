@@ -181,7 +181,9 @@ class _ReportScreenState extends State<ReportScreen> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50),
                           ))),
-                      onPressed: () {},
+                      onPressed: () async {
+                        await printReport(widget.report);
+                      },
                       icon: const Icon(Icons.download, color: white, size: 30),
                       label: const Text('Save',
                           style: TextStyle(

@@ -3,6 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/patient.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/report_screen.dart';
+import 'package:printing/printing.dart';
+
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
+
+import '../../Presentation/Widgets/printable_report.dart';
 
 class Report {
   String image;
@@ -29,6 +36,7 @@ class Report {
       required this.Date});
 
   AddReport(Report report, context) async {
+    showLoading(context);
     await FirebaseFirestore.instance.collection("Reports").add({
       "PatientId": FirebaseAuth.instance.currentUser!.uid,
       "Image": report.image,
@@ -73,4 +81,18 @@ GetReports(Patient patient, context) async {
     }
   });
   return reports;
+}
+
+Future<void> printReport(Report report) async {
+  var image = await networkImage(
+    report.image,
+  );
+  final doc = pw.Document();
+  doc.addPage(pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context) {
+        return buildPrintableData(report, image);
+      }));
+  await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => doc.save());
 }
