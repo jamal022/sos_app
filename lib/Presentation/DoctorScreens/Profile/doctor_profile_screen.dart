@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../Data/Authentication/login.dart';
 import '../../../Data/Models/doctor.dart';
+import '../../Constants/app_assets.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
 import 'doctor_edit_screen.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
-  final doctor;
-  const DoctorProfileScreen({Key? key, @required this.doctor})
-      : super(key: key);
+  Doctor? doctor;
+  DoctorProfileScreen({Key? key, @required this.doctor}) : super(key: key);
 
   @override
   State<DoctorProfileScreen> createState() => _DoctorProfileScreen();
@@ -22,7 +21,8 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: back,
-      body: Padding(
+      body: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
         child: Column(children: [
           Stack(alignment: AlignmentDirectional.topStart, children: <Widget>[
@@ -32,23 +32,24 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
               margin: const EdgeInsets.fromLTRB(200, 55, 0, 0),
               child: Column(
                 children: [
-                  Expanded(
-                    child: Text(widget.doctor.username,
-                        style: const TextStyle(
+                  const Flexible(
+                    child: Text("Doctor Name",
+                        style: TextStyle(
                           color: black,
                           fontSize: contentFont,
                           fontWeight: FontWeight.bold,
                         )),
                   ),
-                  Expanded(
-                    child: Text(widget.doctor.field,
-                        style: const TextStyle(
+                  const Flexible(
+                    child: Text("Field",
+                        style: TextStyle(
                           color: Color.fromARGB(255, 88, 82, 82),
                           fontSize: contentFont,
                           fontWeight: FontWeight.bold,
                         )),
                   ),
-                  Expanded(
+                  const Spacer(),
+                  Flexible(
                     child: SizedBox(
                       height: size.height / 10,
                       width: size.width / 2,
@@ -60,12 +61,13 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                             borderSide: BorderSide.none,
                           ),
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DoctorEditScreen(
                                         doctor: widget.doctor,
                                       )),
+                              (Route<dynamic> route) => false,
                             );
                           },
                           child: const Text(
@@ -85,50 +87,47 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
               height: 30,
             ),
             Container(
-                width: size.width / 2.1,
-                height: size.height / 5,
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(100, 46, 47, 51),
-                      offset: Offset(
-                        3.0,
-                        3.0,
-                      ),
-                      blurRadius: 10.0,
-                      spreadRadius: 2.0,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.all(Radius.circular(140.0)),
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-                margin: const EdgeInsets.fromLTRB(8.0, 50.0, 10.0, 30.0),
-                child: Image.network(
-                  widget.doctor.image,
-                  width: size.width / 2.5,
-                  height: size.height / 5,
-                )),
+              height: size.height / 6,
+              width: size.width / 3,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(2.0),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(160.0)),
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+              margin: const EdgeInsets.fromLTRB(8.0, 50.0, 10.0, 30.0),
+              child: const CircleAvatar(
+                backgroundImage: AssetImage(sosLogoImage),
+                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                radius: 120,
+              ),
+            ),
           ]),
           Container(
               width: size.width / 0.7,
               color: const Color.fromARGB(239, 217, 225, 240),
               height: size.height / 5.4,
-              child: Column(children: const <Widget>[
-                TextField(
-                  maxLines: 6,
-                  minLines: 1,
-                  decoration: InputDecoration(
-                      hintText: "Brief description about the doctor...",
-                      hintStyle:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      border: InputBorder.none,
-                      icon: Icon(
-                        Icons.mode_edit_outline_sharp,
-                        color: Colors.black,
-                      )),
-                  autofocus: true,
-                  keyboardType: TextInputType.multiline,
-                ),
+              child: Column(children: <Widget>[
+                Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: const <Widget>[
+                        Icon(
+                          Icons.mode_edit_outline_sharp,
+                          color: Colors.black,
+                        ),
+                        Center(
+                          child: Text(
+                            'Brief description about the doctor...',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
               ])),
           const SizedBox(height: 100),
           Stack(

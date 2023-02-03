@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Authentication/login.dart';
+import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment_screen.dart';
 import '../../../../Data/Models/doctor.dart';
 import '../../../Styles/colors.dart';
 
@@ -248,7 +249,13 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddAppointmentScreen(),
+                      ));
+                },
                 child: const Text(
                   'Make an Appointment',
                   style: TextStyle(
