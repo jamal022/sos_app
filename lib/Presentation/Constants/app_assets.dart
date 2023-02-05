@@ -66,10 +66,4 @@ List<ContactUSModel> ContactUsList = [
 
 /// doctors screens list
 
-List<Widget> doctorScreens = [
-  const SettingScreen(),
-  ChatsScreen(),
-  const DoctorHomeScreen(),
-  NotificationsScreen(),
-  DoctorProfileScreen(),
-];
+

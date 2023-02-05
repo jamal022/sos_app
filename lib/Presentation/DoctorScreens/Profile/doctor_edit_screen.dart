@@ -7,7 +7,7 @@ import '../../Constants/app_assets.dart';
 import '../../Widgets/upoladPhoto_widget.dart';
 
 class DoctorEditScreen extends StatefulWidget {
-  Doctor? doctor;
+  Doctor doctor;
   DoctorEditScreen({Key? key, required this.doctor}) : super(key: key);
 
   @override
@@ -38,16 +38,16 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
   @override
   void initState() {
     super.initState();
-    nameController.text = widget.doctor!.username;
-    emailController.text = widget.doctor!.email;
-    passwordController.text = widget.doctor!.password;
-    confirmPasswordController.text = widget.doctor!.password;
-    ageController.text = widget.doctor!.age;
-    phoneController.text = widget.doctor!.phoneNumber;
-    fieldController.text = widget.doctor!.field;
-    priceController.text = widget.doctor!.price;
-    experienceController.text = widget.doctor!.experience;
-    bioController.text = widget.doctor!.bio;
+    nameController.text = widget.doctor.username;
+    emailController.text = widget.doctor.email;
+    passwordController.text = widget.doctor.password;
+    confirmPasswordController.text = widget.doctor.password;
+    ageController.text = widget.doctor.age;
+    phoneController.text = widget.doctor.phoneNumber;
+    fieldController.text = widget.doctor.field;
+    priceController.text = widget.doctor.price;
+    experienceController.text = widget.doctor.experience;
+    bioController.text = widget.doctor.bio;
   }
 
   @override
@@ -210,9 +210,6 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                       return null;
                     },
                   ),
-                  //upload image
-                  //const SizedBox(height: 10),
-                  //const UploadPhotoWidget(text: 'Upload Image'),
                   const SizedBox(height: 40),
                   MaterialButton(
                       elevation: 5.0,
@@ -229,12 +226,12 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                             phoneNumber: phoneController.text,
                             password: passwordController.text,
                             age: ageController.text,
-                            gender: widget.doctor!.gender,
-                            image: widget.doctor!.image,
+                            gender: widget.doctor.gender,
+                            image: widget.doctor.image,
                             field: fieldController.text,
                             experience: experienceController.text,
-                            addressLat: widget.doctor!.addressLat,
-                            addressLong: widget.doctor!.addressLong,
+                            addressLat: widget.doctor.addressLat,
+                            addressLong: widget.doctor.addressLong,
                             price: priceController.text,
                             bio: bioController.text);
 

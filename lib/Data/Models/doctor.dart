@@ -65,11 +65,11 @@ class Doctor extends Patient {
     prefs.setString("Role", "Doctor");
   }
 
-  Update_Doctor(Doctor doctor, GlobalKey<FormState> formkey, context) async {
+  Update_Doctor(Doctor doctor, formkey, context) async {
     var formdata = formKey.currentState;
     if (formdata!.validate()) {
       formdata.save();
-      final DUser = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("Doctors")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({

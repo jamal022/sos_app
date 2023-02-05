@@ -1,5 +1,6 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Presentation/Constants/app_assets.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
@@ -162,7 +163,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       //Navigate the date you choose
                       onClick: (value) async {
-                        schedules = await GetSchedules();
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        var name = prefs.getString("FullName");
+                        schedules = await GetSchedules(name);
 
                         for (var i = 0; i < schedules.length; i++) {
                           if (schedules[i].day == value.day &&
@@ -215,7 +219,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                   Text(
                     _fromTime != null
-                        ? "      0${_fromTime}:00 ${_fromPeriod}"
+                        ? "      ${_fromTime}:00 ${_fromPeriod}"
                         : " ",
                     style: const TextStyle(
                         color: Colors.black, fontSize: formSubtitleFont),
@@ -235,7 +239,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                   Text(
                     _toTime != null
-                        ? "           0${_toTime}:00 ${_toPeriod}"
+                        ? "           ${_toTime}:00 ${_toPeriod}"
                         : " ",
                     style: const TextStyle(
                         color: Colors.black, fontSize: formSubtitleFont),

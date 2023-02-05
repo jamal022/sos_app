@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Authentication/login.dart';
+import 'package:sos_app/Data/Models/ReportModel.dart';
+import 'package:sos_app/Data/Models/ScheduleModel.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/Schedule/Schedule_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment_screen.dart';
 import '../../../../Data/Models/doctor.dart';
+import '../../../../Data/Models/patient.dart';
 import '../../../Styles/colors.dart';
 
 class DoctorPageScreen extends StatefulWidget {
@@ -249,11 +254,28 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  Patient patient = Patient(
+                      username: prefs.getString("FullName"),
+                      email: prefs.getString("Email"),
+                      age: prefs.getString("Age"),
+                      gender: prefs.getString("Gender"),
+                      image: prefs.getString("Image"),
+                      password: prefs.getString("Password"),
+                      phoneNumber: prefs.getString("PhoneNumber"));
+
+                  List<Schedule> schedules =
+                      await GetSchedules(widget.doctor.username);
+                  List<Report> reports = await GetReports(patient, context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddAppointmentScreen(),
+                        builder: (context) => AddAppointmentScreen(
+                            schedules: schedules,
+                            doctor: widget.doctor,
+                            reports: reports),
                       ));
                 },
                 child: const Text(

@@ -15,3 +15,4 @@ const Color lightwhite = Color(0xFFFCF6F4);
 const Color white = Colors.white;
 const Color bubbles = Color.fromARGB(237, 241, 174, 145);
 const Color back = Color.fromARGB(253, 243, 222, 195);
+const Color secondaryColor = Color.fromARGB(236, 253, 151, 107);

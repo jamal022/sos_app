@@ -58,6 +58,21 @@ class Report {
   }
 }
 
+GetReportId(Report report) async {
+  var reportId;
+  await FirebaseFirestore.instance
+      .collection("Reports")
+      .where("PatientId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where("BurnDegree", isEqualTo: report.burnDegree)
+      .where("Date", isEqualTo: report.Date)
+      .where("CauseOfBurn", isEqualTo: report.causeOfBurn)
+      .get()
+      .then((value) {
+    reportId = value.docs.first.id;
+  });
+  return reportId;
+}
+
 GetReports(Patient patient, context) async {
   List<Report> reports = [];
   await FirebaseFirestore.instance

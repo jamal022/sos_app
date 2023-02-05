@@ -6,8 +6,8 @@ import '../../Styles/fonts.dart';
 import 'doctor_edit_screen.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
-  Doctor? doctor;
-  DoctorProfileScreen({Key? key, @required this.doctor}) : super(key: key);
+  Doctor doctor;
+  DoctorProfileScreen({Key? key, required this.doctor}) : super(key: key);
 
   @override
   State<DoctorProfileScreen> createState() => _DoctorProfileScreen();
@@ -22,7 +22,6 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
     return Scaffold(
       backgroundColor: back,
       body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
         child: Column(children: [
           Stack(alignment: AlignmentDirectional.topStart, children: <Widget>[
@@ -32,17 +31,20 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
               margin: const EdgeInsets.fromLTRB(200, 55, 0, 0),
               child: Column(
                 children: [
-                  const Flexible(
-                    child: Text("Doctor Name",
-                        style: TextStyle(
+                  Flexible(
+                    child: Text(widget.doctor.username,
+                        style: const TextStyle(
                           color: black,
                           fontSize: contentFont,
                           fontWeight: FontWeight.bold,
                         )),
                   ),
-                  const Flexible(
-                    child: Text("Field",
-                        style: TextStyle(
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Flexible(
+                    child: Text(widget.doctor.field,
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 88, 82, 82),
                           fontSize: contentFont,
                           fontWeight: FontWeight.bold,
@@ -61,13 +63,12 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                             borderSide: BorderSide.none,
                           ),
                           onPressed: () {
-                            Navigator.pushAndRemoveUntil(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DoctorEditScreen(
                                         doctor: widget.doctor,
                                       )),
-                              (Route<dynamic> route) => false,
                             );
                           },
                           child: const Text(
@@ -96,85 +97,69 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                 color: Color.fromARGB(255, 255, 255, 255),
               ),
               margin: const EdgeInsets.fromLTRB(8.0, 50.0, 10.0, 30.0),
-              child: const CircleAvatar(
-                backgroundImage: AssetImage(sosLogoImage),
-                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(widget.doctor.image),
+                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 radius: 120,
               ),
             ),
           ]),
+          const SizedBox(
+            height: 30,
+          ),
           Container(
               width: size.width / 0.7,
               color: const Color.fromARGB(239, 217, 225, 240),
               height: size.height / 5.4,
-              child: Column(children: <Widget>[
-                Container(
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: const <Widget>[
-                        Icon(
-                          Icons.mode_edit_outline_sharp,
-                          color: Colors.black,
-                        ),
-                        Center(
-                          child: Text(
-                            'Brief description about the doctor...',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-              ])),
-          const SizedBox(height: 100),
-          Stack(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  widget.doctor.bio,
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              )),
+          const SizedBox(height: 80),
+          Column(
             children: [
-              Flexible(
-                child: MaterialButton(
-                    elevation: 6.0,
-                    color: Colors.white,
-                    shape: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+              MaterialButton(
+                  elevation: 6.0,
+                  color: Colors.white,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  onPressed: () {},
+                  child: const Text(
+                    '               Q/A  History               ',
+                    style: TextStyle(
+                      color: black,
+                      fontSize: formButtonFont,
+                      fontWeight: FontWeight.bold,
                     ),
-                    onPressed: () {},
-                    child: const Text(
-                      '              Q/A  History                 ',
-                      style: TextStyle(
-                        color: black,
-                        fontSize: formButtonFont,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Stack(
-            children: [
-              Flexible(
-                child: MaterialButton(
-                    elevation: 6.0,
-                    color: Colors.white,
-                    shape: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+              MaterialButton(
+                  elevation: 6.0,
+                  color: Colors.white,
+                  shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  onPressed: () {},
+                  child: const Text(
+                    '              Article  History                 ',
+                    style: TextStyle(
+                      color: black,
+                      fontSize: formButtonFont,
+                      fontWeight: FontWeight.bold,
                     ),
-                    onPressed: () {},
-                    child: const Text(
-                      '            Article  History                 ',
-                      style: TextStyle(
-                        color: black,
-                        fontSize: formButtonFont,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-              )
+                  )),
             ],
           ),
         ]),

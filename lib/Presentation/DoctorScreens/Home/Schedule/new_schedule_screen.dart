@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/Screens/Login/login_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
+import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -29,6 +31,8 @@ class _NewScheduleScreenState extends State<NewScheduleScreen> {
 
   bool isfromAm = false;
   bool isfromPm = false;
+
+  var maxNbController = TextEditingController();
 
   Color getFromTime(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -254,6 +258,14 @@ class _NewScheduleScreenState extends State<NewScheduleScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 20),
+          textFieldTitle('Max number of appointments:'),
+          const SizedBox(height: 10),
+          TextFormFieldWidget(
+            icon: Icons.numbers,
+            type: TextInputType.number,
+            textController: maxNbController,
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -266,15 +278,20 @@ class _NewScheduleScreenState extends State<NewScheduleScreen> {
                 borderSide: BorderSide.none,
               ),
               onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                var name = prefs.getString("FullName");
                 Schedule sch = Schedule(
                     doctorId: FirebaseAuth.instance.currentUser!.uid,
+                    doctorName: name,
                     day: today.day,
                     month: today.month,
                     year: today.year,
                     fromTime: _currentValue,
                     fromPeriod: isfromPm == true ? "PM" : "AM",
                     toPeriod: isToPm == true ? "PM" : "AM",
-                    toTime: _selectedValue);
+                    toTime: _selectedValue,
+                    maxNbAppoitments: maxNbController.text,
+                    nbAppoinments: 0);
 
                 await AddSchedule(sch, context);
               },
