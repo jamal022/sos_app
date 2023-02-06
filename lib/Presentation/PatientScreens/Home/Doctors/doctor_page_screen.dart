@@ -267,7 +267,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                       phoneNumber: prefs.getString("PhoneNumber"));
 
                   List<Schedule> schedules =
-                      await GetSchedules(widget.doctor.username);
+                      await GetSchedulesForPatient(widget.doctor.username);
                   List<Report> reports = await GetReports(patient, context);
                   Navigator.push(
                       context,

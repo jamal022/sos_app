@@ -23,8 +23,8 @@ class Schedule {
   var fromPeriod;
   var toTime;
   var toPeriod;
-  var maxNbAppoitments;
-  var nbAppoinments;
+  var maxNbAppointments;
+  var nbAppointments;
 
   Schedule({
     required this.doctorId,
@@ -36,14 +36,14 @@ class Schedule {
     required this.fromPeriod,
     required this.toPeriod,
     required this.toTime,
-    required this.maxNbAppoitments,
-    required this.nbAppoinments,
+    required this.maxNbAppointments,
+    required this.nbAppointments,
   });
 }
 
 AddSchedule(Schedule schedule, context) async {
   var exist = false;
-  List<Schedule> scs = await GetSchedules(schedule.doctorName);
+  List<Schedule> scs = await GetSchedulesForDoctor(schedule.doctorName);
   for (var item in scs) {
     if (schedule.day == item.day &&
         schedule.month == item.month &&
@@ -72,8 +72,8 @@ AddSchedule(Schedule schedule, context) async {
       "FromPeriod": schedule.fromPeriod,
       "ToTime": schedule.toTime,
       "ToPeriod": schedule.toPeriod,
-      "MaxNbOfAppointments": schedule.maxNbAppoitments,
-      "NbOfAppoitments": schedule.nbAppoinments,
+      "MaxNbOfAppointments": schedule.maxNbAppointments,
+      "NbOfAppointments": schedule.nbAppointments,
     }).then((value) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       Doctor doc = Doctor(
@@ -111,7 +111,7 @@ AddSchedule(Schedule schedule, context) async {
   }
 }
 
-GetSchedules(doctorName) async {
+GetSchedulesForDoctor(doctorName) async {
   List<Schedule> schedules = [];
   await FirebaseFirestore.instance
       .collection("Schedules")
@@ -129,10 +129,48 @@ GetSchedules(doctorName) async {
         fromPeriod: schedule.data()["FromPeriod"],
         toTime: schedule.data()["ToTime"],
         toPeriod: schedule.data()["ToPeriod"],
-        maxNbAppoitments: schedule.data()["MaxNbOfAppointments"],
-        nbAppoinments: schedule.data()["NbOfAppoitments"],
+        maxNbAppointments: schedule.data()["MaxNbOfAppointments"],
+        nbAppointments: schedule.data()["NbOfAppoitments"] == null
+            ? "0"
+            : schedule.data()["NbOfAppoitments"],
       );
       schedules.add(s);
+    }
+  });
+  return schedules;
+}
+
+GetSchedulesForPatient(doctorName) async {
+  List<Schedule> schedules = [];
+  var today = DateTime.now().day;
+  var month = DateTime.now().month;
+  var year = DateTime.now().year;
+  await FirebaseFirestore.instance
+      .collection("Schedules")
+      .where("DoctorName", isEqualTo: doctorName)
+      .get()
+      .then((value) {
+    for (var schedule in value.docs) {
+      if (schedule.data()["Day"] >= today &&
+          schedule.data()["Month"] >= month &&
+          schedule.data()["Year"] >= year) {
+        Schedule s = Schedule(
+          doctorId: schedule.data()["DoctorId"],
+          doctorName: schedule.data()["DoctorName"],
+          day: schedule.data()["Day"],
+          month: schedule.data()["Month"],
+          year: schedule.data()["Year"],
+          fromTime: schedule.data()["FromTime"],
+          fromPeriod: schedule.data()["FromPeriod"],
+          toTime: schedule.data()["ToTime"],
+          toPeriod: schedule.data()["ToPeriod"],
+          maxNbAppointments: schedule.data()["MaxNbOfAppointments"],
+          nbAppointments: schedule.data()["NbOfAppoitments"] == null
+              ? "0"
+              : schedule.data()["NbOfAppoitments"],
+        );
+        schedules.add(s);
+      }
     }
   });
   return schedules;
@@ -173,6 +211,32 @@ AddAppointmentToSchedule({doctorName, day, month, year}) async {
       number = number + 1;
     }
 
+    await FirebaseFirestore.instance
+        .collection("Schedules")
+        .doc(value.docs.first.id)
+        .update({
+      "NbOfAppointments": number,
+    });
+  });
+}
+
+DeleteAppointmentFromSchedule({doctorName, date}) async {
+  var number;
+  var array = date.split('/');
+  var day = int.parse(array[0]);
+  var month = int.parse(array[1]);
+  var year = int.parse(array[2]);
+  await FirebaseFirestore.instance
+      .collection("Schedules")
+      .where("DoctorName", isEqualTo: doctorName)
+      .where("Day", isEqualTo: day)
+      .where("Month", isEqualTo: month)
+      .where("Year", isEqualTo: year)
+      .get()
+      .then((value) async {
+    number = value.docs.first.data()["NbOfAppointments"];
+    print("==================${number}========");
+    number = number - 1;
     await FirebaseFirestore.instance
         .collection("Schedules")
         .doc(value.docs.first.id)

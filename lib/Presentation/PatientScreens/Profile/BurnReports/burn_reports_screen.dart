@@ -79,7 +79,7 @@ class _BurnReportsScreenState extends State<BurnReportsScreen> {
                                     ),
                                   ),
                                   Text(
-                                    "       ${widget.reports[index].Date}",
+                                    "       ${widget.reports[index].date}",
                                     style: const TextStyle(
                                       letterSpacing: 0.5,
                                       fontSize: contentFont,

@@ -24,7 +24,7 @@ class _SpecificReportScreenState extends State<SpecificReportScreen> {
           elevation: 0,
           centerTitle: true,
           toolbarHeight: 64.5,
-          title: Text('${widget.report.burnDegree} (${widget.report.Date})',
+          title: Text('${widget.report.burnDegree} (${widget.report.date})',
               style:
                   const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           automaticallyImplyLeading: false,

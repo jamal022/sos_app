@@ -290,8 +290,8 @@ class _NewScheduleScreenState extends State<NewScheduleScreen> {
                     fromPeriod: isfromPm == true ? "PM" : "AM",
                     toPeriod: isToPm == true ? "PM" : "AM",
                     toTime: _selectedValue,
-                    maxNbAppoitments: maxNbController.text,
-                    nbAppoinments: 0);
+                    maxNbAppointments: maxNbController.text,
+                    nbAppointments: 0);
 
                 await AddSchedule(sch, context);
               },

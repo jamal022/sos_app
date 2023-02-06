@@ -165,10 +165,19 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                             borderRadius: BorderRadius.circular(50),
                           ))),
                       onPressed: () {
-                        if ((int.parse(widget.schedules[i].nbAppoinments
+                        if ((int.parse(widget.schedules[i].nbAppointments
                                 .toString())) ==
-                            (int.parse(widget.schedules[i].maxNbAppoitments
+                            (int.parse(widget.schedules[i].maxNbAppointments
                                 .toString()))) {
+                          setState(() {
+                            _day = null;
+                            _month = null;
+                            _year = null;
+                            _fromPeriod = null;
+                            _fromTime = null;
+                            _toPeriod = null;
+                            _toTime = null;
+                          });
                           AwesomeDialog(
                             context: context,
                             title: "Error",
@@ -179,13 +188,6 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               ),
                             ),
                           ).show();
-                          _day = null;
-                          _month = null;
-                          _year = null;
-                          _fromPeriod = null;
-                          _fromTime = null;
-                          _toPeriod = null;
-                          _toTime = null;
                         } else {
                           setState(() {
                             schedule = widget.schedules[i];
@@ -272,7 +274,7 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                   RadioListTile(
                     activeColor: primaryColor,
                     title: Text(
-                      "${widget.reports[i].burnDegree} (${widget.reports[i].Date})",
+                      "${widget.reports[i].burnDegree} (${widget.reports[i].date})",
                       style: const TextStyle(
                           color: Colors.black, fontSize: formSubtitleFont),
                     ),

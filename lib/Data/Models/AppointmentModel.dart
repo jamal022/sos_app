@@ -1,19 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:sos_app/Data/Models/ReportModel.dart';
-import 'package:sos_app/Data/Models/ScheduleModel.dart';
-import 'package:sos_app/Data/Models/patient.dart';
-import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/report_screen.dart';
-import 'package:printing/printing.dart';
-
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:sos_app/Presentation/PatientScreens/Home/appointments_screen.dart';
-import 'package:sos_app/Presentation/Screens/App_Layout/bottom_nav_bar.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
-
-import '../../Presentation/Widgets/printable_report.dart';
 
 class Appointment {
   var ReportId;
@@ -43,41 +29,106 @@ AddAppointment({required Appointment app, context}) async {
     "Time": app.Time
   });
 }
-// GetReports(Patient patient, context) async {
-//   List<Report> reports = [];
-//   await FirebaseFirestore.instance
-//       .collection("Reports")
-//       .where("PatientId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-//       .get()
-//       .then((value) {
-//     for (var report in value.docs) {
-//       Report r = Report(
-//           image: report.data()["Image"],
-//           burnDegree: report.data()["BurnDegree"],
-//           name: patient.username,
-//           age: patient.age,
-//           gender: patient.gender,
-//           phoneNumber: patient.phoneNumber,
-//           diabates: report.data()["Diabates"],
-//           pressure: report.data()["BloodPressure"],
-//           causeOfBurn: report.data()["CauseOfBurn"],
-//           Date: report.data()["Date"]);
-//       reports.add(r);
-//     }
-//   });
-//   return reports;
-// }
 
-// Future<void> printReport(Report report) async {
-//   var image = await networkImage(
-//     report.image,
-//   );
-//   final doc = pw.Document();
-//   doc.addPage(pw.Page(
-//       pageFormat: PdfPageFormat.a4,
-//       build: (pw.Context context) {
-//         return buildPrintableData(report, image);
-//       }));
-//   await Printing.layoutPdf(
-//       onLayout: (PdfPageFormat format) async => doc.save());
-// }
+GetDoctorAppointments(doctorName) async {
+  List<Appointment> appointments = [];
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("DoctorName", isEqualTo: doctorName)
+      .where("Status", isEqualTo: "In Progress")
+      .get()
+      .then((value) {
+    for (var app in value.docs) {
+      Appointment s = Appointment(
+        DoctorName: app.data()["DoctorName"],
+        PatientName: app.data()["PatientName"],
+        ReportId: app.data()["ReportId"],
+        Date: app.data()["Date"],
+        Status: app.data()["Status"],
+        Time: app.data()["Time"],
+      );
+      appointments.add(s);
+    }
+  });
+  return appointments;
+}
+
+GetEndedAppointments(doctorName) async {
+  List<Appointment> appointments = [];
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("PatientName", isEqualTo: doctorName)
+      .where("Status", isEqualTo: "Ended")
+      .get()
+      .then((value) {
+    for (var app in value.docs) {
+      Appointment s = Appointment(
+        DoctorName: app.data()["DoctorName"],
+        PatientName: app.data()["PatientName"],
+        ReportId: app.data()["ReportId"],
+        Date: app.data()["Date"],
+        Status: app.data()["Status"],
+        Time: app.data()["Time"],
+      );
+      appointments.add(s);
+    }
+  });
+  return appointments;
+}
+
+GetInProgressAppointments(doctorName) async {
+  List<Appointment> appointments = [];
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("PatientName", isEqualTo: doctorName)
+      .where("Status", isEqualTo: "In Progress")
+      .get()
+      .then((value) {
+    for (var app in value.docs) {
+      Appointment s = Appointment(
+        DoctorName: app.data()["DoctorName"],
+        PatientName: app.data()["PatientName"],
+        ReportId: app.data()["ReportId"],
+        Date: app.data()["Date"],
+        Status: app.data()["Status"],
+        Time: app.data()["Time"],
+      );
+      appointments.add(s);
+    }
+  });
+  return appointments;
+}
+
+ChangeAppointmentToEnded(Appointment app) async {
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("DoctorName", isEqualTo: app.DoctorName)
+      .where("PatientName", isEqualTo: app.PatientName)
+      .where("Date", isEqualTo: app.Date)
+      .where("Time", isEqualTo: app.Time)
+      .get()
+      .then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Appointments")
+        .doc(value.docs.first.id)
+        .update({"Status": "Ended"});
+  });
+  return "changed";
+}
+
+DeleteAppointment(Appointment app) async {
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("DoctorName", isEqualTo: app.DoctorName)
+      .where("PatientName", isEqualTo: app.PatientName)
+      .where("Date", isEqualTo: app.Date)
+      .where("Time", isEqualTo: app.Time)
+      .get()
+      .then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Appointments")
+        .doc(value.docs.first.id)
+        .delete();
+  });
+  return "deleted";
+}

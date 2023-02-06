@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -238,6 +239,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                       patient.image = prefs.getString("Image");
 
                       Report report = Report(
+                          patientId: FirebaseAuth.instance.currentUser!.uid,
                           image: burnImage,
                           age: patient.age,
                           causeOfBurn: causeController.text,
@@ -249,7 +251,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                           gender: patient.gender,
                           name: patient.username,
                           phoneNumber: patient.phoneNumber,
-                          Date: formatDate(
+                          date: formatDate(
                               DateTime.now(), [dd, '/', mm, '/', yyyy]));
                       await report.AddReport(report, context);
                     },

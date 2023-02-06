@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Schedule/Schedule_screen.dart';
-import 'package:sos_app/Presentation/DoctorScreens/Home/appointments_screen.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/Appointments/appointments_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/articles_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/commuinty_screen.dart';

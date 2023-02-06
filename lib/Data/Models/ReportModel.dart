@@ -7,21 +7,23 @@ import 'package:printing/printing.dart';
 
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment_screen.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 import '../../Presentation/Widgets/printable_report.dart';
 
 class Report {
-  String image;
-  String burnDegree;
-  String name;
-  String age;
-  String gender;
-  String phoneNumber;
-  String diabates;
-  String pressure;
-  String causeOfBurn;
-  String Date;
+  var patientId;
+  var image;
+  var burnDegree;
+  var name;
+  var age;
+  var gender;
+  var phoneNumber;
+  var diabates;
+  var pressure;
+  var causeOfBurn;
+  var date;
 
   Report(
       {required this.image,
@@ -33,17 +35,22 @@ class Report {
       required this.diabates,
       required this.pressure,
       required this.causeOfBurn,
-      required this.Date});
+      required this.date,
+      required this.patientId});
 
   AddReport(Report report, context) async {
     showLoading(context);
     await FirebaseFirestore.instance.collection("Reports").add({
       "PatientId": FirebaseAuth.instance.currentUser!.uid,
+      "PatientName": report.name,
+      "Age": report.age,
+      "Gender": report.gender,
+      "PhoneNumber": report.phoneNumber,
       "Image": report.image,
       "BurnDegree": report.burnDegree,
       "Diabates": report.diabates,
       "BloodPressure": report.pressure,
-      "Date": report.Date,
+      "Date": report.date,
       "CauseOfBurn": report.causeOfBurn,
     }).then((value) {
       Navigator.pushAndRemoveUntil(
@@ -64,13 +71,37 @@ GetReportId(Report report) async {
       .collection("Reports")
       .where("PatientId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
       .where("BurnDegree", isEqualTo: report.burnDegree)
-      .where("Date", isEqualTo: report.Date)
+      .where("Date", isEqualTo: report.date)
       .where("CauseOfBurn", isEqualTo: report.causeOfBurn)
       .get()
       .then((value) {
     reportId = value.docs.first.id;
   });
   return reportId;
+}
+
+GetReportById(reportId) async {
+  late Report report;
+  await FirebaseFirestore.instance.collection("Reports").get().then((value) {
+    for (var item in value.docs) {
+      if (item.id == reportId) {
+        report = Report(
+          image: value.docs.first.data()["Image"],
+          burnDegree: value.docs.first.data()["BurnDegree"],
+          name: value.docs.first.data()["PatientName"],
+          age: value.docs.first.data()["Age"],
+          gender: value.docs.first.data()["Gender"],
+          phoneNumber: value.docs.first.data()["PhoneNumber"],
+          diabates: value.docs.first.data()["Diabates"],
+          pressure: value.docs.first.data()["BloodPressure"],
+          causeOfBurn: value.docs.first.data()["CauseOfBurn"],
+          date: value.docs.first.data()["Date"],
+          patientId: value.docs.first.data()["PatientId"],
+        );
+      }
+    }
+  });
+  return report;
 }
 
 GetReports(Patient patient, context) async {
@@ -82,6 +113,7 @@ GetReports(Patient patient, context) async {
       .then((value) {
     for (var report in value.docs) {
       Report r = Report(
+          patientId: report.data()["PatientId"],
           image: report.data()["Image"],
           burnDegree: report.data()["BurnDegree"],
           name: patient.username,
@@ -91,7 +123,7 @@ GetReports(Patient patient, context) async {
           diabates: report.data()["Diabates"],
           pressure: report.data()["BloodPressure"],
           causeOfBurn: report.data()["CauseOfBurn"],
-          Date: report.data()["Date"]);
+          date: report.data()["Date"]);
       reports.add(r);
     }
   });
