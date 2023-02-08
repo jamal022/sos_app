@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
-import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import '../../../Data/Models/patient.dart';
-import '../../Constants/app_assets.dart';
-import '../../Screens/Chats/chats_screen.dart';
-import '../../Screens/Notifications/notifications_screen.dart';
-import '../../Screens/Settings/settings_screen.dart';
-import '../../Widgets/upoladPhoto_widget.dart';
-import '../Home/patient_home_screen.dart';
 
 class PatientEditScreen extends StatefulWidget {
   Patient patient;
@@ -126,7 +120,6 @@ class _PatientEditScreen extends State<PatientEditScreen> {
                       }
                       return passwordMatching(passwordController.text,
                           confirmPasswordController.text);
-                      ;
                     },
                   ),
                   const SizedBox(height: 10),
@@ -156,9 +149,6 @@ class _PatientEditScreen extends State<PatientEditScreen> {
                     },
                   ),
                   const SizedBox(height: 10),
-                  //upload image
-                  const SizedBox(height: 10),
-                  //const UploadPhotoWidget(text: 'Upload Image'),
                   const SizedBox(height: 30),
                   MaterialButton(
                       elevation: 5.0,
@@ -169,7 +159,10 @@ class _PatientEditScreen extends State<PatientEditScreen> {
                         borderSide: BorderSide.none,
                       ),
                       onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
                         Patient pat = Patient(
+                            id: prefs.getString("Id"),
                             username: nameController.text,
                             email: emailController.text,
                             phoneNumber: phoneController.text,

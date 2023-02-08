@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/patient.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/report_screen.dart';
 import 'package:printing/printing.dart';
-
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment_screen.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 import '../../Presentation/Widgets/printable_report.dart';

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import '../Screens/Chats/chat_page_screen.dart';
 
 class ChatCardWidget extends StatefulWidget {
@@ -40,27 +37,27 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
                         spreadRadius: 2,
                       )
                     ]),
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 35,
                   backgroundImage: AssetImage('assets/images/R.jpeg'),
                 ),
               ),
               Container(
                   width: MediaQuery.of(context).size.width * 0.65,
-                  padding: EdgeInsets.only(left: 20),
+                  padding: const EdgeInsets.only(left: 20),
                   child: Column(children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Text(
+                            const Text(
                               'Doctor Name',
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Container(
-                              margin: EdgeInsets.only(left: 5),
+                              margin: const EdgeInsets.only(left: 5),
                               width: 7,
                               height: 7,
                               decoration: BoxDecoration(
@@ -70,7 +67,7 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
                             )
                           ],
                         ),
-                        Text(
+                        const Text(
                           'Mon',
                           style: TextStyle(
                               color: Colors.black54,

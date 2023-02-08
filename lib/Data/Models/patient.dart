@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
-
 import '../../Presentation/PatientScreens/Home/patient_home_screen.dart';
 import '../../Presentation/PatientScreens/Profile/patient_edit_screen.dart';
 import '../../Presentation/PatientScreens/Profile/patient_profile_screen.dart';
@@ -20,9 +18,11 @@ class Patient {
   var age;
   var gender;
   var image;
+  var id;
 
   Patient(
       {this.username,
+      this.id,
       this.email,
       this.phoneNumber,
       this.password,
@@ -30,9 +30,11 @@ class Patient {
       this.gender,
       this.image});
 
-  updatePatientPrefs(name, email, password, age, gender, phone, image) async {
+  updatePatientPrefs(
+      id, name, email, password, age, gender, phone, image) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    prefs.setString("Id", id);
     prefs.setString("FullName", name);
     prefs.setString("Email", email);
     prefs.setString("Password", password);
@@ -60,6 +62,7 @@ class Patient {
       });
 
       await updatePatientPrefs(
+          patient.id,
           patient.username,
           patient.email,
           patient.password,

@@ -1,8 +1,6 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/patient_home_screen.dart';
 import '../../../Data/Models/AppointmentModel.dart';
 import '../../../Data/Models/patient.dart';
@@ -29,6 +27,7 @@ var _ratingValue;
 Patient pt = Patient();
 getPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  pt.id = prefs.getString("Id");
   pt.username = prefs.getString("FullName");
   pt.email = prefs.getString("Email");
   pt.phoneNumber = prefs.getString("PhoneNumber");
@@ -288,9 +287,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                                     date: inProgressAppointments[
                                                                             i]
                                                                         .date,
-                                                                    doctorName:
+                                                                    doctorId:
                                                                         inProgressAppointments[i]
-                                                                            .doctorName);
+                                                                            .doctorId);
                                                                 var result =
                                                                     await DeleteAppointment(
                                                                         inProgressAppointments[
@@ -739,149 +738,3 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     ));
   }
 }
-
-
-// Padding(
-                          //   padding: const EdgeInsets.all(10.0),
-                          //   child: Container(
-                          //     height: 140,
-                          //     padding: const EdgeInsets.fromLTRB(
-                          //         20.0, 8.0, 0.0, 0.0),
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.white,
-                          //       borderRadius: BorderRadius.circular(25),
-                          //     ),
-                          //     child: Row(children: [
-                          //       Column(
-                          //         mainAxisAlignment: MainAxisAlignment.start,
-                          //         children: [
-                          //           Text(
-                          //             'Doctor Name',
-                          //             style: TextStyle(
-                          //                 fontWeight: FontWeight.bold,
-                          //                 fontSize: 18),
-                          //           ),
-                          //           Text('Ganna Shaker',
-                          //               style: TextStyle(
-                          //                   fontWeight: FontWeight.w800,
-                          //                   fontSize: 16,
-                          //                   color:
-                          //                       Colors.black.withOpacity(0.5))),
-                          //           Column(
-                          //             mainAxisAlignment:
-                          //                 MainAxisAlignment.start,
-                          //             crossAxisAlignment:
-                          //                 CrossAxisAlignment.start,
-                          //             children: [
-                          //               Text(
-                          //                 ' \n\n  Price',
-                          //                 style: TextStyle(
-                          //                     fontWeight: FontWeight.bold,
-                          //                     fontSize: 18),
-                          //               ),
-                          //               Text('450 EGP',
-                          //                   style: TextStyle(
-                          //                       fontWeight: FontWeight.w800,
-                          //                       fontSize: 16,
-                          //                       color: Colors.black
-                          //                           .withOpacity(0.5))),
-                          //             ],
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       Column(
-                          //         mainAxisAlignment: MainAxisAlignment.start,
-                          //         crossAxisAlignment: CrossAxisAlignment.center,
-                          //         children: [
-                          //           Column(
-                          //             children: [
-                          //               Text(
-                          //                 '     Date   ',
-                          //                 style: TextStyle(
-                          //                     fontWeight: FontWeight.bold,
-                          //                     fontSize: 18),
-                          //               ),
-                          //               Text('    2/2/2023',
-                          //                   style: TextStyle(
-                          //                       fontWeight: FontWeight.w800,
-                          //                       fontSize: 16,
-                          //                       color: Colors.black
-                          //                           .withOpacity(0.5))),
-                          //             ],
-                          //           ),
-                          //           Column(
-                          //             mainAxisAlignment:
-                          //                 MainAxisAlignment.start,
-                          //             crossAxisAlignment:
-                          //                 CrossAxisAlignment.start,
-                          //             children: [
-                          //               Text(
-                          //                 ' \n\n       Place        ',
-                          //                 style: TextStyle(
-                          //                     fontWeight: FontWeight.bold,
-                          //                     fontSize: 18),
-                          //               ),
-                          //               Text('    Dokki ,Cairo       ',
-                          //                   style: TextStyle(
-                          //                       fontWeight: FontWeight.w800,
-                          //                       fontSize: 16,
-                          //                       color: Colors.black
-                          //                           .withOpacity(0.5))),
-                          //             ],
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       Column(
-                          //         mainAxisAlignment: MainAxisAlignment.start,
-                          //         children: [
-                          //           Text(
-                          //             'Time',
-                          //             style: TextStyle(
-                          //                 fontWeight: FontWeight.bold,
-                          //                 fontSize: 18),
-                          //           ),
-                          //           Text('01:00 PM\n\n',
-                          //               style: TextStyle(
-                          //                   fontWeight: FontWeight.w800,
-                          //                   fontSize: 16,
-                          //                   color:
-                          //                       Colors.black.withOpacity(0.5))),
-                          //           Container(
-                          //             padding: const EdgeInsets.fromLTRB(
-                          //                 0.0, 0.0, 0.0, 5.0),
-                          //             child: Column(
-                          //               children: [
-                          //                 const Text(
-                          //                   'Rate',
-                          //                   style: TextStyle(
-                          //                       fontWeight: FontWeight.bold,
-                          //                       fontSize: 18),
-                          //                 ),
-                          //                 RatingBar(
-                          //                     initialRating: 0,
-                          //                     itemSize: 22,
-                          //                     direction: Axis.horizontal,
-                          //                     allowHalfRating: true,
-                          //                     itemCount: 5,
-                          //                     ratingWidget: RatingWidget(
-                          //                         full: const Icon(Icons.star,
-                          //                             color: primaryColor),
-                          //                         half: const Icon(
-                          //                           Icons.star_half,
-                          //                           color: primaryColor,
-                          //                         ),
-                          //                         empty: const Icon(
-                          //                           Icons.star_outline,
-                          //                           color: primaryColor,
-                          //                         )),
-                          //                     onRatingUpdate: (value) {
-                          //                       setState(() {});
-                          //                     }),
-                          //               ],
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ]),
-                          //   ),
-                          // ),

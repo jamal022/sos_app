@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
-import 'package:sos_app/Presentation/Styles/colors.dart';
 import '../../Presentation/DoctorScreens/Home/doctor_home_screen.dart';
 import '../../Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
 import '../../Presentation/PatientScreens/Home/patient_home_screen.dart';
@@ -20,8 +18,9 @@ import '../Models/patient.dart';
 Patient? patient;
 late Doctor doctor;
 
-savePatientPrefs(name, email, password, age, gender, phone, image) async {
+savePatientPrefs(id, name, email, password, age, gender, phone, image) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("Id", id);
   prefs.setString("FullName", name);
   prefs.setString("Email", email);
   prefs.setString("Password", password);
@@ -33,7 +32,8 @@ savePatientPrefs(name, email, password, age, gender, phone, image) async {
 }
 
 saveDoctorPrefs(
-    {name,
+    {id,
+    name,
     email,
     password,
     age,
@@ -47,6 +47,7 @@ saveDoctorPrefs(
     addLat,
     addLong}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("Id", id);
   prefs.setString("FullName", name);
   prefs.setString("Email", email);
   prefs.setString("Password", password);
@@ -71,6 +72,7 @@ void route(id, context) async {
       .then((value) async {
     if (value.docs.isNotEmpty) {
       patient = Patient(
+          id: value.docs[0].id,
           username: value.docs[0].data()['FullName'],
           email: value.docs[0].data()['Email'],
           phoneNumber: value.docs[0].data()['PhoneNumber'],
@@ -80,6 +82,7 @@ void route(id, context) async {
           image: value.docs[0].data()['Image']);
 
       await savePatientPrefs(
+          value.docs[0].id,
           value.docs[0].data()['FullName'],
           value.docs[0].data()['Email'],
           value.docs[0].data()['Password'],
@@ -112,6 +115,7 @@ void route(id, context) async {
           .get()
           .then((snapshot) async {
         doctor = Doctor(
+            id: id,
             username: snapshot.data()?['FullName'],
             email: snapshot.data()?['Email'],
             phoneNumber: snapshot.data()?['PhoneNumber'],
@@ -128,6 +132,7 @@ void route(id, context) async {
       });
 
       await saveDoctorPrefs(
+          id: doctor.id,
           name: doctor.username,
           email: doctor.email,
           password: doctor.password,

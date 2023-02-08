@@ -2,13 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Data/Authentication/login.dart';
 import 'package:sos_app/Data/Models/patient.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
-
 import '../../Presentation/DoctorScreens/Home/doctor_home_screen.dart';
 import '../../Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
-import '../../Presentation/PatientScreens/Profile/patient_edit_screen.dart';
 import '../../Presentation/Screens/App_Layout/bottom_nav_bar.dart';
 import '../../Presentation/Screens/Chats/chats_screen.dart';
 import '../../Presentation/Screens/Notifications/notifications_screen.dart';
@@ -21,21 +17,23 @@ class Doctor extends Patient {
   var addressLat;
   var addressLong;
   var bio;
+  var id;
 
   Doctor(
       {required username,
+      this.id,
       required email,
       required phoneNumber,
       required password,
       required age,
       required gender,
       required image,
-      required this.field,
-      required this.experience,
-      required this.price,
-      required this.addressLat,
-      required this.addressLong,
-      required this.bio})
+      this.field,
+      this.experience,
+      this.price,
+      this.addressLat,
+      this.addressLong,
+      this.bio})
       : super(
             username: username,
             email: email,
@@ -45,10 +43,11 @@ class Doctor extends Patient {
             gender: gender,
             image: image) {}
 
-  updateDoctorsPrefs(name, email, password, age, gender, phone, image, field,
-      price, experience, bio, lan, lon) async {
+  updateDoctorsPrefs(id, name, email, password, age, gender, phone, image,
+      field, price, experience, bio, lan, lon) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    prefs.setString("Id", id);
     prefs.setString("FullName", name);
     prefs.setString("Email", email);
     prefs.setString("Password", password);
@@ -65,8 +64,7 @@ class Doctor extends Patient {
     prefs.setString("Role", "Doctor");
   }
 
-  Update_Doctor(Doctor doctor, formkey, context) async {
-    var formdata = formKey.currentState;
+  Update_Doctor(Doctor doctor, formdata, context) async {
     if (formdata!.validate()) {
       formdata.save();
       await FirebaseFirestore.instance
@@ -84,6 +82,7 @@ class Doctor extends Patient {
         "Bio": doctor.bio
       });
       await updateDoctorsPrefs(
+          doctor.id,
           doctor.username,
           doctor.email,
           doctor.password,
@@ -126,6 +125,7 @@ getDoctors() async {
   await FirebaseFirestore.instance.collection('Doctors').get().then((value) {
     for (var i = 0; i < value.docs.length; i++) {
       Doctor dr = Doctor(
+        id: value.docs[i].id,
         username: value.docs[i].data()['FullName'],
         email: value.docs[i].data()['Email'],
         phoneNumber: value.docs[i].data()['PhoneNumber'],

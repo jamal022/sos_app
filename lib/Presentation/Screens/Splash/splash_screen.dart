@@ -11,7 +11,6 @@ import '../../../Data/Models/patient.dart';
 import '../../Constants/app_assets.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-
 import '../../DoctorScreens/Home/doctor_home_screen.dart';
 import '../Chats/chats_screen.dart';
 import '../Notifications/notifications_screen.dart';
@@ -34,12 +33,13 @@ class SplashScreen extends StatelessWidget {
   var experience;
   var addLat;
   var addLong;
-
+  var id;
   late Patient patient;
   late Doctor doctor;
 
   getPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = prefs.getString("Id");
     role = prefs.getString("Role");
     name = prefs.getString("FullName");
     email = prefs.getString("Email");
@@ -56,6 +56,7 @@ class SplashScreen extends StatelessWidget {
     addLong = prefs.getString("AddressLongitude");
 
     patient = Patient(
+        id: id,
         username: name,
         email: email,
         phoneNumber: phone,
@@ -65,6 +66,7 @@ class SplashScreen extends StatelessWidget {
         image: image);
 
     doctor = Doctor(
+        id: id,
         username: name,
         email: email,
         phoneNumber: phone,

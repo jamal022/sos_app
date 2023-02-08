@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/report_form_screen.dart';
 import '../Styles/colors.dart';
-import '../Styles/colors.dart';
 
 class UploadBurnPhotoWidget extends StatefulWidget {
   final text;

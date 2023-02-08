@@ -3,8 +3,6 @@ import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
 import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import '../../../Data/Models/doctor.dart';
-import '../../Constants/app_assets.dart';
-import '../../Widgets/upoladPhoto_widget.dart';
 
 class DoctorEditScreen extends StatefulWidget {
   Doctor doctor;
@@ -24,7 +22,7 @@ var fieldController = TextEditingController();
 var priceController = TextEditingController();
 var experienceController = TextEditingController();
 var bioController = TextEditingController();
-GlobalKey<FormState> formKey = GlobalKey<FormState>();
+GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 String? passwordMatching(String password, String confirmPassword) {
   if (password == confirmPassword) {
@@ -69,7 +67,7 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
           color: back,
           child: SingleChildScrollView(
             child: Form(
-              key: formKey,
+              key: _formKey,
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 30),
@@ -129,7 +127,6 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                       }
                       return passwordMatching(passwordController.text,
                           confirmPasswordController.text);
-                      ;
                     },
                   ),
                   const SizedBox(height: 10),
@@ -220,6 +217,7 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                         borderSide: BorderSide.none,
                       ),
                       onPressed: () async {
+                        var formdata = _formKey.currentState;
                         Doctor doc = Doctor(
                             username: nameController.text,
                             email: emailController.text,
@@ -235,7 +233,7 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                             price: priceController.text,
                             bio: bioController.text);
 
-                        await doc.Update_Doctor(doc, formKey, context);
+                        await doc.Update_Doctor(doc, formdata, context);
                       },
                       child: const Text(
                         'Update',

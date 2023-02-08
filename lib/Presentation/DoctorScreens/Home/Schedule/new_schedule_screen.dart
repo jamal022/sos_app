@@ -7,7 +7,6 @@ import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:numberpicker/numberpicker.dart';
-
 import '../../../Styles/fonts.dart';
 
 class NewScheduleScreen extends StatefulWidget {

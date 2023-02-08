@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Data/Authentication/login.dart';
 import 'package:sos_app/Data/Models/ReportModel.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
-import 'package:sos_app/Presentation/DoctorScreens/Home/Schedule/Schedule_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment_screen.dart';
 import '../../../../Data/Models/doctor.dart';
 import '../../../../Data/Models/patient.dart';
@@ -258,6 +256,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   Patient patient = Patient(
+                      id: prefs.getString("Id"),
                       username: prefs.getString("FullName"),
                       email: prefs.getString("Email"),
                       age: prefs.getString("Age"),

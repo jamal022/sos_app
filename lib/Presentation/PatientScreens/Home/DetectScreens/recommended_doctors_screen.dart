@@ -1,11 +1,5 @@
-import 'dart:ui';
-
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sos_app/Presentation/Views/recommended_doctor_card.dart';
-
 import '../../../../Data/Models/doctor.dart';
 import '../../../Styles/colors.dart';
 

@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Widgets/uploadBurnPhoto_widget.dart';
-import 'package:sos_app/Presentation/Widgets/upoladPhoto_widget.dart';
 
 import '../../Styles/colors.dart';
 
@@ -29,8 +27,8 @@ class _DetectScreenState extends State<DetectScreen> {
       body: Padding(
         padding: const EdgeInsets.all(50.0),
         child: Column(
-          children: [
-            const UploadBurnPhotoWidget(text: "Upload Photo"),
+          children: const [
+            UploadBurnPhotoWidget(text: "Upload Photo"),
           ],
         ),
       ),

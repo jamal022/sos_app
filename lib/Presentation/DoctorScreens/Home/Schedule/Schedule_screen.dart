@@ -1,12 +1,7 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
-import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
-
 import '../../../../Data/Models/ScheduleModel.dart';
-import '../../../Screens/App_Layout/bottom_nav_bar.dart';
 import '../../../Styles/colors.dart';
 import '../../../Styles/fonts.dart';
 import 'new_schedule_screen.dart';

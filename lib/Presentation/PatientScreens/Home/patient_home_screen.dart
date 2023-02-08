@@ -7,7 +7,6 @@ import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/doctors_screen.
 import 'package:sos_app/Presentation/PatientScreens/Home/hopsitals_screen.dart';
 import 'package:sos_app/Presentation/Views/home_card_widget.dart';
 import '../../Styles/colors.dart';
-import '../../Styles/fonts.dart';
 
 class PatientHomeScreen extends StatefulWidget {
   const PatientHomeScreen({Key? key}) : super(key: key);
@@ -35,12 +34,12 @@ List<IconData> listIcons = [
 ];
 
 List<Widget> screens = [
-  DetectScreen(),
+  const DetectScreen(),
   AppointmentsScreen(),
-  CommunityScreen(),
-  ArticlesScreen(),
+  const CommunityScreen(),
+  const ArticlesScreen(),
   DoctorsScreen(),
-  HospitalsScreen()
+  const HospitalsScreen()
 ];
 
 class _PatientHomeScreen extends State<PatientHomeScreen> {

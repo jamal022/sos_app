@@ -1,8 +1,4 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/doctor_page_screen.dart';
 
@@ -12,8 +8,6 @@ import '../Styles/colors.dart';
 class DoctorCardWidget extends StatelessWidget {
   Doctor doctor;
   DoctorCardWidget({super.key, required this.doctor});
-
-  double? _ratingValue;
 
   @override
   Widget build(BuildContext context) {

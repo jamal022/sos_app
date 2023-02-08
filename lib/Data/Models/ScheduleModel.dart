@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Presentation/Screens/App_Layout/bottom_nav_bar.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
-
 import '../../Presentation/DoctorScreens/Home/doctor_home_screen.dart';
 import '../../Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
 import '../../Presentation/Screens/Chats/chats_screen.dart';
@@ -77,6 +76,7 @@ AddSchedule(Schedule schedule, context) async {
     }).then((value) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       Doctor doc = Doctor(
+        id: prefs.getString("Id"),
         username: prefs.getString("FullName"),
         email: prefs.getString("Email"),
         password: prefs.getString("Password"),
@@ -111,11 +111,11 @@ AddSchedule(Schedule schedule, context) async {
   }
 }
 
-GetSchedulesForDoctor(doctorName) async {
+GetSchedulesForDoctor(doctorId) async {
   List<Schedule> schedules = [];
   await FirebaseFirestore.instance
       .collection("Schedules")
-      .where("DoctorName", isEqualTo: doctorName)
+      .where("DoctorId", isEqualTo: doctorId)
       .get()
       .then((value) {
     for (var schedule in value.docs) {
@@ -140,14 +140,14 @@ GetSchedulesForDoctor(doctorName) async {
   return schedules;
 }
 
-GetSchedulesForPatient(doctorName) async {
+GetSchedulesForPatient(doctorId) async {
   List<Schedule> schedules = [];
   var today = DateTime.now().day;
   var month = DateTime.now().month;
   var year = DateTime.now().year;
   await FirebaseFirestore.instance
       .collection("Schedules")
-      .where("DoctorName", isEqualTo: doctorName)
+      .where("DoctorId", isEqualTo: doctorId)
       .get()
       .then((value) {
     for (var schedule in value.docs) {
@@ -193,11 +193,11 @@ DeleteSchedule(Schedule sc) async {
   return "deleted";
 }
 
-AddAppointmentToSchedule({doctorName, day, month, year}) async {
+AddAppointmentToSchedule({doctorId, day, month, year}) async {
   var number;
   await FirebaseFirestore.instance
       .collection("Schedules")
-      .where("DoctorName", isEqualTo: doctorName)
+      .where("DoctorId", isEqualTo: doctorId)
       .where("Day", isEqualTo: day)
       .where("Month", isEqualTo: month)
       .where("Year", isEqualTo: year)
@@ -220,7 +220,7 @@ AddAppointmentToSchedule({doctorName, day, month, year}) async {
   });
 }
 
-DeleteAppointmentFromSchedule({doctorName, date}) async {
+DeleteAppointmentFromSchedule({doctorId, date}) async {
   var number;
   var array = date.split('/');
   var day = int.parse(array[0]);
@@ -228,7 +228,7 @@ DeleteAppointmentFromSchedule({doctorName, date}) async {
   var year = int.parse(array[2]);
   await FirebaseFirestore.instance
       .collection("Schedules")
-      .where("DoctorName", isEqualTo: doctorName)
+      .where("DoctorId", isEqualTo: doctorId)
       .where("Day", isEqualTo: day)
       .where("Month", isEqualTo: month)
       .where("Year", isEqualTo: year)

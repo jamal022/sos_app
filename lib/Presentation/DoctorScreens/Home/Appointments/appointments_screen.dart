@@ -1,8 +1,6 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ReportModel.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Appointments/report_screen.dart';
 import '../../../../Data/Models/AppointmentModel.dart';
 import '../../../../Data/Models/doctor.dart';
@@ -24,18 +22,15 @@ class AppointmentsScreen extends StatefulWidget {
 }
 
 List<Appointment> appointments = [];
-getAppsList() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  var name = prefs.getString("FullName");
-  appointments = await GetDoctorAppointments(name);
-}
 
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
   @override
   void initState() {
     super.initState();
     () async {
-      await getAppsList();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var id = prefs.getString("Id");
+      appointments = await GetDoctorAppointments(id);
       setState(() {});
     }();
   }
@@ -149,6 +144,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                             await SharedPreferences
                                                                 .getInstance();
                                                         Doctor doc = Doctor(
+                                                          id: prefs
+                                                              .getString("Id"),
                                                           username:
                                                               prefs.getString(
                                                                   "FullName"),

@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Presentation/Views/doctor_card_widget.dart';
-import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import '../../../Styles/colors.dart';
 import '../../../Widgets/search_widget.dart';
 

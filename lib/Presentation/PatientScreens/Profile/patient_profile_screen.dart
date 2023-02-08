@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Data/Authentication/login.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
 import 'package:sos_app/Presentation/PatientScreens/Profile/BurnReports/burn_reports_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Profile/patient_edit_screen.dart';
 import '../../../Data/Models/ReportModel.dart';

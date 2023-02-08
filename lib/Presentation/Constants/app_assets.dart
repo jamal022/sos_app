@@ -1,12 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:sos_app/Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
-
 import '../../Data/Models/AboutUsModel.dart';
 import '../../Data/Models/ContactUsModel.dart';
-import '../DoctorScreens/Home/doctor_home_screen.dart';
-import '../Screens/Chats/chats_screen.dart';
-import '../Screens/Notifications/notifications_screen.dart';
-import '../Screens/Settings/settings_screen.dart';
 
 ///App logo image
 const String sosLogoImage = 'assets/images/logo.png';
@@ -63,7 +56,3 @@ List<ContactUSModel> ContactUsList = [
   ContactUSModel(
       question: "Contact Us", answer: "Email: SOS_SaveYourSkin@gmail.com"),
 ];
-
-/// doctors screens list
-
-

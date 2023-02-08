@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 
-import '../../Data/Models/doctor.dart';
-
 class CustomSearchDelegate extends SearchDelegate {
 // clear the search text
   @override
@@ -17,35 +15,6 @@ class CustomSearchDelegate extends SearchDelegate {
       ),
     ];
   }
-
-  // List<Doctor> doctorsList = [];
-  // getSearchResult(query) async {
-  //   await FirebaseFirestore.instance
-  //       .collection("Doctors")
-  //       .where("FullName", isEqualTo: query)
-  //       .get()
-  //       .then((value) {
-  //     for (var i = 0; i < value.docs.length; i++) {
-  //       Doctor dr = Doctor(
-  //         username: value.docs[i].data()['FullName'],
-  //         email: value.docs[i].data()['Email'],
-  //         phoneNumber: value.docs[i].data()['PhoneNumber'],
-  //         password: value.docs[i].data()['Password'],
-  //         age: value.docs[i].data()['Age'],
-  //         gender: value.docs[i].data()['Gender'],
-  //         image: value.docs[i].data()['Image'],
-  //         field: value.docs[i].data()['Field'],
-  //         addressLat: value.docs[i].data()['AddressLatitude'],
-  //         addressLong: value.docs[i].data()['AddressLongitude'],
-  //         bio: value.docs[i].data()['Bio'],
-  //         experience: value.docs[i].data()['YearsOfExperience'],
-  //         price: value.docs[i].data()['TicketPrice'],
-  //       );
-
-  //       doctorsList.add(dr);
-  //     }
-  //   });
-  // }
 
 // second overwrite to pop out of search menu
   @override

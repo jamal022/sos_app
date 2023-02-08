@@ -1,12 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/AppointmentModel.dart';
 import 'package:sos_app/Presentation/PatientScreens/Profile/patient_profile_screen.dart';
-import 'package:sos_app/Presentation/Widgets/upoladPhoto_widget.dart';
-
 import '../../../../Data/Models/ReportModel.dart';
 import '../../../../Data/Models/ScheduleModel.dart';
 import '../../../../Data/Models/doctor.dart';
@@ -40,6 +36,7 @@ var report;
 
 getPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  pt.id = prefs.getString("Id");
   pt.username = prefs.getString("FullName");
   pt.email = prefs.getString("Email");
   pt.phoneNumber = prefs.getString("PhoneNumber");
@@ -321,7 +318,11 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               await SharedPreferences.getInstance();
 
                           var patientName = prefs.getString("FullName");
+                          var patientId = prefs.getString("Id");
+
                           Appointment appointment = Appointment(
+                              patientId: patientId,
+                              doctorId: widget.doctor.id,
                               reportId: reportId,
                               patientName: patientName,
                               doctorName: widget.doctor.username,
@@ -335,7 +336,7 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               day: _day,
                               month: _month,
                               year: _year,
-                              doctorName: widget.doctor.username);
+                              doctorId: widget.doctor.id);
                           await AddAppointment(
                               app: appointment, context: context);
                           await getPrefs();
