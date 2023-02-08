@@ -160,8 +160,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       onClick: (value) async {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
-                        var name = prefs.getString("FullName");
-                        schedules = await GetSchedulesForDoctor(name);
+                        var id = prefs.getString("Id");
+                        schedules = await GetSchedulesForDoctor(id);
 
                         for (var i = 0; i < schedules.length; i++) {
                           if (schedules[i].day == value.day &&

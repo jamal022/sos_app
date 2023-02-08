@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
+import 'package:sos_app/Presentation/Views/doctor_card_widget.dart';
+
+import '../PatientScreens/Home/Doctors/doctor_page_screen.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
 // clear the search text
@@ -54,10 +58,33 @@ class CustomSearchDelegate extends SearchDelegate {
                 .map<Widget>(
                   (element) => ListTile(
                     title: Text(
-                      element.data()['FullName'],
+                      element.data()["FullName"],
                       style: const TextStyle(fontSize: 20),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DoctorPageScreen(
+                              doctor: Doctor(
+                                  id: element.id,
+                                  username: element.data()['FullName'],
+                                  email: element.data()['Email'],
+                                  phoneNumber: element.data()['PhoneNumber'],
+                                  password: element.data()['Password'],
+                                  age: element.data()['Age'],
+                                  gender: element.data()['Gender'],
+                                  image: element.data()['Image'],
+                                  addressLat: element.data()['AddressLat'],
+                                  addressLong: element.data()['AddressLong'],
+                                  bio: element.data()['Bio'],
+                                  experience:
+                                      element.data()['YearsOfExperience'],
+                                  field: element.data()['Field'],
+                                  price: element.data()['TicketPrice']),
+                            ),
+                          ));
+                    },
                   ),
                 )
                 .toList());

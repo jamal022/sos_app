@@ -42,7 +42,7 @@ class Schedule {
 
 AddSchedule(Schedule schedule, context) async {
   var exist = false;
-  List<Schedule> scs = await GetSchedulesForDoctor(schedule.doctorName);
+  List<Schedule> scs = await GetSchedulesForDoctor(schedule.doctorId);
   for (var item in scs) {
     if (schedule.day == item.day &&
         schedule.month == item.month &&
@@ -130,9 +130,9 @@ GetSchedulesForDoctor(doctorId) async {
         toTime: schedule.data()["ToTime"],
         toPeriod: schedule.data()["ToPeriod"],
         maxNbAppointments: schedule.data()["MaxNbOfAppointments"],
-        nbAppointments: schedule.data()["NbOfAppoitments"] == null
+        nbAppointments: schedule.data()["NbOfApponitments"] == null
             ? "0"
-            : schedule.data()["NbOfAppoitments"],
+            : schedule.data()["NbOfAppointments"],
       );
       schedules.add(s);
     }
@@ -165,9 +165,9 @@ GetSchedulesForPatient(doctorId) async {
           toTime: schedule.data()["ToTime"],
           toPeriod: schedule.data()["ToPeriod"],
           maxNbAppointments: schedule.data()["MaxNbOfAppointments"],
-          nbAppointments: schedule.data()["NbOfAppoitments"] == null
-              ? "0"
-              : schedule.data()["NbOfAppoitments"],
+          nbAppointments: schedule.data()["NbOfAppointments"] == null
+              ? 0
+              : schedule.data()["NbOfAppointments"],
         );
         schedules.add(s);
       }

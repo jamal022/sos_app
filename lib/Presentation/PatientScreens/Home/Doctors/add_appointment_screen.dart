@@ -162,8 +162,8 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                             borderRadius: BorderRadius.circular(50),
                           ))),
                       onPressed: () {
-                        if ((int.parse(widget.schedules[i].nbAppointments
-                                .toString())) ==
+                        if (int.parse(widget.schedules[i].nbAppointments
+                                .toString()) ==
                             (int.parse(widget.schedules[i].maxNbAppointments
                                 .toString()))) {
                           setState(() {
@@ -186,6 +186,10 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                             ),
                           ).show();
                         } else {
+                          print(
+                              "=============${widget.schedules[i].maxNbAppointments}=============");
+                          print(
+                              "================${widget.schedules[i].nbAppointments}==================");
                           setState(() {
                             schedule = widget.schedules[i];
                             _fromTime = widget.schedules[i].fromTime;
@@ -337,8 +341,10 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               month: _month,
                               year: _year,
                               doctorId: widget.doctor.id);
+
                           await AddAppointment(
                               app: appointment, context: context);
+
                           await getPrefs();
 
                           List<Widget> patientScreens = [

@@ -59,6 +59,7 @@ Register(
 }
 
 AddPatient(Patient? patient, id, context) async {
+  showLoading(context);
   await FirebaseFirestore.instance
       .collection("Patients")
       .doc(FirebaseAuth.instance.currentUser!.uid)

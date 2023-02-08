@@ -135,7 +135,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                         children: [
                           IconButton(
                               onPressed: () {},
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.location_on_rounded,
                                 size: 30,
                                 color: Colors.black,
@@ -266,7 +266,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                       phoneNumber: prefs.getString("PhoneNumber"));
 
                   List<Schedule> schedules =
-                      await GetSchedulesForPatient(widget.doctor.username);
+                      await GetSchedulesForPatient(widget.doctor.id);
                   List<Report> reports = await GetReports(patient, context);
                   Navigator.push(
                       context,

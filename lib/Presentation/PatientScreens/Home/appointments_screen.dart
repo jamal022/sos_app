@@ -63,9 +63,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   void initState() {
     () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var name = prefs.getString("FullName");
-      inProgressAppointments = await GetInProgressAppointments(name);
-      endedAppointments = await GetEndedAppointments(name);
+      var id = prefs.getString("Id");
+      inProgressAppointments = await GetInProgressAppointments(id);
+      endedAppointments = await GetEndedAppointments(id);
       setState(() {});
     }();
 

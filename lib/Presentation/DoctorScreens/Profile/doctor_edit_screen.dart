@@ -219,6 +219,7 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                       onPressed: () async {
                         var formdata = _formKey.currentState;
                         Doctor doc = Doctor(
+                            id: widget.doctor.id,
                             username: nameController.text,
                             email: emailController.text,
                             phoneNumber: phoneController.text,

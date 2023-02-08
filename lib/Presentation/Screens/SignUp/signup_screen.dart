@@ -270,7 +270,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       borderSide: BorderSide.none,
                     ),
                     onPressed: () async {
-                      showLoading(context);
                       userImage = await addImage();
                       if (role == "patient") {
                         patient = Patient(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ReportModel.dart';
+import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Appointments/report_screen.dart';
 import '../../../../Data/Models/AppointmentModel.dart';
 import '../../../../Data/Models/doctor.dart';
@@ -135,6 +136,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                     elevation: 6.0,
                                                     color: Colors.redAccent,
                                                     onPressed: () async {
+                                                      await DeleteAppointmentFromSchedule(
+                                                          doctorId:
+                                                              appointments[i]
+                                                                  .doctorId,
+                                                          date: appointments[i]
+                                                              .date);
                                                       var result =
                                                           await ChangeAppointmentToEnded(
                                                               appointments[i]);
