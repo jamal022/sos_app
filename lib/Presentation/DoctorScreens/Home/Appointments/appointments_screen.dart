@@ -80,7 +80,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             const SizedBox(
                               height: 5,
                             ),
-                            Text(appointments[i].PatientName,
+                            Text(appointments[i].patientName,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 16,
@@ -249,7 +249,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             const SizedBox(
                               height: 5,
                             ),
-                            Text('       ${appointments[i].Date}',
+                            Text('       ${appointments[i].date}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 16,
@@ -266,7 +266,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             const SizedBox(
                               height: 5,
                             ),
-                            Text('${appointments[i].Time}\n\n',
+                            Text('${appointments[i].time}\n\n',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 16,
@@ -284,7 +284,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                   ),
                                   onPressed: () async {
                                     Report report = await GetReportById(
-                                        appointments[i].ReportId);
+                                        appointments[i].reportId);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

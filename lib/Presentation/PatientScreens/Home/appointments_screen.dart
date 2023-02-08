@@ -25,7 +25,7 @@ class AppointmentsScreen extends StatefulWidget {
 
 List<Appointment> inProgressAppointments = [];
 List<Appointment> endedAppointments = [];
-
+var _ratingValue;
 Patient pt = Patient();
 getPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -119,7 +119,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      Text(inProgressAppointments[i].DoctorName,
+                                      Text(inProgressAppointments[i].doctorName,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w800,
                                               fontSize: 16,
@@ -128,7 +128,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                       Column(
                                         children: [
                                           const Text(
-                                            ' \n\n  Price',
+                                            ' \n\n Price',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18),
@@ -136,7 +136,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text('450 EGP',
+                                          Text(
+                                              "${inProgressAppointments[i].price} EGP",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 16,
@@ -163,7 +164,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                             height: 5,
                                           ),
                                           Text(
-                                              '  ${inProgressAppointments[i].Date}',
+                                              '  ${inProgressAppointments[i].date}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 16,
@@ -186,7 +187,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text('Dokki ,Cairo    ',
+                                          Text(
+                                              '${inProgressAppointments[i].place}    ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 16,
@@ -209,7 +211,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                         height: 5,
                                       ),
                                       Text(
-                                          '${inProgressAppointments[i].Time}\n\n',
+                                          '${inProgressAppointments[i].time}\n\n',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w800,
                                               fontSize: 16,
@@ -285,10 +287,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                                 await DeleteAppointmentFromSchedule(
                                                                     date: inProgressAppointments[
                                                                             i]
-                                                                        .Date,
+                                                                        .date,
                                                                     doctorName:
                                                                         inProgressAppointments[i]
-                                                                            .DoctorName);
+                                                                            .doctorName);
                                                                 var result =
                                                                     await DeleteAppointment(
                                                                         inProgressAppointments[
@@ -398,7 +400,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      Text(endedAppointments[i].DoctorName,
+                                      Text(endedAppointments[i].doctorName,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w800,
                                               fontSize: 16,
@@ -415,7 +417,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text('450 EGP',
+                                          Text(
+                                              '${endedAppointments[i].price} EGP',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 16,
@@ -441,7 +444,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text('${endedAppointments[i].Date}',
+                                          Text('${endedAppointments[i].date}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 16,
@@ -464,7 +467,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text('Dokki ,Cairo    ',
+                                          Text(
+                                              '${endedAppointments[i].place}    ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 16,
@@ -486,7 +490,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      Text('${endedAppointments[i].Time}\n\n',
+                                      Text('${endedAppointments[i].time}\n\n',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w800,
                                               fontSize: 16,
@@ -495,24 +499,230 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                       Container(
                                         padding: const EdgeInsets.fromLTRB(
                                             0.0, 0.0, 0.0, 5.0),
-                                        child: MaterialButton(
-                                            elevation: 5.0,
-                                            color: primaryColor,
-                                            padding: const EdgeInsets.all(10),
-                                            shape: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            onPressed: () {},
-                                            child: const Text(
-                                              '   Rate   ',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                        child: endedAppointments[i].rate == 0
+                                            ? MaterialButton(
+                                                elevation: 5.0,
+                                                color: primaryColor,
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                shape: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                  borderSide: BorderSide.none,
+                                                ),
+                                                onPressed: () {
+                                                  showDialog(
+                                                    useSafeArea: false,
+                                                    context: context,
+                                                    barrierColor: splashBack,
+                                                    builder: (ctx) =>
+                                                        AlertDialog(
+                                                      content: Container(
+                                                        height: 100,
+                                                        child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              const Text(
+                                                                  "Rate The Doctor",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        22,
+                                                                  )),
+                                                              const SizedBox(
+                                                                height: 15,
+                                                              ),
+                                                              RatingBar(
+                                                                  initialRating:
+                                                                      0,
+                                                                  itemSize: 35,
+                                                                  direction: Axis
+                                                                      .horizontal,
+                                                                  allowHalfRating:
+                                                                      true,
+                                                                  itemCount: 5,
+                                                                  ratingWidget:
+                                                                      RatingWidget(
+                                                                          full: const Icon(Icons.star,
+                                                                              color:
+                                                                                  primaryColor),
+                                                                          half:
+                                                                              const Icon(
+                                                                            Icons.star_half,
+                                                                            color:
+                                                                                primaryColor,
+                                                                          ),
+                                                                          empty:
+                                                                              const Icon(
+                                                                            Icons.star_outline,
+                                                                            color:
+                                                                                primaryColor,
+                                                                          )),
+                                                                  onRatingUpdate:
+                                                                      (value) {
+                                                                    _ratingValue =
+                                                                        value;
+                                                                  }),
+                                                            ]),
+                                                      ),
+                                                      actions: [
+                                                        Row(
+                                                          children: [
+                                                            //btn cancel
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child:
+                                                                    OutlinedButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator
+                                                                        .pop(
+                                                                            ctx);
+                                                                  },
+                                                                  child:
+                                                                      const Text(
+                                                                    "Cancel",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          primaryColor,
+                                                                      fontSize:
+                                                                          contentFont,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child:
+                                                                    MaterialButton(
+                                                                  elevation:
+                                                                      6.0,
+                                                                  color:
+                                                                      primaryColor,
+                                                                  onPressed:
+                                                                      () async {
+                                                                    var result = await UpdateRate(
+                                                                        endedAppointments[
+                                                                            i],
+                                                                        _ratingValue);
+                                                                    if (result ==
+                                                                        "changed") {
+                                                                      await getPrefs();
+                                                                      List<Widget>
+                                                                          patientScreens =
+                                                                          [
+                                                                        const SettingScreen(),
+                                                                        ChatsScreen(),
+                                                                        const PatientHomeScreen(),
+                                                                        NotificationsScreen(),
+                                                                        PatientProfileScreen(
+                                                                            patient:
+                                                                                pt),
+                                                                      ];
+                                                                      Navigator
+                                                                          .pushAndRemoveUntil(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                BottomNavBar(
+                                                                                  screens: patientScreens,
+                                                                                )),
+                                                                        (Route<dynamic>
+                                                                                route) =>
+                                                                            false,
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                  child:
+                                                                      const Text(
+                                                                    'Rate',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          white,
+                                                                      fontSize:
+                                                                          contentFont,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                                child: const Text(
+                                                  '   Rate   ',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ))
+                                            : Column(
+                                                children: [
+                                                  const Text(
+                                                    'Rate',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18),
+                                                  ),
+                                                  RatingBar(
+                                                    ignoreGestures: true,
+                                                    initialRating:
+                                                        endedAppointments[i]
+                                                            .rate,
+                                                    itemSize: 22,
+                                                    direction: Axis.horizontal,
+                                                    allowHalfRating: true,
+                                                    itemCount: 5,
+                                                    tapOnlyMode: true,
+                                                    ratingWidget: RatingWidget(
+                                                        full: const Icon(
+                                                            Icons.star,
+                                                            color:
+                                                                primaryColor),
+                                                        half: const Icon(
+                                                          Icons.star_half,
+                                                          color: primaryColor,
+                                                        ),
+                                                        empty: const Icon(
+                                                          Icons.star_outline,
+                                                          color: primaryColor,
+                                                        )),
+                                                    onRatingUpdate:
+                                                        ((value) {}),
+                                                  )
+                                                ],
                                               ),
-                                            )),
                                       ),
                                     ],
                                   ),

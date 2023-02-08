@@ -322,12 +322,15 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
 
                           var patientName = prefs.getString("FullName");
                           Appointment appointment = Appointment(
-                              ReportId: reportId,
-                              PatientName: patientName,
-                              DoctorName: widget.doctor.username,
-                              Status: "In Progress",
-                              Date: "${_day}/${_month}/${_year}",
-                              Time: "${_fromTime}:00 ${_fromPeriod}");
+                              reportId: reportId,
+                              patientName: patientName,
+                              doctorName: widget.doctor.username,
+                              status: "In Progress",
+                              date: "${_day}/${_month}/${_year}",
+                              time: "${_fromTime}:00 ${_fromPeriod}",
+                              price: widget.doctor.price,
+                              place: widget.doctor.addressLat,
+                              rate: 0);
                           await AddAppointmentToSchedule(
                               day: _day,
                               month: _month,

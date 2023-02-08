@@ -2,31 +2,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 class Appointment {
-  var ReportId;
-  var PatientName;
-  var DoctorName;
-  var Date;
-  var Status;
-  var Time;
-
+  var reportId;
+  var patientName;
+  var doctorName;
+  var date;
+  var status;
+  var time;
+  var price;
+  var place;
+  var rate;
   Appointment(
-      {required this.ReportId,
-      required this.PatientName,
-      required this.DoctorName,
-      required this.Status,
-      required this.Date,
-      required this.Time});
+      {required this.reportId,
+      required this.patientName,
+      required this.doctorName,
+      required this.status,
+      required this.date,
+      required this.time,
+      required this.price,
+      required this.place,
+      required this.rate});
 }
 
 AddAppointment({required Appointment app, context}) async {
   showLoading(context);
   await FirebaseFirestore.instance.collection("Appointments").add({
-    "PatientName": app.PatientName,
-    "DoctorName": app.DoctorName,
-    "ReportId": app.ReportId,
-    "Date": app.Date,
-    "Status": app.Status,
-    "Time": app.Time
+    "PatientName": app.patientName,
+    "DoctorName": app.doctorName,
+    "ReportId": app.reportId,
+    "Date": app.date,
+    "Status": app.status,
+    "Time": app.time,
+    "Price": app.price,
+    "Place": app.place,
+    "Rate": app.rate,
   });
 }
 
@@ -40,13 +48,15 @@ GetDoctorAppointments(doctorName) async {
       .then((value) {
     for (var app in value.docs) {
       Appointment s = Appointment(
-        DoctorName: app.data()["DoctorName"],
-        PatientName: app.data()["PatientName"],
-        ReportId: app.data()["ReportId"],
-        Date: app.data()["Date"],
-        Status: app.data()["Status"],
-        Time: app.data()["Time"],
-      );
+          doctorName: app.data()["DoctorName"],
+          patientName: app.data()["PatientName"],
+          reportId: app.data()["ReportId"],
+          date: app.data()["Date"],
+          status: app.data()["Status"],
+          time: app.data()["Time"],
+          price: app.data()["Price"],
+          place: app.data()["Place"],
+          rate: app.data()["Rate"]);
       appointments.add(s);
     }
   });
@@ -63,13 +73,15 @@ GetEndedAppointments(doctorName) async {
       .then((value) {
     for (var app in value.docs) {
       Appointment s = Appointment(
-        DoctorName: app.data()["DoctorName"],
-        PatientName: app.data()["PatientName"],
-        ReportId: app.data()["ReportId"],
-        Date: app.data()["Date"],
-        Status: app.data()["Status"],
-        Time: app.data()["Time"],
-      );
+          doctorName: app.data()["DoctorName"],
+          patientName: app.data()["PatientName"],
+          reportId: app.data()["ReportId"],
+          date: app.data()["Date"],
+          status: app.data()["Status"],
+          time: app.data()["Time"],
+          place: app.data()["Place"],
+          price: app.data()["Price"],
+          rate: app.data()["Rate"]);
       appointments.add(s);
     }
   });
@@ -86,13 +98,15 @@ GetInProgressAppointments(doctorName) async {
       .then((value) {
     for (var app in value.docs) {
       Appointment s = Appointment(
-        DoctorName: app.data()["DoctorName"],
-        PatientName: app.data()["PatientName"],
-        ReportId: app.data()["ReportId"],
-        Date: app.data()["Date"],
-        Status: app.data()["Status"],
-        Time: app.data()["Time"],
-      );
+          doctorName: app.data()["DoctorName"],
+          patientName: app.data()["PatientName"],
+          reportId: app.data()["ReportId"],
+          date: app.data()["Date"],
+          status: app.data()["Status"],
+          time: app.data()["Time"],
+          place: app.data()["Place"],
+          price: app.data()["Price"],
+          rate: app.data()["Rate"]);
       appointments.add(s);
     }
   });
@@ -102,10 +116,10 @@ GetInProgressAppointments(doctorName) async {
 ChangeAppointmentToEnded(Appointment app) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
-      .where("DoctorName", isEqualTo: app.DoctorName)
-      .where("PatientName", isEqualTo: app.PatientName)
-      .where("Date", isEqualTo: app.Date)
-      .where("Time", isEqualTo: app.Time)
+      .where("DoctorName", isEqualTo: app.doctorName)
+      .where("PatientName", isEqualTo: app.patientName)
+      .where("Date", isEqualTo: app.date)
+      .where("Time", isEqualTo: app.time)
       .get()
       .then((value) async {
     await FirebaseFirestore.instance
@@ -119,10 +133,10 @@ ChangeAppointmentToEnded(Appointment app) async {
 DeleteAppointment(Appointment app) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
-      .where("DoctorName", isEqualTo: app.DoctorName)
-      .where("PatientName", isEqualTo: app.PatientName)
-      .where("Date", isEqualTo: app.Date)
-      .where("Time", isEqualTo: app.Time)
+      .where("DoctorName", isEqualTo: app.doctorName)
+      .where("PatientName", isEqualTo: app.patientName)
+      .where("Date", isEqualTo: app.date)
+      .where("Time", isEqualTo: app.time)
       .get()
       .then((value) async {
     await FirebaseFirestore.instance
@@ -131,4 +145,21 @@ DeleteAppointment(Appointment app) async {
         .delete();
   });
   return "deleted";
+}
+
+UpdateRate(Appointment app, rate) async {
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("DoctorName", isEqualTo: app.doctorName)
+      .where("PatientName", isEqualTo: app.patientName)
+      .where("Date", isEqualTo: app.date)
+      .where("Time", isEqualTo: app.time)
+      .get()
+      .then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Appointments")
+        .doc(value.docs.first.id)
+        .update({"Rate": rate});
+  });
+  return "changed";
 }
