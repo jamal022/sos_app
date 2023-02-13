@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
-import 'package:sos_app/Presentation/PatientScreens/Home/patient_home_screen.dart';
 import '../../../Data/Models/AppointmentModel.dart';
 import '../../../Data/Models/patient.dart';
-import '../../Screens/App_Layout/bottom_nav_bar.dart';
-import '../../Screens/Chats/chats_screen.dart';
-import '../../Screens/Notifications/notifications_screen.dart';
-import '../../Screens/Settings/settings_screen.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-import '../Profile/patient_profile_screen.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   AppointmentsScreen({Key? key}) : super(key: key);
@@ -59,17 +52,18 @@ SliverAppBar showSliverAppBar(String screenTitle) {
 }
 
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
+  _getApp() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString("Id");
+    inProgressAppointments = await GetInProgressAppointments(id);
+    endedAppointments = await GetEndedAppointments(id);
+    setState(() {});
+  }
+
   @override
   void initState() {
-    () async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var id = prefs.getString("Id");
-      inProgressAppointments = await GetInProgressAppointments(id);
-      endedAppointments = await GetEndedAppointments(id);
-      setState(() {});
-    }();
-
     super.initState();
+    _getApp();
   }
 
   @override
@@ -293,33 +287,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                                 var result =
                                                                     await DeleteAppointment(
                                                                         inProgressAppointments[
-                                                                            i]);
+                                                                            i],
+                                                                        context);
                                                                 if (result ==
                                                                     "deleted") {
-                                                                  await getPrefs();
-                                                                  List<Widget>
-                                                                      patientScreens =
-                                                                      [
-                                                                    const SettingScreen(),
-                                                                    ChatsScreen(),
-                                                                    const PatientHomeScreen(),
-                                                                    NotificationsScreen(),
-                                                                    PatientProfileScreen(
-                                                                        patient:
-                                                                            pt),
-                                                                  ];
-                                                                  Navigator
-                                                                      .pushAndRemoveUntil(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            BottomNavBar(
-                                                                              screens: patientScreens,
-                                                                            )),
-                                                                    (Route<dynamic>
-                                                                            route) =>
-                                                                        false,
-                                                                  );
+                                                                  _getApp();
                                                                 }
                                                               },
                                                               child: const Text(
@@ -625,33 +597,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                                     var result = await UpdateRate(
                                                                         endedAppointments[
                                                                             i],
-                                                                        _ratingValue);
+                                                                        _ratingValue,
+                                                                        context);
                                                                     if (result ==
                                                                         "changed") {
-                                                                      await getPrefs();
-                                                                      List<Widget>
-                                                                          patientScreens =
-                                                                          [
-                                                                        const SettingScreen(),
-                                                                        ChatsScreen(),
-                                                                        const PatientHomeScreen(),
-                                                                        NotificationsScreen(),
-                                                                        PatientProfileScreen(
-                                                                            patient:
-                                                                                pt),
-                                                                      ];
-                                                                      Navigator
-                                                                          .pushAndRemoveUntil(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                BottomNavBar(
-                                                                                  screens: patientScreens,
-                                                                                )),
-                                                                        (Route<dynamic>
-                                                                                route) =>
-                                                                            false,
-                                                                      );
+                                                                      _getApp();
                                                                     }
                                                                   },
                                                                   child:

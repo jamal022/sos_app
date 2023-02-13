@@ -268,7 +268,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                   List<Schedule> schedules =
                       await GetSchedulesForPatient(widget.doctor.id);
                   List<Report> reports = await GetReports(patient, context);
-                  Navigator.push(
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AddAppointmentScreen(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 class Appointment {
@@ -41,7 +42,8 @@ AddAppointment({required Appointment app, context}) async {
     "Price": app.price,
     "Place": app.place,
     "Rate": app.rate,
-  });
+  }).then((value) => Navigator.pop(context));
+  return "Added";
 }
 
 GetDoctorAppointments(doctorId) async {
@@ -143,7 +145,7 @@ ChangeAppointmentToEnded(Appointment app) async {
   return "changed";
 }
 
-DeleteAppointment(Appointment app) async {
+DeleteAppointment(Appointment app, context) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
       .where("DoctorId", isEqualTo: app.doctorId)
@@ -156,11 +158,11 @@ DeleteAppointment(Appointment app) async {
         .collection("Appointments")
         .doc(value.docs.first.id)
         .delete();
-  });
+  }).then((value) => Navigator.pop(context));
   return "deleted";
 }
 
-UpdateRate(Appointment app, rate) async {
+UpdateRate(Appointment app, rate, context) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
       .where("DoctorId", isEqualTo: app.doctorId)
@@ -173,6 +175,6 @@ UpdateRate(Appointment app, rate) async {
         .collection("Appointments")
         .doc(value.docs.first.id)
         .update({"Rate": rate});
-  });
+  }).then((value) => Navigator.pop(context));
   return "changed";
 }

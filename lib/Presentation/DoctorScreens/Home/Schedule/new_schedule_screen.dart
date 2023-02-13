@@ -292,7 +292,10 @@ class _NewScheduleScreenState extends State<NewScheduleScreen> {
                     maxNbAppointments: maxNbController.text,
                     nbAppointments: 0);
 
-                await AddSchedule(sch, context);
+                var result = await AddSchedule(sch, context);
+                if (result == "Added") {
+                  Navigator.pop(context, "refresh");
+                }
               },
               child: const Text(
                 'Add',

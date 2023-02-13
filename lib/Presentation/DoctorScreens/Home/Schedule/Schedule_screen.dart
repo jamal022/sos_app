@@ -25,6 +25,19 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     });
   }
 
+  _getSchedules() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString("Id");
+    schedules = await GetSchedulesForDoctor(id);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getSchedules();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -105,6 +118,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                           await DeleteSchedule(schedule);
                                       if (result == "deleted") {
                                         Navigator.pop(ctx);
+                                        _getSchedules();
                                       }
                                     },
                                     child: const Text(
@@ -158,11 +172,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       //Navigate the date you choose
                       onClick: (value) async {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        var id = prefs.getString("Id");
-                        schedules = await GetSchedulesForDoctor(id);
-
                         for (var i = 0; i < schedules.length; i++) {
                           if (schedules[i].day == value.day &&
                               schedules[i].month == value.month &&
@@ -246,11 +255,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           ]),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            var result = await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => NewScheduleScreen()),
             );
+            if (result == "refresh") {
+              _getSchedules();
+            }
           },
           backgroundColor: primaryColor,
           child: const Icon(Icons.add),

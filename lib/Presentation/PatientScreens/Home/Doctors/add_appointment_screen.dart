@@ -186,10 +186,6 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                             ),
                           ).show();
                         } else {
-                          print(
-                              "=============${widget.schedules[i].maxNbAppointments}=============");
-                          print(
-                              "================${widget.schedules[i].nbAppointments}==================");
                           setState(() {
                             schedule = widget.schedules[i];
                             _fromTime = widget.schedules[i].fromTime;
@@ -342,27 +338,10 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               year: _year,
                               doctorId: widget.doctor.id);
 
-                          await AddAppointment(
+                          var result = await AddAppointment(
                               app: appointment, context: context);
 
-                          await getPrefs();
-
-                          List<Widget> patientScreens = [
-                            const SettingScreen(),
-                            ChatsScreen(),
-                            const PatientHomeScreen(),
-                            NotificationsScreen(),
-                            PatientProfileScreen(patient: pt),
-                          ];
-
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BottomNavBar(
-                                      screens: patientScreens,
-                                    )),
-                            (Route<dynamic> route) => false,
-                          );
+                          Navigator.pop(context);
                         }
                       },
                       child: const Text('Confirm',

@@ -73,41 +73,8 @@ AddSchedule(Schedule schedule, context) async {
       "ToPeriod": schedule.toPeriod,
       "MaxNbOfAppointments": schedule.maxNbAppointments,
       "NbOfAppointments": schedule.nbAppointments,
-    }).then((value) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      Doctor doc = Doctor(
-        id: prefs.getString("Id"),
-        username: prefs.getString("FullName"),
-        email: prefs.getString("Email"),
-        password: prefs.getString("Password"),
-        phoneNumber: prefs.getString("PhoneNumber"),
-        age: prefs.getString("Age"),
-        gender: prefs.getString("Gender"),
-        image: prefs.getString("Image"),
-        field: prefs.getString("Field"),
-        experience: prefs.getString("YearsOfExperience"),
-        price: prefs.getString("TicketPrice"),
-        bio: prefs.getString("Bio"),
-        addressLat: prefs.getString("AddressLatitude"),
-        addressLong: prefs.getString("AddressLongitude"),
-      );
-
-      List<Widget> doctorScreens = [
-        const SettingScreen(),
-        ChatsScreen(),
-        const DoctorHomeScreen(),
-        NotificationsScreen(),
-        DoctorProfileScreen(doctor: doc),
-      ];
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => BottomNavBar(
-                  screens: doctorScreens,
-                )),
-        (Route<dynamic> route) => false,
-      );
-    });
+    }).then((value) => Navigator.pop(context));
+    return "Added";
   }
 }
 
