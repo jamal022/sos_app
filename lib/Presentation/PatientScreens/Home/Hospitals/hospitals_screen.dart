@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Views/hospital_card_widget.dart';
+import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
 import '../../../Widgets/search_widget.dart';
 
@@ -10,7 +11,22 @@ class HospitalsScreen extends StatefulWidget {
   State<HospitalsScreen> createState() => _HospitalsScreenState();
 }
 
+List<Hospital> hospitalsList = [];
+
+getHospitals() async {
+  hospitalsList = await getHospitals();
+}
+
 class _HospitalsScreenState extends State<HospitalsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    () async {
+      await getHospitals();
+      setState(() {});
+    }();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -45,7 +61,7 @@ class _HospitalsScreenState extends State<HospitalsScreen> {
         body: SingleChildScrollView(
           child: Column(children: [
             Container(
-              color: Color.fromARGB(253, 243, 222, 195),
+              color: const Color.fromARGB(253, 243, 222, 195),
               //width: MediaQuery.of(context).size.width * 0.65,
 
               child: Column(children: <Widget>[
@@ -53,10 +69,11 @@ class _HospitalsScreenState extends State<HospitalsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(15),
                           child: Column(
                             children: [
-                              for (var i = 0; i < 3; i++) HospitalCard()
+                              for (var hos in hospitalsList)
+                                HospitalCard(hospital: hos)
                             ],
                           ))
                     ])

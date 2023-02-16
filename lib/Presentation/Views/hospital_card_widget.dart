@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Hospitals/hospital_page_screen.dart';
 
+import '../../Data/Models/HospitalModel.dart';
+
 class HospitalCard extends StatefulWidget {
-  HospitalCard({super.key});
+  Hospital hospital;
+  HospitalCard({super.key, required this.hospital});
 
   @override
   State<HospitalCard> createState() => _HospitalCard();
@@ -19,15 +22,18 @@ class _HospitalCard extends State<HospitalCard> {
           leading: Container(
             height: 70,
             width: 70,
-            child: Image.asset(
-              "assets/images/R.jpg",
+            child: Image.network(
+              widget.hospital.image,
               fit: BoxFit.fill,
             ),
           ),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HospitalPageScreen()),
+              MaterialPageRoute(
+                  builder: (context) => HospitalPageScreen(
+                        hospital: widget.hospital,
+                      )),
             );
           },
           title: Padding(
@@ -35,7 +41,7 @@ class _HospitalCard extends State<HospitalCard> {
             child: Column(
               children: [
                 Text(
-                  "Hospital Name",
+                  widget.hospital.name,
                   style: const TextStyle(
                     fontSize: 22,
                     color: Colors.black,
@@ -45,9 +51,9 @@ class _HospitalCard extends State<HospitalCard> {
                 const SizedBox(
                   height: 10,
                 ), //SizedBox
-                Text(
+                const Text(
                   "Location : Giza",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
                     color: Color.fromARGB(255, 90, 84, 84),
                   ), //Textstyle
@@ -56,9 +62,9 @@ class _HospitalCard extends State<HospitalCard> {
                   height: 5,
                 ),
 
-                Text(
+                const Text(
                   "City : Giza",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
                     color: Color.fromARGB(255, 90, 84, 84),
                   ), //Textstyle

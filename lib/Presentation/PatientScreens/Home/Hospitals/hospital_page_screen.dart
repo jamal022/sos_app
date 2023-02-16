@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
+import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
 
 class HospitalPageScreen extends StatefulWidget {
-  const HospitalPageScreen({super.key});
+  Hospital hospital;
+  HospitalPageScreen({super.key, required this.hospital});
 
   @override
   State<HospitalPageScreen> createState() => _HospitalPageScreenState();
@@ -17,9 +16,9 @@ class _HospitalPageScreenState extends State<HospitalPageScreen> {
     return Scaffold(
         backgroundColor: const Color.fromARGB(253, 243, 222, 195),
         appBar: AppBar(
-          title: const Text(
-            "\t\tHospital Name",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+          title: Text(
+            "\t\t${widget.hospital.name}",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
           ),
           centerTitle: true,
           toolbarHeight: 60.2,
@@ -33,8 +32,8 @@ class _HospitalPageScreenState extends State<HospitalPageScreen> {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/images/R.jpg"),
+                    image: DecorationImage(
+                      image: NetworkImage(widget.hospital.image),
                       fit: BoxFit.fill,
                     )),
                 height: 220,
@@ -44,89 +43,89 @@ class _HospitalPageScreenState extends State<HospitalPageScreen> {
                 child: Column(children: <Widget>[
               Card(
                 elevation: 5,
-                margin: EdgeInsets.fromLTRB(15.0, 10, 15, 10),
+                margin: const EdgeInsets.fromLTRB(15.0, 10, 15, 10),
                 color: white,
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.phone_android_outlined,
                       size: 45,
                       color: black,
                     ),
-                    title: Text(
+                    title: const Text(
                       "Give us a Call",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "  +0222103815\n  +0233109276",
-                      style: TextStyle(fontSize: 16),
+                      "  ${widget.hospital.telephone1}\n  ${widget.hospital.telephone2}",
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
               ),
               Card(
                 elevation: 5,
-                margin: EdgeInsets.fromLTRB(15.0, 10, 15, 10),
+                margin: const EdgeInsets.fromLTRB(15.0, 10, 15, 10),
                 color: white,
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.phone,
                       size: 45,
                       color: black,
                     ),
-                    title: Text(
+                    title: const Text(
                       "Give us an Ambulance Call",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "  16648",
-                      style: TextStyle(fontSize: 16),
+                      "  ${widget.hospital.ambulancePhone}",
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
               ),
               Card(
                 elevation: 5,
-                margin: EdgeInsets.fromLTRB(15.0, 10, 15, 10),
+                margin: const EdgeInsets.fromLTRB(15.0, 10, 15, 10),
                 color: white,
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.mail_outlined,
                       size: 45,
                       color: black,
                     ),
-                    title: Text(
+                    title: const Text(
                       "Send us a message",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "  sosApp@gmail.com",
-                      style: TextStyle(fontSize: 16),
+                      "  ${widget.hospital.email}",
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
               ),
               Card(
                 elevation: 5,
-                margin: EdgeInsets.fromLTRB(15.0, 10, 15, 10),
+                margin: const EdgeInsets.fromLTRB(15.0, 10, 15, 10),
                 color: white,
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.location_on_outlined,
                       size: 45,
                       color: black,
                     ),
-                    title: Text(
+                    title: const Text(
                       "Visit our Location",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
