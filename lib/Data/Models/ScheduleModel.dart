@@ -2,15 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Data/Models/doctor.dart';
-import 'package:sos_app/Presentation/Screens/App_Layout/bottom_nav_bar.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
-import '../../Presentation/DoctorScreens/Home/doctor_home_screen.dart';
-import '../../Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
-import '../../Presentation/Screens/Chats/chats_screen.dart';
-import '../../Presentation/Screens/Notifications/notifications_screen.dart';
-import '../../Presentation/Screens/Settings/settings_screen.dart';
 
 class Schedule {
   var doctorId;

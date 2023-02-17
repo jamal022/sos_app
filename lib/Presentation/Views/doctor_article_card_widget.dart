@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/ArticlesModel.dart';
-
+import 'package:sos_app/Presentation/DoctorScreens/Home/Articles/specific_article_screen.dart';
 import '../Styles/colors.dart';
 
 class DoctorArticleCard extends StatefulWidget {
@@ -89,14 +89,12 @@ class _DoctorArticleCardState extends State<DoctorArticleCard> {
                   child: Container(
                     margin: const EdgeInsets.all(7.0),
                     alignment: Alignment.topLeft,
-                    child: Center(
-                      child: Text(
-                        widget.article.content,
-                        style: const TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                    child: Text(
+                      widget.article.content,
+                      style: const TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -104,136 +102,27 @@ class _DoctorArticleCardState extends State<DoctorArticleCard> {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(children: [
-                  Container(
-                    width: size.width / 3.0,
-                    height: size.height / 20.5,
-                    alignment: Alignment.bottomLeft,
-                    /*
-                              child: MaterialButton(
-                                  elevation: 6.0,
-                                  color: primaryColor,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                  shape: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Like',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ))
-                                  */
-                    child: CupertinoButton(
-                      minSize: 20,
-                      padding: const EdgeInsets.all(0), // remove button padding
-                      color: CupertinoColors.white.withOpacity(
-                          0), // use this to make default color to transparent
-                      child: Container(
-                        // wrap the text/widget using container
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 9, horizontal: 30), // add padding
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 0, 122, 255),
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(50)), // radius as you wish
-                        ),
-                        child: Wrap(
-                          children: const [
-                            Icon(
-                              size: 23,
-                              CupertinoIcons.hand_thumbsdown_fill,
-                              color: CupertinoColors.black,
-                            ),
-                            Text(
-                              " Like",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: CupertinoColors.systemBlue),
-                            )
-                          ],
-                        ),
-                      ),
-                      onPressed: () {
-                        // on press action
-                      },
-                    ),
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(fontSize: 18),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: 'See Details',
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 24, 111, 183)),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              var result = Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SpecificArticleScreen(
+                                          article: widget.article,
+                                        )),
+                              );
+                            }),
+                    ],
                   ),
-                  const Spacer(),
-                  Container(
-                    width: size.width / 3.0,
-                    height: size.height / 20.5,
-                    alignment: Alignment.bottomRight,
-                    /*
-                              child: MaterialButton(
-                                  elevation: 6.0,
-                                  color: primaryColor,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                  shape: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Like',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ))
-                                  */
-                    child: CupertinoButton(
-                      minSize: 20,
-                      padding: const EdgeInsets.all(0), // remove button padding
-                      color: CupertinoColors.white.withOpacity(
-                          0), // use this to make default color to transparent
-                      child: Container(
-                        // wrap the text/widget using container
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 9, horizontal: 20), // add padding
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromRGBO(255, 45, 85, 1),
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(50)), // radius as you wish
-                        ),
-                        child: Wrap(
-                          children: const [
-                            Icon(
-                              size: 23,
-                              CupertinoIcons.hand_thumbsup_fill,
-                              color: CupertinoColors.black,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              " DisLike",
-                              style: TextStyle(
-                                  fontSize: 19,
-                                  color: CupertinoColors.systemPink),
-                            )
-                          ],
-                        ),
-                      ),
-                      onPressed: () {
-                        // on press action
-                      },
-                    ),
-                  ),
-                ]),
+                ),
               ]),
             ])));
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ArticlesModel.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 

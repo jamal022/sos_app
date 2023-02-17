@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:sos_app/Data/Models/ArticlesLikesModel.dart';
 import '../../../Data/Models/ArticlesModel.dart';
 import '../../Styles/colors.dart';
 import '../../Views/doctor_article_card_widget.dart';
@@ -14,6 +13,7 @@ class ArticlesScreen extends StatefulWidget {
 
 class _ArticlesScreenState extends State<ArticlesScreen> {
   List<Article> articles = [];
+  List<ArticleLikes> likes = [];
   _getArticles() async {
     articles = await GetAllArticles();
     setState(() {});
@@ -32,7 +32,6 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
       backgroundColor: back,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        elevation: 0,
         centerTitle: true,
         toolbarHeight: 64.5,
         title: const Text('Articles',

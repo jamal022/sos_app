@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../Presentation/Widgets/loading_widget.dart';
 
 class Article {
+  var articleId;
   var doctorId;
   var doctorName;
   var doctorImage;
@@ -12,6 +13,7 @@ class Article {
   var dislikes;
 
   Article({
+    this.articleId,
     required this.doctorId,
     required this.doctorName,
     required this.doctorField,
@@ -41,6 +43,7 @@ GetAllArticles() async {
   await FirebaseFirestore.instance.collection("Articles").get().then((value) {
     for (var art in value.docs) {
       Article a = Article(
+          articleId: art.id,
           doctorId: art.data()["DoctorId"],
           doctorName: art.data()["DoctorName"],
           doctorImage: art.data()["DoctorImage"],
@@ -52,4 +55,104 @@ GetAllArticles() async {
     }
   });
   return articles;
+}
+
+AddLikeToArticle(articleId) async {
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .doc(articleId)
+      .get()
+      .then((value) async {
+    var like;
+    if (value.data()!["Likes"] == 0) {
+      like = 1;
+    } else {
+      like = value.data()!["Likes"] + 1;
+    }
+    await FirebaseFirestore.instance
+        .collection("Articles")
+        .doc(value.id)
+        .update({"Likes": like});
+  });
+}
+
+DeleteLikeFromArticle(articleId) async {
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .doc(articleId)
+      .get()
+      .then((value) async {
+    var like;
+    if (value.data()!["Likes"] == 0) {
+      like = 0;
+    } else {
+      like = value.data()!["Likes"] - 1;
+    }
+    await FirebaseFirestore.instance
+        .collection("Articles")
+        .doc(value.id)
+        .update({"Likes": like});
+  });
+}
+
+AddDislikeToArticle(articleId) async {
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .doc(articleId)
+      .get()
+      .then((value) async {
+    var dislike;
+    if (value.data()!["Dislikes"] == 0) {
+      dislike = 1;
+    } else {
+      dislike = value.data()!["Dislikes"] + 1;
+    }
+    await FirebaseFirestore.instance
+        .collection("Articles")
+        .doc(value.id)
+        .update({"Dislikes": dislike});
+  });
+}
+
+DeleteDislikeFromArticle(articleId) async {
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .doc(articleId)
+      .get()
+      .then((value) async {
+    var dislike;
+    if (value.data()!["Dislikes"] == 0) {
+      dislike = 0;
+    } else {
+      dislike = value.data()!["Dislikes"] - 1;
+    }
+    await FirebaseFirestore.instance
+        .collection("Articles")
+        .doc(value.id)
+        .update({"Dislikes": dislike});
+  });
+}
+
+GetLikes(articleId) async {
+  var likes = 0;
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .doc(articleId)
+      .get()
+      .then((value) {
+    likes = value.data()!["Likes"];
+  });
+  return likes;
+}
+
+GetDislikes(articleId) async {
+  var dislikes = 0;
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .doc(articleId)
+      .get()
+      .then((value) {
+    dislikes = value.data()!["Dislikes"];
+  });
+  return dislikes;
 }
