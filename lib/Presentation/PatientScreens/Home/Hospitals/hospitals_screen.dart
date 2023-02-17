@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Views/hospital_card_widget.dart';
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
-import '../../../Widgets/search_widget.dart';
+import '../../../Widgets/doctor_search_widget.dart';
+import '../../../Widgets/hospital_search_widget.dart';
 
 class HospitalsScreen extends StatefulWidget {
   HospitalsScreen({Key? key}) : super(key: key);
@@ -13,18 +14,16 @@ class HospitalsScreen extends StatefulWidget {
 
 List<Hospital> hospitalsList = [];
 
-getHospitals() async {
-  hospitalsList = await getHospitals();
-}
-
 class _HospitalsScreenState extends State<HospitalsScreen> {
+  getHospitals() async {
+    hospitalsList = await GetHospitals();
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
-    () async {
-      await getHospitals();
-      setState(() {});
-    }();
+    getHospitals();
   }
 
   @override
@@ -51,7 +50,7 @@ class _HospitalsScreenState extends State<HospitalsScreen> {
                   showSearch(
                       context: context,
                       // delegate to customize the search bar
-                      delegate: CustomSearchDelegate());
+                      delegate: HospitalSearchDelegate());
                 },
                 icon: const Icon(Icons.search),
               ),

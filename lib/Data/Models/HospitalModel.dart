@@ -20,26 +20,23 @@ class Hospital {
     required this.ambulancePhone,
     required this.email,
   });
+}
 
-  GetHospitals() async {
-    List<Hospital> hospitals = [];
-    await FirebaseFirestore.instance
-        .collection("Hospitals")
-        .get()
-        .then((value) {
-      for (var hos in value.docs) {
-        Hospital h = Hospital(
-            name: hos.data()["Name"],
-            image: hos.data()["Image"],
-            email: hos.data()["Email"],
-            telephone1: hos.data()["Telephone1"],
-            telephone2: hos.data()["Telephone2"],
-            ambulancePhone: hos.data()["AmbulancePhone"],
-            addressLang: hos.data()["AddressLang"],
-            addressLong: hos.data()["AddressLong"]);
-        hospitals.add(h);
-      }
-    });
-    return hospitals;
-  }
+GetHospitals() async {
+  List<Hospital> hospitals = [];
+  await FirebaseFirestore.instance.collection("Hospitals").get().then((value) {
+    for (var hos in value.docs) {
+      Hospital h = Hospital(
+          name: hos.data()["Name"],
+          image: hos.data()["Image"],
+          email: hos.data()["Email"],
+          telephone1: hos.data()["Telephone1"],
+          telephone2: hos.data()["Telephone2"],
+          ambulancePhone: hos.data()["AmbulancePhone"],
+          addressLang: hos.data()["AddressLang"],
+          addressLong: hos.data()["AddressLong"]);
+      hospitals.add(h);
+    }
+  });
+  return hospitals;
 }

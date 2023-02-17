@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Presentation/Views/doctor_card_widget.dart';
 import '../../../Styles/colors.dart';
-import '../../../Widgets/search_widget.dart';
+import '../../../Widgets/doctor_search_widget.dart';
 
 class DoctorsScreen extends StatefulWidget {
   DoctorsScreen({Key? key}) : super(key: key);
@@ -51,7 +51,7 @@ class _DoctorsScreen extends State<DoctorsScreen> {
                 showSearch(
                     context: context,
                     // delegate to customize the search bar
-                    delegate: CustomSearchDelegate());
+                    delegate: DoctorSearchDelegate());
               },
               icon: const Icon(Icons.search),
             ),

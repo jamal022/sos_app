@@ -1,12 +1,14 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Data/Models/HospitalModel.dart';
 import 'package:sos_app/Data/Models/doctor.dart';
+import 'package:sos_app/Presentation/PatientScreens/Home/Hospitals/hospital_page_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
-import 'package:sos_app/Presentation/Views/doctor_card_widget.dart';
-
 import '../PatientScreens/Home/Doctors/doctor_page_screen.dart';
 
-class CustomSearchDelegate extends SearchDelegate {
+class HospitalSearchDelegate extends SearchDelegate {
 // clear the search text
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -35,14 +37,31 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection("Doctors")
-          .where("FullName", isEqualTo: query)
-          .snapshots(),
+      stream: FirebaseFirestore.instance.collection("Hospitals").snapshots(),
       builder: (context, snapshot) {
-        var results;
+        List<Hospital> hospitals = [];
+        List<String> names = [];
+        List<Hospital> results = [];
         if (snapshot.data!.docs.isNotEmpty) {
-          results = snapshot.data!.docs;
+          for (var hos in snapshot.data!.docs) {
+            Hospital hospital = Hospital(
+              name: hos.data()["Name"],
+              ambulancePhone: hos.data()["AmbulancePhone"],
+              telephone1: hos.data()["Telephone1"],
+              telephone2: hos.data()["Telephone2"],
+              email: hos.data()["Email"],
+              image: hos.data()["Image"],
+              addressLang: hos.data()["AddressLang"],
+              addressLong: hos.data()["AddressLong"],
+            );
+            hospitals.add(hospital);
+            names.add(hospital.name);
+          }
+          for (var i = 0; i < names.length; i++) {
+            if (names[i].toLowerCase().contains(query)) {
+              results.add(hospitals[i]);
+            }
+          }
         } else {
           return const Center(
               child: Text(
@@ -58,30 +77,23 @@ class CustomSearchDelegate extends SearchDelegate {
                 .map<Widget>(
                   (element) => ListTile(
                     title: Text(
-                      element.data()["FullName"],
+                      element.name,
                       style: const TextStyle(fontSize: 20),
                     ),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DoctorPageScreen(
-                              doctor: Doctor(
-                                  id: element.id,
-                                  username: element.data()['FullName'],
-                                  email: element.data()['Email'],
-                                  phoneNumber: element.data()['PhoneNumber'],
-                                  password: element.data()['Password'],
-                                  age: element.data()['Age'],
-                                  gender: element.data()['Gender'],
-                                  image: element.data()['Image'],
-                                  addressLat: element.data()['AddressLat'],
-                                  addressLong: element.data()['AddressLong'],
-                                  bio: element.data()['Bio'],
-                                  experience:
-                                      element.data()['YearsOfExperience'],
-                                  field: element.data()['Field'],
-                                  price: element.data()['TicketPrice']),
+                            builder: (context) => HospitalPageScreen(
+                              hospital: Hospital(
+                                  addressLang: element.addressLang,
+                                  addressLong: element.addressLong,
+                                  name: element.name,
+                                  ambulancePhone: element.ambulancePhone,
+                                  email: element.email,
+                                  image: element.image,
+                                  telephone1: element.telephone1,
+                                  telephone2: element.telephone2),
                             ),
                           ));
                     },
