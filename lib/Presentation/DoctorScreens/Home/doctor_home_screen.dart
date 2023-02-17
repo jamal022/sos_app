@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/Articles/articles_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Schedule/Schedule_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Appointments/appointments_screen.dart';
-import 'package:sos_app/Presentation/DoctorScreens/Home/articles_screen.dart';
-import 'package:sos_app/Presentation/PatientScreens/Home/commuinty_screen.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/community_screen.dart';
+
 import '../../Styles/colors.dart';
 import '../../Views/home_card_widget.dart';
 
@@ -49,7 +50,7 @@ class _DoctorHomeScreen extends State<DoctorHomeScreen> {
                   mainAxisSpacing: 20,
                   maxCrossAxisExtent: 200.0,
                   children: <Widget>[
-                    for (var i = 0; i < 4; i++)
+                    for (var i = 0; i < screens.length; i++)
                       HomeCardWidget(
                         screen: screens[i],
                         text: texts[i],
