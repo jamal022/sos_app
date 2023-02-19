@@ -13,6 +13,19 @@ class DoctorArticleCard extends StatefulWidget {
 }
 
 class _DoctorArticleCardState extends State<DoctorArticleCard> {
+  var likesCount = 0, dislikesCount = 0;
+  _getLike() async {
+    likesCount = await GetLikes(widget.article.articleId);
+    dislikesCount = await GetDislikes(widget.article.articleId);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getLike();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -57,7 +70,7 @@ class _DoctorArticleCardState extends State<DoctorArticleCard> {
                         width: 5,
                       ),
                       Text(
-                        "${widget.article.likes}",
+                        "${likesCount}",
                         style: const TextStyle(fontSize: 20),
                       ),
                       const SizedBox(
@@ -71,7 +84,7 @@ class _DoctorArticleCardState extends State<DoctorArticleCard> {
                         width: 5,
                       ),
                       Text(
-                        "${widget.article.dislikes}",
+                        "${dislikesCount}",
                         style: const TextStyle(fontSize: 20),
                       ),
                       const SizedBox(
@@ -111,14 +124,17 @@ class _DoctorArticleCardState extends State<DoctorArticleCard> {
                           style: const TextStyle(
                               color: Color.fromARGB(255, 24, 111, 183)),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              var result = Navigator.push(
+                            ..onTap = () async {
+                              var result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SpecificArticleScreen(
                                           article: widget.article,
                                         )),
                               );
+                              if (result == "refresh") {
+                                _getLike();
+                              }
                             }),
                     ],
                   ),
