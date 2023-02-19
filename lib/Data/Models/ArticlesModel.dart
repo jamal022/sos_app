@@ -156,3 +156,26 @@ GetDislikes(articleId) async {
   });
   return dislikes;
 }
+
+GetSpecificDoctorArticles(doctorId) async {
+  List<Article> articles = [];
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .where("DoctorId", isEqualTo: doctorId)
+      .get()
+      .then((value) {
+    for (var art in value.docs) {
+      Article a = Article(
+          articleId: art.id,
+          doctorId: art.data()["DoctorId"],
+          doctorName: art.data()["DoctorName"],
+          doctorImage: art.data()["DoctorImage"],
+          doctorField: art.data()["DoctorField"],
+          content: art.data()["Content"],
+          likes: art.data()["Likes"],
+          dislikes: art.data()["Dislikes"]);
+      articles.add(a);
+    }
+  });
+  return articles;
+}

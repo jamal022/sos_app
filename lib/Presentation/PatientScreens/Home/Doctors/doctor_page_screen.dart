@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ReportModel.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment_screen.dart';
+import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/doctor_articles_screen.dart';
 import '../../../../Data/Models/doctor.dart';
 import '../../../../Data/Models/patient.dart';
 import '../../../Styles/colors.dart';
@@ -15,7 +21,40 @@ class DoctorPageScreen extends StatefulWidget {
   State<DoctorPageScreen> createState() => _DoctorPageScreen();
 }
 
+CameraPosition? kGooglePlex;
+
+List<Placemark> placemarks = [];
+
+late GoogleMapController gmc;
+
+Set<Marker> mymarkers = {};
+
 class _DoctorPageScreen extends State<DoctorPageScreen> {
+  Future _getLatAndLong() async {
+    kGooglePlex = CameraPosition(
+      target: LatLng(double.parse(widget.doctor.addressLat),
+          double.parse(widget.doctor.addressLong)),
+      zoom: 12.0,
+    );
+
+    mymarkers.add(Marker(
+      markerId: MarkerId("initial"),
+      position: LatLng(double.parse(widget.doctor.addressLat),
+          double.parse(widget.doctor.addressLong)),
+    ));
+    placemarks = await placemarkFromCoordinates(
+        double.parse(widget.doctor.addressLat),
+        double.parse(widget.doctor.addressLong));
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getLatAndLong();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -84,7 +123,15 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DoctotArticlesScreen(
+                                      doctor: widget.doctor,
+                                    )),
+                          );
+                        },
                         icon: const Icon(
                           Icons.newspaper_outlined,
                           size: 25,
@@ -112,35 +159,44 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                   Row(children: [
                     Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             widget.doctor.field,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                              fontSize: 20,
                             ),
                           ),
-                          Text('Address',
+                          Text(
+                              '${placemarks[0].locality},${placemarks[0].country}',
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: Colors.black.withOpacity(0.5)))
                         ],
                       ),
                     ),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.location_on_rounded,
-                                size: 30,
-                                color: Colors.black,
-                              ))
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Container(
+                          height: 60,
+                          width: 50,
+                          child: GoogleMap(
+                            mapType: MapType.normal,
+                            initialCameraPosition: kGooglePlex!,
+                            onMapCreated: (GoogleMapController controller) {
+                              gmc = controller;
+                            },
+                            markers: mymarkers,
+                            onTap: (argument) {
+                              MapsLauncher.launchCoordinates(
+                                  argument.latitude,
+                                  argument.longitude,
+                                  "${widget.doctor.username}'s location");
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ]),
