@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Hospitals/hospital_page_screen.dart';
-
 import '../../Data/Models/HospitalModel.dart';
 
 class HospitalCard extends StatefulWidget {
   Hospital hospital;
-  HospitalCard({super.key, required this.hospital});
+  Placemark placemarks;
+  HospitalCard({super.key, required this.hospital, required this.placemarks});
 
   @override
   State<HospitalCard> createState() => _HospitalCard();
@@ -54,9 +55,9 @@ class _HospitalCard extends State<HospitalCard> {
                   const SizedBox(
                     height: 10,
                   ), //SizedBox
-                  const Text(
-                    "Location : Giza",
-                    style: TextStyle(
+                  Text(
+                    "Location : ${widget.placemarks.locality}",
+                    style: const TextStyle(
                       fontSize: 17,
                       color: Color.fromARGB(255, 90, 84, 84),
                     ), //Textstyle
@@ -65,9 +66,9 @@ class _HospitalCard extends State<HospitalCard> {
                     height: 5,
                   ),
 
-                  const Text(
-                    "City : Giza",
-                    style: TextStyle(
+                  Text(
+                    "Country : ${widget.placemarks.country}",
+                    style: const TextStyle(
                       fontSize: 17,
                       color: Color.fromARGB(255, 90, 84, 84),
                     ), //Textstyle

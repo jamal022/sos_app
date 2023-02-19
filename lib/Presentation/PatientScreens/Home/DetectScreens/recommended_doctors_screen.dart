@@ -19,8 +19,6 @@ class RecommendedDoctorsScreen extends StatefulWidget {
 }
 
 CameraPosition? kGooglePlex;
-final Completer<GoogleMapController> _controller =
-    Completer<GoogleMapController>();
 
 var lat;
 var long;

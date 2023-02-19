@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
 
@@ -10,7 +13,40 @@ class HospitalPageScreen extends StatefulWidget {
   State<HospitalPageScreen> createState() => _HospitalPageScreenState();
 }
 
+CameraPosition? kGooglePlex;
+
+List<Placemark> placemarks = [];
+
+late GoogleMapController gmc;
+
+Set<Marker> mymarkers = {};
+
 class _HospitalPageScreenState extends State<HospitalPageScreen> {
+  Future _getLatAndLong() async {
+    kGooglePlex = CameraPosition(
+      target: LatLng(double.parse(widget.hospital.addressLang),
+          double.parse(widget.hospital.addressLong)),
+      zoom: 12.0,
+    );
+
+    mymarkers.add(Marker(
+      markerId: MarkerId("initial"),
+      position: LatLng(double.parse(widget.hospital.addressLang),
+          double.parse(widget.hospital.addressLong)),
+    ));
+    placemarks = await placemarkFromCoordinates(
+        double.parse(widget.hospital.addressLang),
+        double.parse(widget.hospital.addressLong));
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getLatAndLong();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +166,24 @@ class _HospitalPageScreenState extends State<HospitalPageScreen> {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Image.asset("assets/images/R.jpg"),
+                    subtitle: Container(
+                      height: 150,
+                      width: 60,
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        initialCameraPosition: kGooglePlex!,
+                        onMapCreated: (GoogleMapController controller) {
+                          gmc = controller;
+                        },
+                        markers: mymarkers,
+                        onTap: (argument) {
+                          MapsLauncher.launchCoordinates(
+                              argument.latitude,
+                              argument.longitude,
+                              "${widget.hospital.name}'s location");
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),

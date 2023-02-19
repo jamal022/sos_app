@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:sos_app/Presentation/Views/hospital_card_widget.dart';
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
-import '../../../Widgets/doctor_search_widget.dart';
 import '../../../Widgets/hospital_search_widget.dart';
 
 class HospitalsScreen extends StatefulWidget {
@@ -13,17 +13,22 @@ class HospitalsScreen extends StatefulWidget {
 }
 
 List<Hospital> hospitalsList = [];
+List<Placemark> placemarks = [];
 
 class _HospitalsScreenState extends State<HospitalsScreen> {
-  getHospitals() async {
+  _getHospitals() async {
     hospitalsList = await GetHospitals();
+    for (var hos in hospitalsList) {
+      placemarks = await placemarkFromCoordinates(
+          double.parse(hos.addressLang), double.parse(hos.addressLong));
+    }
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    getHospitals();
+    _getHospitals();
   }
 
   @override
@@ -71,8 +76,11 @@ class _HospitalsScreenState extends State<HospitalsScreen> {
                           padding: const EdgeInsets.all(15),
                           child: Column(
                             children: [
-                              for (var hos in hospitalsList)
-                                HospitalCard(hospital: hos)
+                              for (var i = 0; i < hospitalsList.length; i++)
+                                HospitalCard(
+                                  hospital: hospitalsList[i],
+                                  placemarks: placemarks[i],
+                                )
                             ],
                           ))
                     ])
