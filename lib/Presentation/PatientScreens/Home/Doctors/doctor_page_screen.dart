@@ -11,6 +11,7 @@ import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment
 import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/doctor_articles_screen.dart';
 import '../../../../Data/Models/doctor.dart';
 import '../../../../Data/Models/patient.dart';
+import '../../../Screens/Chats/chat_page_screen.dart';
 import '../../../Styles/colors.dart';
 
 class DoctorPageScreen extends StatefulWidget {
@@ -28,6 +29,8 @@ List<Placemark> placemarks = [];
 late GoogleMapController gmc;
 
 Set<Marker> mymarkers = {};
+
+Patient patient = Patient();
 
 class _DoctorPageScreen extends State<DoctorPageScreen> {
   Future _getLatAndLong() async {
@@ -53,6 +56,17 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
     // TODO: implement initState
     super.initState();
     _getLatAndLong();
+    () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      patient.username = prefs.getString("FullName");
+      patient.email = prefs.getString("Email");
+      patient.phoneNumber = prefs.getString("PhoneNumber");
+      patient.password = prefs.getString("Password");
+      patient.age = prefs.getString("Age");
+      patient.gender = prefs.getString("Gender");
+      patient.image = prefs.getString("Image");
+      setState(() {});
+    }();
   }
 
   @override
@@ -96,7 +110,32 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Doctor doc = Doctor(
+                              username: widget.doctor.username,
+                              email: widget.doctor.email,
+                              phoneNumber: widget.doctor.phoneNumber,
+                              password: widget.doctor.password,
+                              age: widget.doctor.age,
+                              gender: widget.doctor.gender,
+                              image: widget.doctor.image,
+                              field: widget.doctor.field,
+                              experience: widget.doctor.experience,
+                              price: widget.doctor.price,
+                              addressLat: widget.doctor.addressLat,
+                              addressLong: widget.doctor.addressLong,
+                              bio: widget.doctor.bio);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatPageScreen(
+                                      currentuser: patient.username,
+                                      peerId: widget.doctor.username,
+                                      groupChatId:
+                                          "${widget.doctor.username}-${patient.username}",
+                                    )),
+                          );
+                        },
                         icon: const Icon(
                           Icons.message_outlined,
                           size: 25,

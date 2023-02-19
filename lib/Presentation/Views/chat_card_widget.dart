@@ -13,11 +13,11 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatPageScreen(),
-              ));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => ChatPageScreen(),
+          //     ));
         },
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
