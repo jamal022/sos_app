@@ -3,16 +3,31 @@ import 'package:sos_app/Presentation/PatientScreens/Profile/BurnReports/specific
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
 import '../../../../Data/Models/ReportModel.dart';
+import '../../../../Data/Models/patient.dart';
 
 class BurnReportsScreen extends StatefulWidget {
-  List<Report> reports;
-  BurnReportsScreen({Key? key, required this.reports}) : super(key: key);
+  Patient patient;
+  BurnReportsScreen({Key? key, required this.patient}) : super(key: key);
 
   @override
   State<BurnReportsScreen> createState() => _BurnReportsScreenState();
 }
 
+List<Report> reports = [];
+
 class _BurnReportsScreenState extends State<BurnReportsScreen> {
+  _getReports() async {
+    reports = await GetReports(widget.patient, context);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getReports();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -24,14 +39,6 @@ class _BurnReportsScreenState extends State<BurnReportsScreen> {
         toolbarHeight: 64.5,
         title: const Text('Burn Reports',
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            return Navigator.pop(context);
-          },
-          icon:
-              const Icon(Icons.arrow_back_ios_rounded, color: white, size: 30),
-        ),
       ),
       body: Container(
         color: back,
@@ -39,7 +46,7 @@ class _BurnReportsScreenState extends State<BurnReportsScreen> {
             padding: const EdgeInsets.all(15.0),
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
-                itemCount: widget.reports.length,
+                itemCount: reports.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -62,7 +69,7 @@ class _BurnReportsScreenState extends State<BurnReportsScreen> {
                                     ),
                                   ),
                                   Text(
-                                    "    ${widget.reports[index].burnDegree}",
+                                    "    ${reports[index].burnDegree}",
                                     style: const TextStyle(
                                       fontSize: contentFont,
                                       color: Colors.grey,
@@ -79,7 +86,7 @@ class _BurnReportsScreenState extends State<BurnReportsScreen> {
                                     ),
                                   ),
                                   Text(
-                                    "       ${widget.reports[index].date}",
+                                    "       ${reports[index].date}",
                                     style: const TextStyle(
                                       letterSpacing: 0.5,
                                       fontSize: contentFont,
@@ -93,13 +100,16 @@ class _BurnReportsScreenState extends State<BurnReportsScreen> {
                             size: 30,
                             color: black,
                           ),
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            var result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SpecificReportScreen(
-                                      report: widget.reports[index]),
+                                      report: reports[index]),
                                 ));
+                            if (result == "refresh") {
+                              _getReports();
+                            }
                           },
                         )),
                   );

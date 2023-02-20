@@ -184,13 +184,8 @@ DeleteArticle(articleId, context) async {
   await FirebaseFirestore.instance
       .collection("Articles")
       .doc(articleId)
-      .get()
-      .then((value) async {
-    await FirebaseFirestore.instance
-        .collection("Articles")
-        .doc(value.id)
-        .delete();
-  }).then((value) => Navigator.pop(context));
+      .delete()
+      .then((value) => Navigator.pop(context));
   return "deleted";
 }
 

@@ -141,3 +141,21 @@ Future<void> printReport(Report report) async {
   await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => doc.save());
 }
+
+DeleteReport(report, context) async {
+  await FirebaseFirestore.instance
+      .collection("Reports")
+      .where("PatientId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where("BurnDegree", isEqualTo: report.burnDegree)
+      .where("Date", isEqualTo: report.date)
+      .where("CauseOfBurn", isEqualTo: report.causeOfBurn)
+      .get()
+      .then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Reports")
+        .doc(value.docs.first.id)
+        .delete();
+  }).then((value) => Navigator.pop(context));
+
+  return "deleted";
+}

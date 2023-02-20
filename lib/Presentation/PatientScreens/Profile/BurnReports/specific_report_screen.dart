@@ -26,14 +26,6 @@ class _SpecificReportScreenState extends State<SpecificReportScreen> {
           title: Text('${widget.report.burnDegree} (${widget.report.date})',
               style:
                   const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            onPressed: () {
-              return Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back_ios_rounded,
-                color: white, size: 30),
-          ),
         ),
         body: SingleChildScrollView(
             child: Column(children: [
@@ -149,9 +141,93 @@ class _SpecificReportScreenState extends State<SpecificReportScreen> {
                             style: TextStyle(
                                 fontSize: fontfonty, color: Colors.grey)),
                       ])),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
             ]),
-          )
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
+            child: MaterialButton(
+                elevation: 5.0,
+                color: Colors.red,
+                padding: const EdgeInsets.all(10),
+                shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: BorderSide.none,
+                ),
+                onPressed: () {
+                  showDialog(
+                    useSafeArea: false,
+                    context: context,
+                    barrierColor: splashBack,
+                    builder: (ctx) => AlertDialog(
+                      content: const Text(
+                          "Are you sure, you want to delete this report?",
+                          style: TextStyle(
+                            fontSize: contentFont,
+                          )),
+                      actions: [
+                        Row(
+                          children: [
+                            //btn cancel
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.pop(ctx);
+                                  },
+                                  child: const Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                      color: primaryColor,
+                                      fontSize: contentFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: MaterialButton(
+                                  elevation: 6.0,
+                                  color: Colors.redAccent,
+                                  onPressed: () async {
+                                    var res = await DeleteReport(
+                                        widget.report, context);
+                                    if (res == "deleted") {
+                                      Navigator.pop(context, "refresh");
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Sure',
+                                    style: TextStyle(
+                                      color: white,
+                                      fontSize: contentFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: const Text(
+                  '  Delete  ',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+          ),
+          const SizedBox(height: 10),
         ])));
   }
 }

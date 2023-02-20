@@ -121,13 +121,11 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                         borderSide: BorderSide.none,
                       ),
                       onPressed: () async {
-                        List<Report> reports =
-                            await GetReports(widget.patient!, context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => BurnReportsScreen(
-                                reports: reports,
+                                patient: widget.patient!,
                               ),
                             ));
                       },
