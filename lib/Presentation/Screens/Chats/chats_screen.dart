@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
 import 'package:sos_app/Presentation/Views/chat_card_widget.dart';
 import '../../../Data/Models/ChatMessages.dart';
 import '../../../Data/Models/patient.dart';
 import '../../Styles/colors.dart';
-import '../../Styles/fonts.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ChatsScreen extends StatefulWidget {
   ChatsScreen({Key? key}) : super(key: key);
@@ -31,7 +27,8 @@ class _ChatsScreen extends State<ChatsScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   DocumentSnapshot ds = snapshot.data.docs[index];
-                  return ChatCardWidget();
+                  return ChatCardWidget(
+                      ChatId: ds.id, userName: patient.username);
                 })
             : Center(child: CircularProgressIndicator());
       },

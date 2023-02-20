@@ -52,6 +52,22 @@ DeleteLike(ArticleLikes likes) async {
   return "deleted";
 }
 
+DeleteAllArticleLikes(articleId) async {
+  await FirebaseFirestore.instance
+      .collection("ArticleLikes")
+      .where("ArticleId", isEqualTo: articleId)
+      .get()
+      .then((value) async {
+    for (var like in value.docs) {
+      await FirebaseFirestore.instance
+          .collection("ArticleLikes")
+          .doc(like.id)
+          .delete();
+    }
+  });
+  return "deleted";
+}
+
 GetLike({userId, articleId}) async {
   var like;
   await FirebaseFirestore.instance

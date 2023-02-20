@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sos_app/Data/Authentication/login.dart';
-import 'package:sos_app/Data/Models/patient.dart';
 
 class MessageChat {
   String idFrom;

@@ -1,23 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../../Data/Models/ChatMessages.dart';
 import '../Screens/Chats/chat_page_screen.dart';
 
 class ChatCardWidget extends StatefulWidget {
-  const ChatCardWidget({super.key});
+  final String userName;
+  final String ChatId;
+  const ChatCardWidget(
+      {super.key, required this.userName, required this.ChatId});
 
   @override
   State<ChatCardWidget> createState() => _ChatCardWidgetState();
 }
 
 class _ChatCardWidgetState extends State<ChatCardWidget> {
+  String profilePicUrl = "", username = "";
+
+  getThisUserInfo() async {
+    username =
+        widget.ChatId.replaceAll(widget.userName, "").replaceAll("-", "");
+    QuerySnapshot querySnapshot = await getUserInfo("FullName");
+    profilePicUrl = querySnapshot.docs[0]["Image"];
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getThisUserInfo();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => ChatPageScreen(),
-          //     ));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatPageScreen(
+                  currentuser: widget.userName,
+                  peerId: username,
+                  groupChatId: widget.ChatId,
+                ),
+              ));
         },
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -37,9 +62,11 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
                         spreadRadius: 2,
                       )
                     ]),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 35,
-                  backgroundImage: AssetImage('assets/images/R.jpeg'),
+                  backgroundImage: NetworkImage(
+                    profilePicUrl,
+                  ),
                 ),
               ),
               Container(
@@ -51,8 +78,8 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            const Text(
-                              'Doctor Name',
+                            Text(
+                              username,
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),

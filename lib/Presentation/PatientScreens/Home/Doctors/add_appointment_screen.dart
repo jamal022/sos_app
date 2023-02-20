@@ -1,5 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/AppointmentModel.dart';
 import 'package:sos_app/Presentation/PatientScreens/Profile/patient_profile_screen.dart';
@@ -93,8 +95,15 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                                 fontSize: 20,
                                 color: Colors.black.withOpacity(0.5))),
                         IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.location_on))
+                          onPressed: () {
+                            MapsLauncher.launchCoordinates(
+                                double.parse(widget.doctor.addressLat),
+                                double.parse(widget.doctor.addressLong),
+                                "${widget.doctor.username}'s location");
+                          },
+                          icon: const Icon(Icons.location_on),
+                          iconSize: 40,
+                        )
                       ],
                     ),
                     Text('\nTicket Price : ${widget.doctor.price} EGP',
@@ -320,6 +329,10 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                           var patientName = prefs.getString("FullName");
                           var patientId = prefs.getString("Id");
 
+                          List<Placemark> myPlacemark =
+                              await placemarkFromCoordinates(
+                                  double.parse(widget.doctor.addressLat),
+                                  double.parse(widget.doctor.addressLong));
                           Appointment appointment = Appointment(
                               patientId: patientId,
                               doctorId: widget.doctor.id,
@@ -330,7 +343,7 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               date: "${_day}/${_month}/${_year}",
                               time: "${_fromTime}:00 ${_fromPeriod}",
                               price: widget.doctor.price,
-                              place: widget.doctor.addressLat,
+                              place: myPlacemark[0].locality,
                               rate: 0);
                           await AddAppointmentToSchedule(
                               day: _day,

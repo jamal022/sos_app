@@ -179,3 +179,29 @@ GetSpecificDoctorArticles(doctorId) async {
   });
   return articles;
 }
+
+DeleteArticle(articleId, context) async {
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .doc(articleId)
+      .get()
+      .then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Articles")
+        .doc(value.id)
+        .delete();
+  }).then((value) => Navigator.pop(context));
+  return "deleted";
+}
+
+GetArticlesNb(doctorId) async {
+  var number;
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .where("DoctorId", isEqualTo: doctorId)
+      .get()
+      .then((value) {
+    number = value.size;
+  });
+  return number;
+}

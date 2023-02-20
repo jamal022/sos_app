@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import '../../../../Data/Models/ReportModel.dart';
+import '../../../Screens/Chats/chat_page_screen.dart';
 import '../../../Styles/fonts.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -12,7 +14,20 @@ class ReportScreen extends StatefulWidget {
   State<ReportScreen> createState() => _ReportScreenState();
 }
 
+var doctorName;
+
 class _ReportScreenState extends State<ReportScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      doctorName = prefs.getString("FullName");
+      setState(() {});
+    }();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -154,7 +169,18 @@ class _ReportScreenState extends State<ReportScreen> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50),
                       ))),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatPageScreen(
+                                currentuser: doctorName,
+                                peerId: widget.report.name,
+                                groupChatId:
+                                    "${widget.report.name}-${doctorName}",
+                              )),
+                    );
+                  },
                   child: const Text('Send message',
                       style: TextStyle(
                         color: Colors.white,

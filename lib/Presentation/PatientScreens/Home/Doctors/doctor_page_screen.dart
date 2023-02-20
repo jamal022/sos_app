@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sos_app/Data/Models/ArticlesModel.dart';
 import 'package:sos_app/Data/Models/ReportModel.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/add_appointment_screen.dart';
@@ -31,8 +31,14 @@ late GoogleMapController gmc;
 Set<Marker> mymarkers = {};
 
 Patient patient = Patient();
+var articlesNb = 0;
 
 class _DoctorPageScreen extends State<DoctorPageScreen> {
+  _getArticlesNb() async {
+    articlesNb = await GetArticlesNb(widget.doctor.id);
+    setState(() {});
+  }
+
   Future _getLatAndLong() async {
     kGooglePlex = CameraPosition(
       target: LatLng(double.parse(widget.doctor.addressLat),
@@ -56,6 +62,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
     // TODO: implement initState
     super.initState();
     _getLatAndLong();
+    _getArticlesNb();
     () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       patient.username = prefs.getString("FullName");
@@ -323,7 +330,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
-                        Text('6',
+                        Text('${articlesNb}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 16,
