@@ -110,8 +110,7 @@ GetSchedulesForPatient(doctorId) async {
       .get()
       .then((value) {
     for (var schedule in value.docs) {
-      if (schedule.data()["Day"] >= today &&
-          schedule.data()["Month"] >= month &&
+      if (schedule.data()["Month"] >= month &&
           schedule.data()["Year"] >= year) {
         Schedule s = Schedule(
           doctorId: schedule.data()["DoctorId"],

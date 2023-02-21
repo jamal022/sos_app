@@ -56,12 +56,12 @@ void sendMessage(String content, int type, String groupChatId,
       .collection("Messages")
       .doc(groupChatId)
       .collection(groupChatId)
-      .doc(DateTime.now().millisecondsSinceEpoch.toString());
+      .doc(DateTime.now().toString());
 
   MessageChat messageChat = MessageChat(
     idFrom: currentUserId,
     idTo: peerId,
-    timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+    timestamp: DateTime.now().toString(),
     content: content,
     type: type,
   );

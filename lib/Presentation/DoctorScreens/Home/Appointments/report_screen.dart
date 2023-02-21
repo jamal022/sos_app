@@ -177,7 +177,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 currentuser: doctorName,
                                 peerId: widget.report.name,
                                 groupChatId:
-                                    "${widget.report.name}-${doctorName}",
+                                    "${doctorName}-${widget.report.name}",
                               )),
                     );
                   },

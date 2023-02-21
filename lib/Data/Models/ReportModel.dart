@@ -24,17 +24,17 @@ class Report {
   var date;
 
   Report(
-      {required this.image,
-      required this.burnDegree,
-      required this.name,
-      required this.age,
-      required this.gender,
-      required this.phoneNumber,
-      required this.diabates,
-      required this.pressure,
-      required this.causeOfBurn,
-      required this.date,
-      required this.patientId});
+      {this.image,
+      this.burnDegree,
+      this.name,
+      this.age,
+      this.gender,
+      this.phoneNumber,
+      this.diabates,
+      this.pressure,
+      this.causeOfBurn,
+      this.date,
+      this.patientId});
 
   AddReport(Report report, context) async {
     showLoading(context);
@@ -79,25 +79,23 @@ GetReportId(Report report) async {
 }
 
 GetReportById(reportId) async {
-  late Report report;
-  await FirebaseFirestore.instance.collection("Reports").get().then((value) {
-    for (var item in value.docs) {
-      if (item.id == reportId) {
-        report = Report(
-          image: value.docs.first.data()["Image"],
-          burnDegree: value.docs.first.data()["BurnDegree"],
-          name: value.docs.first.data()["PatientName"],
-          age: value.docs.first.data()["Age"],
-          gender: value.docs.first.data()["Gender"],
-          phoneNumber: value.docs.first.data()["PhoneNumber"],
-          diabates: value.docs.first.data()["Diabates"],
-          pressure: value.docs.first.data()["BloodPressure"],
-          causeOfBurn: value.docs.first.data()["CauseOfBurn"],
-          date: value.docs.first.data()["Date"],
-          patientId: value.docs.first.data()["PatientId"],
-        );
-      }
-    }
+  Report report = Report();
+  await FirebaseFirestore.instance
+      .collection("Reports")
+      .doc(reportId)
+      .get()
+      .then((value) {
+    report.image = value.data()!["Image"];
+    report.age = value.data()!["Age"];
+    report.burnDegree = value.data()!["BurnDegree"];
+    report.causeOfBurn = value.data()!["CauseOfBurn"];
+    report.date = value.data()!["Date"];
+    report.diabates = value.data()!["Diabates"];
+    report.gender = value.data()!["Gender"];
+    report.name = value.data()!["PatientName"];
+    report.patientId = value.data()!["PatientId"];
+    report.pressure = value.data()!["BloodPressure"];
+    report.phoneNumber = value.data()!["PhoneNumber"];
   });
   return report;
 }
