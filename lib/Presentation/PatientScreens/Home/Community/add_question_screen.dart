@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:sos_app/Data/Models/ArticlesModel.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
+import '../../../../Data/Models/QuestionModel.dart';
 
-class NewArticlesScreen extends StatefulWidget {
+class NewQuestionScreen extends StatefulWidget {
   var id;
   var name;
   var image;
-  var field;
-  NewArticlesScreen(
-      {Key? key,
-      required this.id,
-      required this.name,
-      required this.image,
-      required this.field})
-      : super(key: key);
+  NewQuestionScreen({
+    Key? key,
+    required this.id,
+    required this.name,
+    required this.image,
+  }) : super(key: key);
 
   @override
-  State<NewArticlesScreen> createState() => _NewArticlesScreenState();
+  State<NewQuestionScreen> createState() => _NewQuestionScreenState();
 }
 
-class _NewArticlesScreenState extends State<NewArticlesScreen> {
+class _NewQuestionScreenState extends State<NewQuestionScreen> {
   var contentController = TextEditingController();
 
   @override
@@ -32,7 +30,7 @@ class _NewArticlesScreenState extends State<NewArticlesScreen> {
           elevation: 0,
           centerTitle: true,
           toolbarHeight: 64.5,
-          title: const Text('New Article',
+          title: const Text('New Question',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
         ),
         body: SingleChildScrollView(
@@ -103,16 +101,17 @@ class _NewArticlesScreenState extends State<NewArticlesScreen> {
                                 borderSide: BorderSide.none,
                               ),
                               onPressed: () async {
-                                Article article = Article(
-                                    doctorId: widget.id,
-                                    doctorName: widget.name,
-                                    doctorField: widget.field,
-                                    doctorImage: widget.image,
+                                Question question = Question(
+                                    answers: 0,
                                     content: contentController.text,
-                                    likes: 0,
-                                    dislikes: 0);
+                                    date:
+                                        "${DateTime.now().day} / ${DateTime.now().month} / ${DateTime.now().year}",
+                                    patientId: widget.id,
+                                    patientImage: widget.image,
+                                    patientName: widget.name);
 
-                                var result = await AddArticle(article, context);
+                                var result =
+                                    await AddQuestion(question, context);
                                 if (result == "Added") {
                                   Navigator.pop(context, "refresh");
                                 }

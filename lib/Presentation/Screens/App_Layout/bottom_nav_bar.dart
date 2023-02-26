@@ -1,8 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:sos_app/Presentation/PatientScreens/Home/patient_home_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 
 import '../../Constants/app_assets.dart';

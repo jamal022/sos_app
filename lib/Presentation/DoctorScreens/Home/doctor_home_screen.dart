@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Articles/articles_screen.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Home/Community/community_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Schedule/Schedule_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Appointments/appointments_screen.dart';
-import 'package:sos_app/Presentation/DoctorScreens/Home/community_screen.dart';
 
 import '../../Styles/colors.dart';
 import '../../Views/home_card_widget.dart';
