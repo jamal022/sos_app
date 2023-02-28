@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Presentation/PatientScreens/Profile/BurnReports/burn_reports_screen.dart';
+import 'package:sos_app/Presentation/PatientScreens/Profile/community_history_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Profile/patient_edit_screen.dart';
-import '../../../Data/Models/ReportModel.dart';
 import '../../../Data/Models/patient.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
@@ -97,7 +96,13 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CommunityHistoryScreen(),
+                              ));
+                        },
                         child: const Text(
                           'Q/A History',
                           style: TextStyle(

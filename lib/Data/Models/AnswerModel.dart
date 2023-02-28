@@ -61,3 +61,29 @@ GetQuestionAnswers(questionId) async {
   });
   return answers;
 }
+
+DeleteQuestionAnswers(questionId) async {
+  await FirebaseFirestore.instance
+      .collection("Answers")
+      .where("QuestionId", isEqualTo: questionId)
+      .get()
+      .then((value) async {
+    for (var answer in value.docs) {
+      await FirebaseFirestore.instance
+          .collection("Answers")
+          .doc(answer.id)
+          .delete();
+    }
+  });
+}
+
+DeleteAnswer({questionId, answerId, context}) async {
+  await FirebaseFirestore.instance
+      .collection("Answers")
+      .doc(answerId)
+      .delete()
+      .then((value) async {
+    await DeleteAnswerFromQuestion(questionId);
+  }).then((value) => Navigator.pop(context));
+  return "deleted";
+}
