@@ -19,8 +19,8 @@ GetAnswersWithQuestion(userId) async {
       .where("UserId", isEqualTo: userId)
       .get()
       .then((value) async {
-    QuestionAnswer qa = QuestionAnswer();
     for (var answer in value.docs) {
+      QuestionAnswer qa = QuestionAnswer();
       Answer a = Answer(
           answerId: answer.id,
           questionId: answer.data()["QuestionId"],

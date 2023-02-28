@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/AnswerModel.dart';
 import 'package:sos_app/Data/Models/QuestionAnswerModel.dart';
 import 'package:sos_app/Data/Models/QuestionModel.dart';
-import '../../Constants/app_assets.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
 import '../Home/Community/specific_question_screen.dart';
@@ -55,6 +54,7 @@ class _CommunityHistoryScreenState extends State<CommunityHistoryScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     id = prefs.getString("Id");
     qa = await GetAnswersWithQuestion(id);
+
     setState(() {});
   }
 
@@ -346,7 +346,6 @@ class _CommunityHistoryScreenState extends State<CommunityHistoryScreen> {
                 SliverList(
                   delegate: SliverChildListDelegate([
                     Container(
-                      color: back,
                       child: SingleChildScrollView(
                         child: Column(children: [
                           Padding(
@@ -624,7 +623,7 @@ class _CommunityHistoryScreenState extends State<CommunityHistoryScreen> {
                                                         alignment:
                                                             Alignment.topLeft,
                                                         child: Text(
-                                                          qa[i].answer!.content,
+                                                          "${qa[i].answer!.content}",
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 16,

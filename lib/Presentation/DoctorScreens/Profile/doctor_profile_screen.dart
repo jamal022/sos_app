@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Profile/articles_history_screen.dart';
+import 'package:sos_app/Presentation/DoctorScreens/Profile/community_history_screen.dart';
 import '../../../Data/Models/doctor.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
@@ -117,7 +118,13 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide.none,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CommunityHistoryScreen()),
+                      );
+                    },
                     child: const Text(
                       'Q/A  History',
                       style: TextStyle(
