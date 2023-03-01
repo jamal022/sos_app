@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Widgets/uploadBurnPhoto_widget.dart';
 
-import '../../Styles/colors.dart';
+import '../../../Styles/colors.dart';
 
 class DetectScreen extends StatefulWidget {
   const DetectScreen({super.key});

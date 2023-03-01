@@ -94,7 +94,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                 const Text(
                   "Please fill these information",
                   style: TextStyle(
-                    color: primaryColor,
+                    color: Color.fromARGB(255, 168, 109, 19),
                     fontSize: 22,
                   ),
                 ),

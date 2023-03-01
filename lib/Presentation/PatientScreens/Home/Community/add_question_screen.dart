@@ -75,7 +75,7 @@ class _NewQuestionScreenState extends State<NewQuestionScreen> {
                               maxLines: 10,
                               minLines: 1,
                               decoration: const InputDecoration(
-                                hintText: "Write new article...",
+                                hintText: "Write new question...",
                                 hintStyle: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                                 border: InputBorder.none,

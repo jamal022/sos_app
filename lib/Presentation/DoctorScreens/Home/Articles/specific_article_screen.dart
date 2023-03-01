@@ -173,7 +173,7 @@ class _SpecificArticleScreenState extends State<SpecificArticleScreen> {
                                     children: const [
                                       Icon(
                                         size: 23,
-                                        CupertinoIcons.hand_thumbsdown_fill,
+                                        CupertinoIcons.hand_thumbsup_fill,
                                         color: CupertinoColors.black,
                                       ),
                                       Text(
@@ -250,7 +250,7 @@ class _SpecificArticleScreenState extends State<SpecificArticleScreen> {
                                     children: const [
                                       Icon(
                                         size: 23,
-                                        CupertinoIcons.hand_thumbsup_fill,
+                                        CupertinoIcons.hand_thumbsdown_fill,
                                         color: CupertinoColors.black,
                                       ),
                                       SizedBox(

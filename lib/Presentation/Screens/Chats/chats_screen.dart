@@ -71,13 +71,6 @@ class _ChatsScreen extends State<ChatsScreen> {
             "Chats",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
           ),
-          // actions: <Widget>[
-          //   IconButton(
-          //     onPressed: () {},
-          //     icon: const Icon(Icons.search),
-          //     color: Colors.white,
-          //   )
-          // ],
           centerTitle: true,
           toolbarHeight: 60.2,
           elevation: 4,

@@ -54,25 +54,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
             key: formKey,
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
                 const Text(
                   "Register",
                   style: TextStyle(
                       fontSize: formTitleFont, fontWeight: FontWeight.bold),
                 ),
                 Container(
-                  padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
                   child: RichText(
                     text: TextSpan(
                       style: const TextStyle(fontSize: 18),
                       children: <TextSpan>[
                         const TextSpan(
                           text: 'Already have an account? ',
-                          style: TextStyle(color: bubbles),
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 212, 137, 24)),
                         ),
                         TextSpan(
                             text: 'Login',
-                            style: const TextStyle(color: primaryColor),
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 136, 88, 16)),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.pushAndRemoveUntil(

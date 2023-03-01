@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/AnswerModel.dart';
 import '../../../../Data/Models/QuestionModel.dart';
 import '../../../Styles/colors.dart';
+import '../../../Styles/fonts.dart';
 
 class SpecificQuestionScreen extends StatefulWidget {
   Question question;
@@ -135,7 +136,7 @@ class _SpecificQuestionScreenState extends State<SpecificQuestionScreen> {
                         ),
                         const Divider(
                           color: Color.fromARGB(153, 58, 58, 58),
-                          thickness: 2.5,
+                          thickness: 2,
                         ),
                         const SizedBox(
                           height: 10,
@@ -195,67 +196,74 @@ class _SpecificQuestionScreenState extends State<SpecificQuestionScreen> {
                           height: 10,
                         ),
                         for (var i = 0; i < answers.length; i++)
-                          Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            color: Colors.white60,
-                            margin: const EdgeInsets.all(8.0),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 12, 8, 10),
-                              child: Column(
-                                children: [
-                                  Row(
+                          Column(children: <Widget>[
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: Row(
                                     children: [
-                                      CircleAvatar(
-                                        backgroundImage:
-                                            NetworkImage(answers[i].userImage),
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 255, 255, 255),
-                                        radius: 30,
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8.0, 0, 8.0, 0),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              answers[i].userImage),
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          radius: 30,
+                                        ),
                                       ),
                                       Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text('  ${answers[i].UserName}',
+                                            Text(" ${answers[i].UserName}",
                                                 style: const TextStyle(
-                                                    fontSize: 22,
+                                                    fontSize: 18,
                                                     fontWeight:
                                                         FontWeight.bold)),
-                                            Text(' ${answers[i].role}',
+                                            Text(answers[i].role,
                                                 style: const TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 15,
                                                     color: Color.fromARGB(
                                                         153, 58, 58, 58))),
                                           ]),
                                     ],
                                   ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
                                     margin: const EdgeInsets.all(5.0),
-                                    color: const Color.fromARGB(
-                                        255, 242, 235, 235),
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(6.0),
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)),
+                                      color: Color.fromARGB(255, 242, 235, 235),
+                                    ),
+                                    child: Container(
+                                      margin: const EdgeInsets.all(7.0),
+                                      alignment: Alignment.topLeft,
                                       child: Text(
-                                        answers[i].content,
+                                        "${answers[i].content}",
                                         style: const TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           letterSpacing: 0.5,
                                           fontWeight: FontWeight.bold,
-                                          color:
-                                              Color.fromARGB(153, 58, 58, 58),
+                                          color: Colors.black45,
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
                             ),
-                          ),
+                          ]),
                       ]),
                     ])))
           ],

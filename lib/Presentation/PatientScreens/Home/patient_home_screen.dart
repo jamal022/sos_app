@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/appointments_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/articles_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Community/commuinty_screen.dart';
-import 'package:sos_app/Presentation/PatientScreens/Home/detect_screen.dart';
+import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/detect_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Doctors/doctors_screen.dart';
 import 'package:sos_app/Presentation/Views/home_card_widget.dart';
 import '../../Styles/colors.dart';

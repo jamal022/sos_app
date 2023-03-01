@@ -55,8 +55,9 @@ class _ReportScreenState extends State<ReportScreen> {
           child: Column(children: [
             Container(
               margin: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(children: <Widget>[
                 const SizedBox(height: 10),

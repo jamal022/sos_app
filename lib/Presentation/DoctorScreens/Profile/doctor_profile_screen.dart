@@ -90,8 +90,11 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white60,
+                ),
                 width: size.width / 0.7,
-                color: Colors.white60,
                 height: size.height / 5.4,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),

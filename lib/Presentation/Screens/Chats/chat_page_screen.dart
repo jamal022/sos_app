@@ -40,13 +40,33 @@ class _ChatPageScreen extends State<ChatPageScreen> {
     FirebaseFirestore.instance
         .collection("Messages")
         .doc(widget.groupChatId)
-        .update({
-      'Users': users,
-      'ChatId': widget.groupChatId,
-      'UserImage1': widget.currentimage,
-      'UserImage2': widget.peerimage,
-      'PeerName': widget.peername,
-      'CurrentName': widget.currentname,
+        .get()
+        .then((value) async {
+      if (value != null) {
+        FirebaseFirestore.instance
+            .collection("Messages")
+            .doc(widget.groupChatId)
+            .update({
+          'Users': users,
+          'ChatId': widget.groupChatId,
+          'UserImage1': widget.currentimage,
+          'UserImage2': widget.peerimage,
+          'PeerName': widget.peername,
+          'CurrentName': widget.currentname,
+        });
+      } else {
+        FirebaseFirestore.instance
+            .collection("Messages")
+            .doc(widget.groupChatId)
+            .set({
+          'Users': users,
+          'ChatId': widget.groupChatId,
+          'UserImage1': widget.currentimage,
+          'UserImage2': widget.peerimage,
+          'PeerName': widget.peername,
+          'CurrentName': widget.currentname,
+        });
+      }
     });
   }
 

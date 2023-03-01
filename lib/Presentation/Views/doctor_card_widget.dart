@@ -41,7 +41,7 @@ class DoctorCardWidget extends StatelessWidget {
             ),
 
             const SizedBox(
-              height: 8,
+              height: 10,
             ),
             Text(
               doctor.username,
@@ -63,7 +63,7 @@ class DoctorCardWidget extends StatelessWidget {
               ), //Textstyle
             ), //Text
             const SizedBox(
-              height: 5,
+              height: 15,
             ),
 
             RatingBar(

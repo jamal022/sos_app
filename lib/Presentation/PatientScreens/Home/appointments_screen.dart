@@ -37,7 +37,10 @@ SliverAppBar showSliverAppBar(String screenTitle) {
     floating: true,
     pinned: true,
     snap: false,
-    title: Text(screenTitle),
+    title: Text(
+      screenTitle,
+      style: const TextStyle(fontSize: 28),
+    ),
     centerTitle: true,
     bottom: const TabBar(
       tabs: [

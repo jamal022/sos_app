@@ -48,7 +48,7 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
         userimage = snapshot.data()!['UserImage1'];
         currentImage = snapshot.data()!['UserImage2'];
         lastmessage = snapshot.data()!['LastMessage'];
-        //time = snapshot.data()!['Time'];
+        time = snapshot.data()!['Time'];
         peername = snapshot.data()!['PeerName'];
         currentname = snapshot.data()!['CurrentName'];
       });
@@ -145,13 +145,6 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
-                            ),
-                            Text(
-                              time.substring(0, 10),
-                              style: const TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300),
                             ),
                           ],
                         ),

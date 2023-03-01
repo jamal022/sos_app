@@ -37,7 +37,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         centerTitle: true,
         toolbarHeight: 64.5,
         title: const Text("Q/A Community",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
           child: Padding(
@@ -60,10 +60,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                             height: size.height / 8.4,
                             child: Row(
                               children: [
-                                const CircleAvatar(
-                                  backgroundImage: AssetImage(sosLogoImage),
+                                CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(questions[i].patientImage),
                                   backgroundColor:
-                                      Color.fromARGB(255, 255, 255, 255),
+                                      const Color.fromARGB(255, 255, 255, 255),
                                   radius: 30,
                                 ),
                                 Column(
@@ -83,9 +84,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 Container(
                                   color:
                                       const Color.fromARGB(255, 242, 235, 235),
-                                  child: Text(
-                                    "${questions[i].answers} Answers",
-                                    style: const TextStyle(fontSize: 16),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(.0),
+                                    child: Text(
+                                      "${questions[i].answers} Answers",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(
@@ -102,7 +106,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                             decoration: const BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                              color: Color.fromARGB(255, 242, 235, 235),
+                              color: const Color.fromARGB(255, 242, 235, 235),
                             ),
                             child: Container(
                               margin: const EdgeInsets.all(7.0),
