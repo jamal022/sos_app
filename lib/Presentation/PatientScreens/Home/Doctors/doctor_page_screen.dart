@@ -47,7 +47,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
     );
 
     mymarkers.add(Marker(
-      markerId: MarkerId("initial"),
+      markerId: const MarkerId("initial"),
       position: LatLng(double.parse(widget.doctor.addressLat),
           double.parse(widget.doctor.addressLong)),
     ));
@@ -59,12 +59,12 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getLatAndLong();
     _getArticlesNb();
     () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      patient.id = prefs.getString("Id");
       patient.username = prefs.getString("FullName");
       patient.email = prefs.getString("Email");
       patient.phoneNumber = prefs.getString("PhoneNumber");
@@ -136,11 +136,14 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ChatPageScreen(
-                                      currentuser: patient.username,
-                                      peerId: widget.doctor.username,
-                                      groupChatId:
-                                          "${widget.doctor.username}-${patient.username}",
-                                    )),
+                                    currentuser: patient.id,
+                                    peerId: widget.doctor.id,
+                                    groupChatId:
+                                        "${widget.doctor.username}-${patient.username}",
+                                    currentimage: patient.image,
+                                    peerimage: widget.doctor.image,
+                                    peername: widget.doctor.username,
+                                    currentname: patient.username)),
                           );
                         },
                         icon: const Icon(

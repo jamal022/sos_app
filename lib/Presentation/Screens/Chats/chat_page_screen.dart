@@ -8,12 +8,20 @@ class ChatPageScreen extends StatefulWidget {
   String currentuser;
   String peerId;
   String groupChatId;
-  ChatPageScreen(
-      {Key? key,
-      required this.peerId,
-      required this.currentuser,
-      required this.groupChatId})
-      : super(key: key);
+  String currentimage;
+  String peerimage;
+  String peername;
+  String currentname;
+  ChatPageScreen({
+    Key? key,
+    required this.peerId,
+    required this.currentuser,
+    required this.groupChatId,
+    required this.currentimage,
+    required this.peerimage,
+    required this.peername,
+    required this.currentname,
+  }) : super(key: key);
 
   @override
   State<ChatPageScreen> createState() => _ChatPageScreen();
@@ -32,9 +40,13 @@ class _ChatPageScreen extends State<ChatPageScreen> {
     FirebaseFirestore.instance
         .collection("Messages")
         .doc(widget.groupChatId)
-        .set({
+        .update({
       'Users': users,
       'ChatId': widget.groupChatId,
+      'UserImage1': widget.currentimage,
+      'UserImage2': widget.peerimage,
+      'PeerName': widget.peername,
+      'CurrentName': widget.currentname,
     });
   }
 
@@ -62,15 +74,18 @@ class _ChatPageScreen extends State<ChatPageScreen> {
       backgroundColor: const Color.fromARGB(253, 243, 222, 195),
       appBar: AppBar(
         title: Text(
-          widget.peerId,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+          widget.peername,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
         ),
         actions: [
-          CircleAvatar(
-            radius: 25,
-            //backgroundImage: NetworkImage(
-            //  peerImage!,
-            //),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: CircleAvatar(
+              radius: 25,
+              backgroundImage: NetworkImage(
+                widget.peerimage,
+              ),
+            ),
           )
         ],
         centerTitle: true,
@@ -98,22 +113,29 @@ class _ChatPageScreen extends State<ChatPageScreen> {
 
   Widget buildInput() {
     return Container(
+      width: double.infinity,
+      height: 50,
+      decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: black, width: 0.5)),
+          color: Colors.white),
       child: Row(
         children: <Widget>[
           // Edit text
           Flexible(
             child: Container(
-              child: TextField(
-                onSubmitted: (value) {
-                  onSendMessage(MessageController.text, TypeMessage.text);
-                },
-                style: TextStyle(color: primaryColor, fontSize: 15),
-                controller: MessageController,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
-                  hintStyle: TextStyle(color: black),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onSubmitted: (value) {
+                    onSendMessage(MessageController.text, TypeMessage.text);
+                  },
+                  style: const TextStyle(color: primaryColor, fontSize: 15),
+                  controller: MessageController,
+                  decoration: const InputDecoration.collapsed(
+                    hintText: 'Type your message...',
+                    hintStyle: TextStyle(color: black),
+                  ),
                 ),
-                autofocus: true,
               ),
             ),
           ),
@@ -123,8 +145,16 @@ class _ChatPageScreen extends State<ChatPageScreen> {
               margin: EdgeInsets.symmetric(horizontal: 8),
               child: IconButton(
                 icon: Icon(Icons.send),
-                onPressed: () =>
-                    onSendMessage(MessageController.text, TypeMessage.text),
+                onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection("Messages")
+                      .doc(widget.groupChatId)
+                      .update({
+                    'Time': DateTime.now().toString(),
+                    'LastMessage': MessageController.text,
+                  });
+                  onSendMessage(MessageController.text, TypeMessage.text);
+                },
                 color: primaryColor,
               ),
             ),
@@ -132,11 +162,6 @@ class _ChatPageScreen extends State<ChatPageScreen> {
           ),
         ],
       ),
-      width: double.infinity,
-      height: 50,
-      decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: black, width: 0.5)),
-          color: Colors.white),
     );
   }
 
@@ -151,18 +176,18 @@ class _ChatPageScreen extends State<ChatPageScreen> {
                   listMessage = snapshot.data!.docs;
                   if (listMessage.length > 0) {
                     return ListView.builder(
-                      padding: EdgeInsets.only(
-                          left: 14, right: 14, top: 10, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          left: 0, right: 10, top: 10, bottom: 10),
                       itemBuilder: (context, index) =>
                           buildItem(index, snapshot.data?.docs[index]),
                       itemCount: snapshot.data?.docs.length,
                       reverse: true,
                     );
                   } else {
-                    return Center(child: Text("No message here yet..."));
+                    return const Center(child: Text("No message here yet..."));
                   }
                 } else {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(
                       color: black,
                     ),
@@ -170,7 +195,7 @@ class _ChatPageScreen extends State<ChatPageScreen> {
                 }
               },
             )
-          : Center(
+          : const Center(
               child: CircularProgressIndicator(
                 color: black,
               ),
@@ -204,66 +229,66 @@ class _ChatPageScreen extends State<ChatPageScreen> {
       if (messageChat.idFrom == widget.currentuser) {
         // Right (my message)
         return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             // Text
             Container(
-              child: Text(
-                messageChat.content,
-                style: TextStyle(color: white),
-              ),
-              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
               width: 200,
               decoration: BoxDecoration(
                   color: primaryColor, borderRadius: BorderRadius.circular(8)),
               margin: EdgeInsets.only(
                   bottom: isLastMessageRight(index) ? 20 : 10, right: 10),
+              child: Text(
+                messageChat.content,
+                style: const TextStyle(color: white),
+              ),
             ),
           ],
-          mainAxisAlignment: MainAxisAlignment.end,
         );
       } else {
         // Left (peer message)
         return Container(
+          margin: const EdgeInsets.only(bottom: 10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 children: <Widget>[
                   isLastMessageLeft(index)
                       ? Material(
-                          // child: Image.network(
-                          // patient.image,
-                          //width: 35,
-                          //height: 35,
-                          //fit: BoxFit.cover,
-                          //),
-                          borderRadius: BorderRadius.all(
+                          clipBehavior: Clip.hardEdge,
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(18),
                           ),
-                          clipBehavior: Clip.hardEdge,
+                          child: Image.network(
+                            widget.peerimage,
+                            width: 35,
+                            height: 35,
+                            fit: BoxFit.cover,
+                          ),
                         )
                       : Container(width: 35),
                   Container(
-                    child: Text(
-                      messageChat.content,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                     width: 200,
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 214, 160, 80),
+                        color: const Color.fromARGB(255, 228, 176, 97),
                         borderRadius: BorderRadius.circular(8)),
-                    margin: EdgeInsets.only(left: 10),
+                    margin: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      messageChat.content,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   )
                 ],
               ),
             ],
-            crossAxisAlignment: CrossAxisAlignment.start,
           ),
-          margin: EdgeInsets.only(bottom: 10),
         );
       }
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 }

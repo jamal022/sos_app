@@ -28,7 +28,10 @@ class _ChatsScreen extends State<ChatsScreen> {
                 itemBuilder: (context, index) {
                   DocumentSnapshot ds = snapshot.data.docs[index];
                   return ChatCardWidget(
-                      ChatId: ds.id, userName: patient.username);
+                      ChatId: ds.id,
+                      userName: patient.id,
+                      userImage: patient.image,
+                      currentname: patient.username);
                 })
             : Center(child: CircularProgressIndicator());
       },
@@ -36,7 +39,7 @@ class _ChatsScreen extends State<ChatsScreen> {
   }
 
   getChatRooms() async {
-    chatRooms = await getUserChats(patient.username);
+    chatRooms = await getUserChats(patient.id);
     setState(() {});
   }
 
@@ -45,6 +48,7 @@ class _ChatsScreen extends State<ChatsScreen> {
     () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       patient.username = prefs.getString("FullName");
+      patient.id = prefs.getString("Id");
       patient.email = prefs.getString("Email");
       patient.phoneNumber = prefs.getString("PhoneNumber");
       patient.password = prefs.getString("Password");

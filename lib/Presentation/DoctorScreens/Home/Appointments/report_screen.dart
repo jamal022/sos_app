@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sos_app/Data/Models/doctor.dart';
+import 'package:sos_app/Data/Models/patient.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import '../../../../Data/Models/ReportModel.dart';
 import '../../../Screens/Chats/chat_page_screen.dart';
@@ -14,7 +16,7 @@ class ReportScreen extends StatefulWidget {
   State<ReportScreen> createState() => _ReportScreenState();
 }
 
-var doctorName;
+Patient doctor = Patient();
 
 class _ReportScreenState extends State<ReportScreen> {
   @override
@@ -23,7 +25,9 @@ class _ReportScreenState extends State<ReportScreen> {
     super.initState();
     () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      doctorName = prefs.getString("FullName");
+      doctor.id = prefs.getString("Id");
+      doctor.image = prefs.getString("Image");
+      doctor.username = prefs.getString("FullName");
       setState(() {});
     }();
   }
@@ -174,10 +178,14 @@ class _ReportScreenState extends State<ReportScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChatPageScreen(
-                                currentuser: doctorName,
-                                peerId: widget.report.name,
+                                currentuser: doctor.id,
+                                peerId: widget.report.patientId,
                                 groupChatId:
-                                    "${doctorName}-${widget.report.name}",
+                                    "${doctor.id}-${widget.report.patientId}",
+                                currentimage: doctor.image,
+                                peerimage: widget.report.image,
+                                peername: widget.report.name,
+                                currentname: doctor.username,
                               )),
                     );
                   },
