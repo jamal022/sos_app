@@ -7,54 +7,47 @@ import '../../Presentation/Widgets/loading_widget.dart';
 import '../Models/doctor.dart';
 import '../Models/patient.dart';
 
-Register(
-    {Patient? patient,
-    Doctor? doctor,
-    GlobalKey<FormState>? formKey,
-    BuildContext? context}) async {
-  var formdata = formKey?.currentState;
+Register({Patient? patient, Doctor? doctor, BuildContext? context}) async {
   late UserCredential _user;
-  if (formdata!.validate()) {
-    formdata.save();
-    showLoading(context);
 
-    try {
-      if (patient != null) {
-        _user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: patient.email, password: patient.password);
-      } else if (doctor != null) {
-        _user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: doctor.email, password: doctor.password);
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        Navigator.of(context!).pop();
-        AwesomeDialog(
-                context: context,
-                title: "Error",
-                body: const Text("Password is too weak"))
-            .show();
-      } else if (e.code == 'email-already-in-use') {
-        Navigator.of(context!).pop();
-        AwesomeDialog(
-                context: context,
-                title: "Error",
-                body: const Text("email-already-in-use"))
-            .show();
-      }
-    } catch (e) {
+  showLoading(context);
+
+  try {
+    if (patient != null) {
+      _user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: patient.email, password: patient.password);
+    } else if (doctor != null) {
+      _user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: doctor.email, password: doctor.password);
+    }
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
       Navigator.of(context!).pop();
       AwesomeDialog(
-        context: context,
-        title: "Error",
-        body: Text("$e"),
-      ).show();
+              context: context,
+              title: "Error",
+              body: const Text("Password is too weak"))
+          .show();
+    } else if (e.code == 'email-already-in-use') {
+      Navigator.of(context!).pop();
+      AwesomeDialog(
+              context: context,
+              title: "Error",
+              body: const Text("email-already-in-use"))
+          .show();
     }
-    if (patient != null) {
-      AddPatient(patient, _user.user!.uid, context);
-    } else if (doctor != null) {
-      AddDoctor(doctor, _user.user!.uid, context);
-    }
+  } catch (e) {
+    Navigator.of(context!).pop();
+    AwesomeDialog(
+      context: context,
+      title: "Error",
+      body: Text("$e"),
+    ).show();
+  }
+  if (patient != null) {
+    AddPatient(patient, _user.user!.uid, context);
+  } else if (doctor != null) {
+    AddDoctor(doctor, _user.user!.uid, context);
   }
 }
 
@@ -100,6 +93,9 @@ AddDoctor(Doctor? doctor, id, context) async {
     "AddressLatitude": doctor?.addressLat,
     "AddressLongitude": doctor?.addressLong,
     "Bio": doctor?.bio,
+    "Verified": doctor?.verified,
+    "IdImage": doctor?.idImage,
+    "Rate": doctor?.rate,
   }).then((value) {
     Navigator.pushAndRemoveUntil(
       context,

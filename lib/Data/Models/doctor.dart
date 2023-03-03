@@ -3,12 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/patient.dart';
-import '../../Presentation/DoctorScreens/Home/doctor_home_screen.dart';
-import '../../Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
-import '../../Presentation/Screens/App_Layout/bottom_nav_bar.dart';
-import '../../Presentation/Screens/Chats/chats_screen.dart';
-import '../../Presentation/Screens/Notifications/notifications_screen.dart';
-import '../../Presentation/Screens/Settings/settings_screen.dart';
 
 class Doctor extends Patient {
   var field;
@@ -18,16 +12,22 @@ class Doctor extends Patient {
   var addressLong;
   var bio;
   var id;
+  var idImage;
+  var rate;
+  var verified;
 
   Doctor(
-      {required username,
+      {username,
       this.id,
-      required email,
-      required phoneNumber,
-      required password,
-      required age,
-      required gender,
-      required image,
+      email,
+      phoneNumber,
+      password,
+      age,
+      gender,
+      image,
+      this.verified,
+      this.rate,
+      this.idImage,
       this.field,
       this.experience,
       this.price,
@@ -42,27 +42,6 @@ class Doctor extends Patient {
             age: age,
             gender: gender,
             image: image) {}
-
-  updateDoctorsPrefs(id, name, email, password, age, gender, phone, image,
-      field, price, experience, bio, lan, lon) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    prefs.setString("Id", id);
-    prefs.setString("FullName", name);
-    prefs.setString("Email", email);
-    prefs.setString("Password", password);
-    prefs.setString("PhoneNumber", phone);
-    prefs.setString("Age", age);
-    prefs.setString("Gender", gender);
-    prefs.setString("Image", image);
-    prefs.setString("Field", field);
-    prefs.setString("TicketPrice", price);
-    prefs.setString("YearsOfExperience", experience);
-    prefs.setString("Bio", bio);
-    prefs.setString("AddressLatitude", lan);
-    prefs.setString("AddressLongitude", lon);
-    prefs.setString("Role", "Doctor");
-  }
 
   Update_Doctor(Doctor doctor, formdata, context) async {
     if (formdata!.validate()) {
@@ -79,7 +58,8 @@ class Doctor extends Patient {
         "Field": doctor.field,
         "TicketPrice": doctor.price,
         "YearsOfExperience": doctor.experience,
-        "Bio": doctor.bio
+        "Bio": doctor.bio,
+        "Image": doctor.image,
       });
       await updateDoctorsPrefs(
           doctor.id,
@@ -95,29 +75,63 @@ class Doctor extends Patient {
           doctor.experience,
           doctor.bio,
           doctor.addressLat,
-          doctor.addressLong);
+          doctor.addressLong,
+          doctor.rate.toString(),
+          doctor.verified.toString());
 
-      List<Widget> doctorScreens = [
-        const SettingScreen(),
-        ChatsScreen(),
-        const DoctorHomeScreen(),
-        NotificationsScreen(),
-        DoctorProfileScreen(
-          doctor: doctor,
-        ),
-      ];
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => BottomNavBar(
-                  screens: doctorScreens,
-                )),
-        (Route<dynamic> route) => false,
-      );
+      Navigator.pop(context, "refresh");
     } else {
       print("not valid");
     }
   }
+}
+
+updateDoctorsPrefs(id, name, email, password, age, gender, phone, image, field,
+    price, experience, bio, lan, lon, rate, verified) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.clear();
+  prefs.setString("Id", id);
+  prefs.setString("FullName", name);
+  prefs.setString("Email", email);
+  prefs.setString("Password", password);
+  prefs.setString("PhoneNumber", phone);
+  prefs.setString("Age", age);
+  prefs.setString("Gender", gender);
+  prefs.setString("Image", image);
+  prefs.setString("Field", field);
+  prefs.setString("TicketPrice", price);
+  prefs.setString("YearsOfExperience", experience);
+  prefs.setString("Bio", bio);
+  prefs.setString("AddressLatitude", lan);
+  prefs.setString("AddressLongitude", lon);
+  prefs.setString("Role", "Doctor");
+  prefs.setString("Rate", rate);
+  prefs.setString("Verified", verified);
+}
+
+UpdateAddress({doctor, lat, long, context}) async {
+  await FirebaseFirestore.instance
+      .collection("Doctors")
+      .doc(doctor.id)
+      .update({"AddressLatitude": lat, "AddressLongitude": long});
+  await updateDoctorsPrefs(
+      doctor.id,
+      doctor.username,
+      doctor.email,
+      doctor.password,
+      doctor.age,
+      doctor.gender,
+      doctor.phoneNumber,
+      doctor.image,
+      doctor.field,
+      doctor.price,
+      doctor.experience,
+      doctor.bio,
+      lat.toString(),
+      long.toString(),
+      doctor.rate.toString(),
+      doctor.verified.toString());
+  Navigator.pop(context, "refresh");
 }
 
 getDoctors() async {
@@ -139,6 +153,8 @@ getDoctors() async {
         bio: value.docs[i].data()['Bio'],
         experience: value.docs[i].data()['YearsOfExperience'],
         price: value.docs[i].data()['TicketPrice'],
+        verified: value.docs[i].data()["Verified"],
+        rate: value.docs[i].data()["Rate"],
       );
 
       doctors.insert(i, dr);

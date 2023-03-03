@@ -71,24 +71,7 @@ class Patient {
           patient.phoneNumber,
           patient.image);
 
-      List<Widget> patientScreens = [
-        const SettingScreen(),
-        ChatsScreen(),
-        const PatientHomeScreen(),
-        NotificationsScreen(),
-        PatientProfileScreen(
-          patient: patient,
-        ),
-      ];
-
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => BottomNavBar(
-                  screens: patientScreens,
-                )),
-        (Route<dynamic> route) => false,
-      );
+      Navigator.pop(context, "refresh");
     } else {
       print("not valid");
     }

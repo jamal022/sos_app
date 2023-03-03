@@ -4,6 +4,7 @@ import 'package:sos_app/Data/Authentication/signup.dart';
 import '../../../Data/Models/doctor.dart';
 import '../../Styles/colors.dart';
 import '../../Widgets/textFormField_widget.dart';
+import '../../Widgets/upoladPhoto_widget.dart';
 import '../Login/login_screen.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -36,8 +37,8 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
   var addressController = TextEditingController();
   var bioController = TextEditingController();
   late Doctor doctor;
-  var formKey = GlobalKey<FormState>();
-
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  var idImage;
   var lat;
   var long;
   List<Placemark> placemarks = [];
@@ -109,6 +110,9 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                     if (value!.isEmpty) {
                       return 'You must fill the field';
                     }
+                    if (value.length > 15) {
+                      return 'Must be less than 15 characters';
+                    }
                     return null;
                   },
                 ),
@@ -152,7 +156,8 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                             },
                             child: const Text('Get the current location'),
                           )
-                        : Text("  ${placemarks[0].street}"),
+                        : Text(
+                            "  ${placemarks[0].street}, ${placemarks[0].administrativeArea}"),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -166,11 +171,19 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                     if (value!.isEmpty) {
                       return 'You must fill the bio';
                     }
+                    if (value.length > 200) {
+                      return 'Must be less than 22 characters';
+                    }
                     return null;
                   },
                 ),
                 const SizedBox(
                   height: 10.0,
+                ),
+                textFieldTitle('Upload Your ID'),
+                const UploadPhotoWidget(text: 'Upload Image'),
+                const SizedBox(
+                  height: 20,
                 ),
                 MaterialButton(
                     elevation: 5.0,
@@ -180,23 +193,31 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                       borderRadius: BorderRadius.circular(50),
                       borderSide: BorderSide.none,
                     ),
-                    onPressed: () {
-                      doctor = Doctor(
-                          username: widget.name,
-                          email: widget.email,
-                          phoneNumber: widget.phone,
-                          password: widget.password,
-                          age: widget.age,
-                          gender: widget.gender,
-                          image: widget.image,
-                          field: fieldController.text,
-                          experience: experienceController.text,
-                          price: ticketController.text,
-                          addressLat: lat.toString(),
-                          addressLong: long.toString(),
-                          bio: bioController.text);
-                      Register(
-                          context: context, formKey: formKey, doctor: doctor);
+                    onPressed: () async {
+                      var formdata = formKey.currentState;
+                      if (formdata!.validate()) {
+                        formdata.save();
+                        idImage = await addImage();
+                        doctor = Doctor(
+                            username: widget.name,
+                            email: widget.email,
+                            phoneNumber: widget.phone,
+                            password: widget.password,
+                            age: widget.age,
+                            gender: widget.gender,
+                            image: widget.image,
+                            field: fieldController.text,
+                            experience: experienceController.text,
+                            price: ticketController.text,
+                            addressLat: lat.toString(),
+                            addressLong: long.toString(),
+                            bio: bioController.text,
+                            idImage: idImage,
+                            rate: 0,
+                            verified: false);
+
+                        Register(context: context, doctor: doctor);
+                      }
                     },
                     child: const Text(
                       'Register',

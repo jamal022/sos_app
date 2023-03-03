@@ -22,19 +22,6 @@ class ReportScreen extends StatefulWidget {
   State<ReportScreen> createState() => _ReportScreenState();
 }
 
-Patient pt = Patient();
-
-getPrefs() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  pt.username = prefs.getString("FullName");
-  pt.email = prefs.getString("Email");
-  pt.phoneNumber = prefs.getString("PhoneNumber");
-  pt.password = prefs.getString("Password");
-  pt.age = prefs.getString("Age");
-  pt.gender = prefs.getString("Gender");
-  pt.image = prefs.getString("Image");
-}
-
 class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
@@ -200,14 +187,13 @@ class _ReportScreenState extends State<ReportScreen> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50),
                           ))),
-                      onPressed: () async {
-                        await getPrefs();
+                      onPressed: () {
                         List<Widget> patientScreens = [
                           const SettingScreen(),
                           ChatsScreen(),
                           const PatientHomeScreen(),
                           NotificationsScreen(),
-                          PatientProfileScreen(patient: pt),
+                          PatientProfileScreen(),
                         ];
                         Navigator.pushAndRemoveUntil(
                           context,

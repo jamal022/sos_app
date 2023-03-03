@@ -6,8 +6,6 @@ import 'package:sos_app/Presentation/PatientScreens/Home/patient_home_screen.dar
 import 'package:sos_app/Presentation/PatientScreens/Profile/patient_profile_screen.dart';
 import 'package:sos_app/Presentation/Screens/App_Layout/bottom_nav_bar.dart';
 import 'package:sos_app/Presentation/Screens/Start/start_screen.dart';
-import '../../../Data/Models/doctor.dart';
-import '../../../Data/Models/patient.dart';
 import '../../Constants/app_assets.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -20,66 +18,11 @@ class SplashScreen extends StatelessWidget {
   SplashScreen({Key? key}) : super(key: key);
 
   var role;
-  var name;
-  var email;
-  var password;
-  var phone;
-  var image;
-  var age;
-  var gender;
-  var bio;
-  var field;
-  var price;
-  var experience;
-  var addLat;
-  var addLong;
-  var id;
-  late Patient patient;
-  late Doctor doctor;
 
   getPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    id = prefs.getString("Id");
+
     role = prefs.getString("Role");
-    name = prefs.getString("FullName");
-    email = prefs.getString("Email");
-    password = prefs.getString("Password");
-    phone = prefs.getString("PhoneNumber");
-    age = prefs.getString("Age");
-    gender = prefs.getString("Gender");
-    image = prefs.getString("Image");
-    field = prefs.getString("Field");
-    experience = prefs.getString("YearsOfExperience");
-    price = prefs.getString("TicketPrice");
-    bio = prefs.getString("Bio");
-    addLat = prefs.getString("AddressLatitude");
-    addLong = prefs.getString("AddressLongitude");
-
-    patient = Patient(
-        id: id,
-        username: name,
-        email: email,
-        phoneNumber: phone,
-        password: password,
-        age: age,
-        gender: gender,
-        image: image);
-
-    doctor = Doctor(
-        id: id,
-        username: name,
-        email: email,
-        phoneNumber: phone,
-        password: password,
-        age: age,
-        gender: gender,
-        image: image,
-        field: field,
-        experience: experience,
-        price: price,
-        addressLat: addLat,
-        addressLong: addLong,
-        bio: bio);
   }
 
   @override
@@ -147,12 +90,8 @@ class SplashScreen extends StatelessWidget {
                                       : DoctorHomeScreen(),
                                   NotificationsScreen(),
                                   role == "Patient"
-                                      ? PatientProfileScreen(
-                                          patient: patient,
-                                        )
-                                      : DoctorProfileScreen(
-                                          doctor: doctor,
-                                        ),
+                                      ? PatientProfileScreen()
+                                      : DoctorProfileScreen(),
                                 ],
                               ),
                             ),

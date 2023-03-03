@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Screens/Login/login_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
-
 import '../../../Data/Authentication/signup.dart';
 import '../../../Data/Models/patient.dart';
 import '../../Styles/fonts.dart';
-import '../../Widgets/loading_widget.dart';
 import '../../Widgets/upoladPhoto_widget.dart';
 import 'doctorSignup_screen.dart';
 
@@ -99,6 +97,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     if (value!.isEmpty) {
                       return 'You must fill the full name';
                     }
+                    if (value.length > 15) {
+                      return 'Must be less than 15 characters';
+                    }
                     return null;
                   },
                 ),
@@ -111,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   textController: emailController,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'You must fill the email';
+                      return 'You must fill a valid email';
                     }
                     return null;
                   },
@@ -177,6 +178,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     if (value!.isEmpty) {
                       return 'You must fill the phone number';
                     }
+                    if (value.length < 12 && value.length > 12) {
+                      return 'Phone number must be 11 number';
+                    }
                     return null;
                   },
                 ),
@@ -225,7 +229,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 30),
                 textFieldTitle('Role'),
                 Container(
-                  padding: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
                   child: RadioListTile(
                     activeColor: primaryColor,
                     title: const Text(
@@ -243,7 +247,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
                   child: RadioListTile(
                     activeColor: primaryColor,
                     title: const Text(
@@ -272,34 +276,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       borderSide: BorderSide.none,
                     ),
                     onPressed: () async {
-                      userImage = await addImage();
-                      if (role == "patient") {
-                        patient = Patient(
-                            username: nameController.text,
-                            email: emailController.text,
-                            phoneNumber: phoneController.text,
-                            password: passwordController.text,
-                            age: ageController.text,
-                            gender: gender,
-                            image: userImage);
-
-                        Register(
-                            context: context,
-                            patient: patient,
-                            formKey: formKey);
-                      } else if (role == "doctor") {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (_) => DoctorSignupScreen(
-                                  name: nameController.text,
-                                  email: emailController.text,
-                                  phone: phoneController.text,
-                                  password: passwordController.text,
-                                  age: ageController.text,
-                                  gender: gender,
-                                  image: userImage)),
-                          (Route<dynamic> route) => false,
-                        );
+                      var formdata = formKey.currentState;
+                      if (formdata!.validate()) {
+                        formdata.save();
+                        userImage = await addImage();
+                        if (role == "patient") {
+                          patient = Patient(
+                              username: nameController.text,
+                              email: emailController.text,
+                              phoneNumber: phoneController.text,
+                              password: passwordController.text,
+                              age: ageController.text,
+                              gender: gender,
+                              image: userImage);
+                          Register(context: context, patient: patient);
+                        } else if (role == "doctor") {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (_) => DoctorSignupScreen(
+                                    name: nameController.text,
+                                    email: emailController.text,
+                                    phone: phoneController.text,
+                                    password: passwordController.text,
+                                    age: ageController.text,
+                                    gender: gender,
+                                    image: userImage)),
+                            (Route<dynamic> route) => false,
+                          );
+                        }
                       }
                     },
                     child: const Text(

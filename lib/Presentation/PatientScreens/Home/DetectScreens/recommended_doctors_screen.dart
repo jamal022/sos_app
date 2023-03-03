@@ -107,12 +107,6 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
                       },
                       markers: mymarkers,
                     ),
-
-              // decoration: const BoxDecoration(
-              //     image: DecorationImage(
-              //   image: AssetImage("assets/images/R.jpg"),
-              //   fit: BoxFit.fill,
-              // )),
             ),
             Container(
               height: 313,

@@ -45,7 +45,9 @@ saveDoctorPrefs(
     experience,
     bio,
     addLat,
-    addLong}) async {
+    addLong,
+    rate,
+    verified}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("Id", id);
   prefs.setString("FullName", name);
@@ -61,6 +63,8 @@ saveDoctorPrefs(
   prefs.setString("Bio", bio);
   prefs.setString("AddressLatitude", addLat);
   prefs.setString("AddressLongitude", addLong);
+  prefs.setString("Rate", rate);
+  prefs.setString("Verified", verified);
   prefs.setString("Role", "Doctor");
 }
 
@@ -96,9 +100,7 @@ void route(id, context) async {
         ChatsScreen(),
         const PatientHomeScreen(),
         NotificationsScreen(),
-        PatientProfileScreen(
-          patient: patient,
-        ),
+        PatientProfileScreen(),
       ];
       Navigator.pushAndRemoveUntil(
         context,
@@ -128,7 +130,9 @@ void route(id, context) async {
             price: snapshot.data()?['TicketPrice'],
             addressLat: snapshot.data()?['AddressLatitude'],
             addressLong: snapshot.data()?['AddressLongitude'],
-            bio: snapshot.data()?['Bio']);
+            bio: snapshot.data()?['Bio'],
+            rate: snapshot.data()?["Rate"],
+            verified: snapshot.data()?["Verified"]);
       });
 
       await saveDoctorPrefs(
@@ -145,16 +149,16 @@ void route(id, context) async {
           experience: doctor.experience,
           bio: doctor.bio,
           addLat: doctor.addressLat,
-          addLong: doctor.addressLong);
+          addLong: doctor.addressLong,
+          rate: doctor.rate.toString(),
+          verified: doctor.verified.toString());
 
       List<Widget> doctorScreens = [
         const SettingScreen(),
         ChatsScreen(),
         const DoctorHomeScreen(),
         NotificationsScreen(),
-        DoctorProfileScreen(
-          doctor: doctor,
-        ),
+        DoctorProfileScreen(),
       ];
       Navigator.pushAndRemoveUntil(
         context,
