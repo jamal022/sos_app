@@ -1,35 +1,33 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 class Schedule {
+  var scheduleId;
   var doctorId;
-  var doctorName;
   var day;
   var month;
   var year;
   var fromTime;
-  var fromPeriod;
   var toTime;
-  var toPeriod;
-  var maxNbAppointments;
-  var nbAppointments;
 
   Schedule({
+    this.scheduleId,
     required this.doctorId,
-    required this.doctorName,
     required this.day,
     required this.month,
     required this.year,
     required this.fromTime,
-    required this.fromPeriod,
-    required this.toPeriod,
     required this.toTime,
-    required this.maxNbAppointments,
-    required this.nbAppointments,
   });
+}
+
+class TimeSlots {
+  var timeSlotId;
+  var time;
+  var status;
+  TimeSlots({this.timeSlotId, required this.time, required this.status});
 }
 
 AddSchedule(Schedule schedule, context) async {
@@ -55,16 +53,46 @@ AddSchedule(Schedule schedule, context) async {
     showLoading(context);
     await FirebaseFirestore.instance.collection("Schedules").add({
       "DoctorId": schedule.doctorId,
-      "DoctorName": schedule.doctorName,
       "Day": schedule.day,
       "Month": schedule.month,
       "Year": schedule.year,
       "FromTime": schedule.fromTime,
-      "FromPeriod": schedule.fromPeriod,
       "ToTime": schedule.toTime,
-      "ToPeriod": schedule.toPeriod,
-      "MaxNbOfAppointments": schedule.maxNbAppointments,
-      "NbOfAppointments": schedule.nbAppointments,
+    }).then((value) async {
+      DocumentReference sch = await FirebaseFirestore.instance
+          .collection("Schedules")
+          .doc(value.id);
+
+      List<int> timeSlots = [];
+      var counter;
+      if (schedule.toTime > schedule.fromTime) {
+        counter = schedule.toTime - schedule.fromTime;
+        timeSlots.add(schedule.fromTime);
+        var time = schedule.fromTime;
+        for (int i = 1; i <= counter - 1; i++) {
+          time++;
+          timeSlots.add(time);
+        }
+      } else if (schedule.fromTime > schedule.toTime) {
+        var first;
+        first = 24 - schedule.fromTime;
+        timeSlots.add(schedule.fromTime);
+        var time = schedule.fromTime;
+        for (int i = 1; i <= first; i++) {
+          time++;
+          timeSlots.add(time);
+        }
+        counter = schedule.toTime - 1;
+        for (int i = 1; i <= counter; i++) {
+          timeSlots.add(i);
+        }
+      }
+      for (var i = 0; i < timeSlots.length; i++) {
+        await sch.collection("TimeSlots").add({
+          "Time": timeSlots[i],
+          "Status": 0,
+        });
+      }
     }).then((value) => Navigator.pop(context));
     return "Added";
   }
@@ -79,19 +107,13 @@ GetSchedulesForDoctor(doctorId) async {
       .then((value) {
     for (var schedule in value.docs) {
       Schedule s = Schedule(
+        scheduleId: schedule.id,
         doctorId: schedule.data()["DoctorId"],
-        doctorName: schedule.data()["DoctorName"],
         day: schedule.data()["Day"],
         month: schedule.data()["Month"],
         year: schedule.data()["Year"],
         fromTime: schedule.data()["FromTime"],
-        fromPeriod: schedule.data()["FromPeriod"],
         toTime: schedule.data()["ToTime"],
-        toPeriod: schedule.data()["ToPeriod"],
-        maxNbAppointments: schedule.data()["MaxNbOfAppointments"],
-        nbAppointments: schedule.data()["NbOfApponitments"] == null
-            ? "0"
-            : schedule.data()["NbOfAppointments"],
       );
       schedules.add(s);
     }
@@ -101,7 +123,6 @@ GetSchedulesForDoctor(doctorId) async {
 
 GetSchedulesForPatient(doctorId) async {
   List<Schedule> schedules = [];
-  var today = DateTime.now().day;
   var month = DateTime.now().month;
   var year = DateTime.now().year;
   await FirebaseFirestore.instance
@@ -113,19 +134,13 @@ GetSchedulesForPatient(doctorId) async {
       if (schedule.data()["Month"] >= month &&
           schedule.data()["Year"] >= year) {
         Schedule s = Schedule(
+          scheduleId: schedule.id,
           doctorId: schedule.data()["DoctorId"],
-          doctorName: schedule.data()["DoctorName"],
           day: schedule.data()["Day"],
           month: schedule.data()["Month"],
           year: schedule.data()["Year"],
           fromTime: schedule.data()["FromTime"],
-          fromPeriod: schedule.data()["FromPeriod"],
           toTime: schedule.data()["ToTime"],
-          toPeriod: schedule.data()["ToPeriod"],
-          maxNbAppointments: schedule.data()["MaxNbOfAppointments"],
-          nbAppointments: schedule.data()["NbOfAppointments"] == null
-              ? 0
-              : schedule.data()["NbOfAppointments"],
         );
         schedules.add(s);
       }
@@ -134,20 +149,41 @@ GetSchedulesForPatient(doctorId) async {
   return schedules;
 }
 
-DeleteSchedule(Schedule sc) async {
-  await FirebaseFirestore.instance
-      .collection("Schedules")
-      .where("DoctorId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .where("Day", isEqualTo: sc.day)
-      .where("Month", isEqualTo: sc.month)
-      .where("Year", isEqualTo: sc.year)
+GetTimeSlots(id) async {
+  List<TimeSlots> ts = [];
+  DocumentReference schedule =
+      await FirebaseFirestore.instance.collection("Schedules").doc(id);
+  await schedule
+      .collection("TimeSlots")
+      .where("Status", isEqualTo: 0)
       .get()
-      .then((value) async {
-    await FirebaseFirestore.instance
-        .collection("Schedules")
-        .doc(value.docs.first.id)
-        .delete();
+      .then((value) {
+    for (var t in value.docs) {
+      TimeSlots timeslot = TimeSlots(
+          timeSlotId: t.id, status: t.data()["Status"], time: t.data()["Time"]);
+      ts.add(timeslot);
+    }
   });
+  return ts;
+}
+
+UpdateTimeStatus(scheduleId, timeId) async {
+  DocumentReference schedule =
+      await FirebaseFirestore.instance.collection("Schedules").doc(scheduleId);
+  await schedule.collection("TimeSlots").doc(timeId).update({"Status": 1});
+}
+
+DeleteSchedule(id) async {
+  DocumentReference sch =
+      await FirebaseFirestore.instance.collection("Schedules").doc(id);
+  await sch.collection("TimeSlots").get().then((value) async {
+    for (var time in value.docs) {
+      await sch.collection("TimeSlots").doc(time.id).delete();
+    }
+  }).then((value) {
+    sch.delete();
+  });
+
   return "deleted";
 }
 

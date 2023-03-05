@@ -61,8 +61,8 @@ saveDoctorPrefs(
   prefs.setString("YearsOfExperience", experience);
   prefs.setString("TicketPrice", price);
   prefs.setString("Bio", bio);
-  prefs.setString("AddressLatitude", addLat);
-  prefs.setString("AddressLongitude", addLong);
+  prefs.setString("AddressLatitude", addLat.toString());
+  prefs.setString("AddressLongitude", addLong.toString());
   prefs.setString("Rate", rate);
   prefs.setString("Verified", verified);
   prefs.setString("Role", "Doctor");

@@ -14,7 +14,7 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 List<Schedule> schedules = [];
-var _fromTime, _fromPeriod, _toTime, _toPeriod, _date;
+var _fromTime, _toTime, _date;
 late Schedule schedule;
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
@@ -29,6 +29,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString("Id");
     schedules = await GetSchedulesForDoctor(id);
+    _fromTime = null;
+    _toTime = null;
+    _date = null;
     setState(() {});
   }
 
@@ -114,8 +117,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                     elevation: 6.0,
                                     color: Colors.redAccent,
                                     onPressed: () async {
-                                      var result =
-                                          await DeleteSchedule(schedule);
+                                      var result = await DeleteSchedule(
+                                          schedule.scheduleId);
                                       if (result == "deleted") {
                                         Navigator.pop(ctx);
                                         _getSchedules();
@@ -179,9 +182,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             setState(() {
                               schedule = schedules[i];
                               _fromTime = schedules[i].fromTime;
-                              _fromPeriod = schedules[i].fromPeriod;
                               _toTime = schedules[i].toTime;
-                              _toPeriod = schedules[i].toPeriod;
                               _date =
                                   "${schedules[i].day} / ${schedules[i].month} / ${schedules[i].year}";
                             });
@@ -222,9 +223,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    _fromTime != null
-                        ? "      ${_fromTime}:00 ${_fromPeriod}"
-                        : " ",
+                    _fromTime != null ? "      ${_fromTime}:00" : " ",
                     style: const TextStyle(
                         color: Colors.black, fontSize: formSubtitleFont),
                   ),
@@ -242,9 +241,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    _toTime != null
-                        ? "           ${_toTime}:00 ${_toPeriod}"
-                        : " ",
+                    _toTime != null ? "           ${_toTime}:00 " : " ",
                     style: const TextStyle(
                         color: Colors.black, fontSize: formSubtitleFont),
                   ),

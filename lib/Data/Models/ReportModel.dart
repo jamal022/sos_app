@@ -11,6 +11,7 @@ import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import '../../Presentation/Widgets/printable_report.dart';
 
 class Report {
+  var reportId;
   var patientId;
   var image;
   var burnDegree;
@@ -24,7 +25,8 @@ class Report {
   var date;
 
   Report(
-      {this.image,
+      {this.reportId,
+      this.image,
       this.burnDegree,
       this.name,
       this.age,
@@ -109,6 +111,7 @@ GetReports(Patient patient, context) async {
       .then((value) {
     for (var report in value.docs) {
       Report r = Report(
+          reportId: report.id,
           patientId: report.data()["PatientId"],
           image: report.data()["Image"],
           burnDegree: report.data()["BurnDegree"],

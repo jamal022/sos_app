@@ -41,19 +41,19 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
 
   Future _getLatAndLong() async {
     kGooglePlex = CameraPosition(
-      target: LatLng(double.parse(widget.doctor.addressLat),
-          double.parse(widget.doctor.addressLong)),
+      target: LatLng(double.parse(widget.doctor.addressLat.toString()),
+          double.parse(widget.doctor.addressLong.toString())),
       zoom: 12.0,
     );
 
     mymarkers.add(Marker(
       markerId: const MarkerId("initial"),
-      position: LatLng(double.parse(widget.doctor.addressLat),
-          double.parse(widget.doctor.addressLong)),
+      position: LatLng(double.parse(widget.doctor.addressLat.toString()),
+          double.parse(widget.doctor.addressLong.toString())),
     ));
     placemarks = await placemarkFromCoordinates(
-        double.parse(widget.doctor.addressLat),
-        double.parse(widget.doctor.addressLong));
+        double.parse(widget.doctor.addressLat.toString()),
+        double.parse(widget.doctor.addressLong.toString()));
     setState(() {});
   }
 
@@ -217,12 +217,14 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                                   fontSize: 20,
                                 ),
                               ),
-                              Text(
-                                  '${placemarks[0].locality},${placemarks[0].country}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 14,
-                                      color: Colors.black.withOpacity(0.5)))
+                              placemarks.length == 0
+                                  ? Text(
+                                      '${placemarks[0].locality},${placemarks[0].country}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 14,
+                                          color: Colors.black.withOpacity(0.5)))
+                                  : Center()
                             ],
                           ),
                         ),
@@ -378,9 +380,10 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => AddAppointmentScreen(
-                                schedules: schedules,
-                                doctor: widget.doctor,
-                                reports: reports),
+                              schedules: schedules,
+                              reports: reports,
+                              doctor: widget.doctor,
+                            ),
                           ));
                     },
                     child: const Text(

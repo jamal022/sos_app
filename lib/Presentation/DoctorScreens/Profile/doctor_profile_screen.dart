@@ -262,7 +262,7 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                                 Container(
                                   height: 50,
                                   width: 200,
-                                  child: placemarks != null
+                                  child: placemarks.length != 0
                                       ? Text(
                                           "${placemarks[0].street} ,${placemarks[0].administrativeArea}")
                                       : Text(""),

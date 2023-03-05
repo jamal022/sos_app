@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 class Appointment {
+  var appointmentId;
   var reportId;
   var patientName;
   var doctorId;
@@ -15,34 +17,34 @@ class Appointment {
   var place;
   var rate;
   Appointment(
-      {required this.reportId,
+      {this.appointmentId,
+      required this.reportId,
       required this.doctorId,
       required this.patientId,
-      required this.patientName,
-      required this.doctorName,
+      this.patientName,
+      this.doctorName,
       required this.status,
       required this.date,
       required this.time,
-      required this.price,
-      required this.place,
+      this.price,
+      this.place,
       required this.rate});
 }
 
-AddAppointment({required Appointment app, context}) async {
+AddAppointment({required Appointment app, scheduleId, timeId, context}) async {
   showLoading(context);
   await FirebaseFirestore.instance.collection("Appointments").add({
-    "PatientName": app.patientName,
     "PatientId": app.patientId,
     "DoctorId": app.doctorId,
-    "DoctorName": app.doctorName,
     "ReportId": app.reportId,
     "Date": app.date,
     "Status": app.status,
     "Time": app.time,
-    "Price": app.price,
-    "Place": app.place,
     "Rate": app.rate,
-  }).then((value) => Navigator.pop(context));
+  }).then((value) async {
+    await UpdateTimeStatus(scheduleId, timeId);
+    Navigator.pop(context);
+  });
   return "Added";
 }
 
