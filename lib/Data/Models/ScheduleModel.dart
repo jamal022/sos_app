@@ -173,6 +173,39 @@ UpdateTimeStatus(scheduleId, timeId) async {
   await schedule.collection("TimeSlots").doc(timeId).update({"Status": 1});
 }
 
+UpdateTimeInCancel(doctorId, date, time) async {
+  var array = date.split('/');
+  var day = int.parse(array[0]);
+  var month = int.parse(array[1]);
+  var year = int.parse(array[2]);
+  var array2 = time.split(':');
+  var timesolt = int.parse(array2[0]);
+  var scheduleId;
+  await FirebaseFirestore.instance
+      .collection("Schedules")
+      .where("DoctorId", isEqualTo: doctorId)
+      .where("Day", isEqualTo: day)
+      .where("Month", isEqualTo: month)
+      .where("Year", isEqualTo: year)
+      .get()
+      .then((value) async {
+    scheduleId = value.docs.first.id;
+    DocumentReference schedule = await FirebaseFirestore.instance
+        .collection("Schedules")
+        .doc(scheduleId);
+    await schedule
+        .collection("TimeSlots")
+        .where("Time", isEqualTo: timesolt)
+        .get()
+        .then((value) async {
+      await schedule
+          .collection("TimeSlots")
+          .doc(value.docs.first.id)
+          .update({"Status": 0});
+    });
+  });
+}
+
 DeleteSchedule(id) async {
   DocumentReference sch =
       await FirebaseFirestore.instance.collection("Schedules").doc(id);
@@ -185,57 +218,4 @@ DeleteSchedule(id) async {
   });
 
   return "deleted";
-}
-
-AddAppointmentToSchedule({doctorId, day, month, year}) async {
-  var number;
-  await FirebaseFirestore.instance
-      .collection("Schedules")
-      .where("DoctorId", isEqualTo: doctorId)
-      .where("Day", isEqualTo: day)
-      .where("Month", isEqualTo: month)
-      .where("Year", isEqualTo: year)
-      .get()
-      .then((value) async {
-    number = value.docs.first.data()["NbOfAppointments"];
-
-    if (number == null) {
-      number = 1;
-    } else {
-      number = number + 1;
-    }
-
-    await FirebaseFirestore.instance
-        .collection("Schedules")
-        .doc(value.docs.first.id)
-        .update({
-      "NbOfAppointments": number,
-    });
-  });
-}
-
-DeleteAppointmentFromSchedule({doctorId, date}) async {
-  var number;
-  var array = date.split('/');
-  var day = int.parse(array[0]);
-  var month = int.parse(array[1]);
-  var year = int.parse(array[2]);
-  await FirebaseFirestore.instance
-      .collection("Schedules")
-      .where("DoctorId", isEqualTo: doctorId)
-      .where("Day", isEqualTo: day)
-      .where("Month", isEqualTo: month)
-      .where("Year", isEqualTo: year)
-      .get()
-      .then((value) async {
-    number = value.docs.first.data()["NbOfAppointments"];
-    print("==================${number}========");
-    number = number - 1;
-    await FirebaseFirestore.instance
-        .collection("Schedules")
-        .doc(value.docs.first.id)
-        .update({
-      "NbOfAppointments": number,
-    });
-  });
 }

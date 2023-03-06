@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
@@ -55,20 +56,23 @@ GetDoctorAppointments(doctorId) async {
       .where("DoctorId", isEqualTo: doctorId)
       .where("Status", isEqualTo: "In Progress")
       .get()
-      .then((value) {
-    print("==============${value.docs.length}============");
+      .then((value) async {
     for (var app in value.docs) {
+      var patientName;
+      await FirebaseFirestore.instance
+          .collection("Patients")
+          .doc(app.data()["PatientId"])
+          .get()
+          .then((value) => patientName = value.data()!["FullName"]);
       Appointment s = Appointment(
+          appointmentId: app.id,
           doctorId: app.data()["DoctorId"],
           patientId: app.data()["PatientId"],
-          doctorName: app.data()["DoctorName"],
-          patientName: app.data()["PatientName"],
+          patientName: patientName,
           reportId: app.data()["ReportId"],
           date: app.data()["Date"],
           status: app.data()["Status"],
           time: app.data()["Time"],
-          price: app.data()["Price"],
-          place: app.data()["Place"],
           rate: app.data()["Rate"]);
       appointments.add(s);
     }
@@ -83,19 +87,34 @@ GetEndedAppointments(patientId) async {
       .where("PatientId", isEqualTo: patientId)
       .where("Status", isEqualTo: "Ended")
       .get()
-      .then((value) {
+      .then((value) async {
     for (var app in value.docs) {
+      var doctorName, price, lat, long;
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(app.data()["DoctorId"])
+          .get()
+          .then((value) {
+        doctorName = value.data()!["FullName"];
+        price = value.data()!["TicketPrice"];
+        lat = value.data()!["AddressLatitude"];
+        long = value.data()!["AddressLongitude"];
+      });
+      List<Placemark> placemarks = [];
+      placemarks = await placemarkFromCoordinates(
+          double.parse(lat.toString()), double.parse(long.toString()));
+      var place = placemarks[0].locality;
       Appointment s = Appointment(
+          appointmentId: app.id,
           doctorId: app.data()["DoctorId"],
           patientId: app.data()["PatientId"],
-          doctorName: app.data()["DoctorName"],
-          patientName: app.data()["PatientName"],
+          doctorName: doctorName,
           reportId: app.data()["ReportId"],
           date: app.data()["Date"],
           status: app.data()["Status"],
           time: app.data()["Time"],
-          place: app.data()["Place"],
-          price: app.data()["Price"],
+          place: place,
+          price: price,
           rate: app.data()["Rate"]);
       appointments.add(s);
     }
@@ -110,19 +129,34 @@ GetInProgressAppointments(patientId) async {
       .where("PatientId", isEqualTo: patientId)
       .where("Status", isEqualTo: "In Progress")
       .get()
-      .then((value) {
+      .then((value) async {
     for (var app in value.docs) {
+      var doctorName, price, lat, long;
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(app.data()["DoctorId"])
+          .get()
+          .then((value) {
+        doctorName = value.data()!["FullName"];
+        price = value.data()!["TicketPrice"];
+        lat = value.data()!["AddressLatitude"];
+        long = value.data()!["AddressLongitude"];
+      });
+      List<Placemark> placemarks = [];
+      placemarks = await placemarkFromCoordinates(
+          double.parse(lat.toString()), double.parse(long.toString()));
+      var place = placemarks[0].locality;
       Appointment s = Appointment(
+          appointmentId: app.id,
           doctorId: app.data()["DoctorId"],
           patientId: app.data()["PatientId"],
-          doctorName: app.data()["DoctorName"],
-          patientName: app.data()["PatientName"],
+          doctorName: doctorName,
           reportId: app.data()["ReportId"],
           date: app.data()["Date"],
           status: app.data()["Status"],
           time: app.data()["Time"],
-          place: app.data()["Place"],
-          price: app.data()["Price"],
+          place: place,
+          price: price,
           rate: app.data()["Rate"]);
       appointments.add(s);
     }
@@ -130,52 +164,37 @@ GetInProgressAppointments(patientId) async {
   return appointments;
 }
 
-ChangeAppointmentToEnded(Appointment app) async {
+ChangeAppointmentToEnded(appId) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
-      .where("DoctorId", isEqualTo: app.doctorId)
-      .where("PatientId", isEqualTo: app.patientId)
-      .where("Date", isEqualTo: app.date)
-      .where("Time", isEqualTo: app.time)
+      .doc(appId)
       .get()
       .then((value) async {
     await FirebaseFirestore.instance
         .collection("Appointments")
-        .doc(value.docs.first.id)
+        .doc(value.id)
         .update({"Status": "Ended"});
   });
   return "changed";
 }
 
-DeleteAppointment(Appointment app, context) async {
+DeleteAppointment(appId) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
-      .where("DoctorId", isEqualTo: app.doctorId)
-      .where("PatientId", isEqualTo: app.patientId)
-      .where("Date", isEqualTo: app.date)
-      .where("Time", isEqualTo: app.time)
-      .get()
-      .then((value) async {
-    await FirebaseFirestore.instance
-        .collection("Appointments")
-        .doc(value.docs.first.id)
-        .delete();
-  }).then((value) => Navigator.pop(context));
+      .doc(appId)
+      .delete();
   return "deleted";
 }
 
-UpdateRate(Appointment app, rate, context) async {
+UpdateRate(appId, rate, context) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
-      .where("DoctorId", isEqualTo: app.doctorId)
-      .where("PatientId", isEqualTo: app.patientId)
-      .where("Date", isEqualTo: app.date)
-      .where("Time", isEqualTo: app.time)
+      .doc(appId)
       .get()
       .then((value) async {
     await FirebaseFirestore.instance
         .collection("Appointments")
-        .doc(value.docs.first.id)
+        .doc(value.id)
         .update({"Rate": rate});
   }).then((value) => Navigator.pop(context));
   return "changed";

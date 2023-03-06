@@ -51,10 +51,12 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
       position: LatLng(double.parse(widget.doctor.addressLat.toString()),
           double.parse(widget.doctor.addressLong.toString())),
     ));
-    placemarks = await placemarkFromCoordinates(
-        double.parse(widget.doctor.addressLat.toString()),
-        double.parse(widget.doctor.addressLong.toString()));
-    setState(() {});
+
+    setState(() async {
+      placemarks = await placemarkFromCoordinates(
+          double.parse(widget.doctor.addressLat.toString()),
+          double.parse(widget.doctor.addressLong.toString()));
+    });
   }
 
   @override
@@ -93,18 +95,46 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
           backgroundColor: primaryColor,
         ),
         body: Container(
-            padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
+            padding: const EdgeInsets.fromLTRB(5, 10, 5, 20),
             child: Center(
                 child: Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: CircleAvatar(
-                    maxRadius: 80,
-                    backgroundImage: NetworkImage(
-                      widget.doctor.image,
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: CircleAvatar(
+                        maxRadius: 80,
+                        backgroundImage: NetworkImage(
+                          widget.doctor.image,
+                        ),
+                      ),
                     ),
-                  ),
+                    // Container(
+                    //   width: double.infinity,
+                    //   child: Row(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    //       const Text(
+                    //         "Field:",
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 20,
+                    //         ),
+                    //       ),
+                    //       const SizedBox(
+                    //         width: 10,
+                    //       ),
+                    //       Text(widget.doctor.field,
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.w800,
+                    //               fontSize: 18,
+                    //               color: Colors.black.withOpacity(0.5)))
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
                 ),
                 Container(
                     height: 80,
@@ -210,14 +240,17 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                         Expanded(
                           child: Column(
                             children: [
-                              Text(
-                                widget.doctor.field,
-                                style: const TextStyle(
+                              const Text(
+                                "Address",
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                 ),
                               ),
-                              placemarks.length == 0
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              placemarks.length != 0
                                   ? Text(
                                       '${placemarks[0].locality},${placemarks[0].country}',
                                       style: TextStyle(
