@@ -47,8 +47,6 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
       setState(() {
         userimage = snapshot.data()!['UserImage1'];
         currentImage = snapshot.data()!['UserImage2'];
-        lastmessage = snapshot.data()!['LastMessage'];
-        time = snapshot.data()!['Time'];
         peername = snapshot.data()!['PeerName'];
         currentname = snapshot.data()!['CurrentName'];
       });
@@ -83,89 +81,62 @@ class _ChatCardWidgetState extends State<ChatCardWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatPageScreen(
-                  currentuser: widget.userName,
-                  peerId: username,
-                  groupChatId: widget.ChatId,
-                  currentimage: widget.userImage,
-                  peerimage: Image,
-                  peername: peername,
-                  currentname: widget.currentname,
-                ),
-              ));
-        },
-        child: Padding(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPageScreen(
+                currentuser: widget.userName,
+                peerId: username,
+                groupChatId: widget.ChatId,
+                currentimage: widget.userImage,
+                peerimage: Image,
+                peername: getpeername(),
+                currentname: widget.currentname,
+              ),
+            ));
+      },
+      child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
-            color: const Color.fromARGB(255, 247, 245, 245),
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 5, 10),
-                child: Row(children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(40)),
-                        border: Border.all(width: 2, color: primaryColor),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                          )
-                        ]),
-                    child: CircleAvatar(
-                      radius: 35,
-                      backgroundImage: NetworkImage(
-                        getpeerimage(),
+              color: const Color.fromARGB(255, 247, 245, 245),
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 5, 10),
+                  child: Row(children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(40)),
+                          border: Border.all(width: 2, color: primaryColor),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                            )
+                          ]),
+                      child: CircleAvatar(
+                        radius: 35,
+                        backgroundImage: NetworkImage(
+                          getpeerimage(),
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
+                    Container(
                       width: MediaQuery.of(context).size.width * 0.65,
                       padding: const EdgeInsets.only(left: 20),
-                      child: Column(children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Text(
-                                  getpeername(),
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            lastmessage,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black54,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        )
-                      ]))
-                ])),
-          ),
-        ));
+                      child: Text(
+                        getpeername(),
+                        style: const TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ])))),
+    );
   }
 }

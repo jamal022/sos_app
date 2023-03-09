@@ -84,10 +84,3 @@ Future<Stream<QuerySnapshot>> getUserChats(String itIsMyName) async {
       .where("Users", arrayContains: itIsMyName)
       .snapshots();
 }
-
-getUserInfo(String username) async {
-  return await FirebaseFirestore.instance
-      .collection("Patients")
-      .where("FullName", isEqualTo: username)
-      .get();
-}

@@ -40,33 +40,13 @@ class _ChatPageScreen extends State<ChatPageScreen> {
     FirebaseFirestore.instance
         .collection("Messages")
         .doc(widget.groupChatId)
-        .get()
-        .then((value) async {
-      if (value != null) {
-        FirebaseFirestore.instance
-            .collection("Messages")
-            .doc(widget.groupChatId)
-            .update({
-          'Users': users,
-          'ChatId': widget.groupChatId,
-          'UserImage1': widget.currentimage,
-          'UserImage2': widget.peerimage,
-          'PeerName': widget.peername,
-          'CurrentName': widget.currentname,
-        });
-      } else {
-        FirebaseFirestore.instance
-            .collection("Messages")
-            .doc(widget.groupChatId)
-            .set({
-          'Users': users,
-          'ChatId': widget.groupChatId,
-          'UserImage1': widget.currentimage,
-          'UserImage2': widget.peerimage,
-          'PeerName': widget.peername,
-          'CurrentName': widget.currentname,
-        });
-      }
+        .set({
+      'Users': users,
+      'ChatId': widget.groupChatId,
+      'UserImage1': widget.currentimage,
+      'UserImage2': widget.peerimage,
+      'PeerName': widget.peername,
+      'CurrentName': widget.currentname,
     });
   }
 
@@ -161,24 +141,17 @@ class _ChatPageScreen extends State<ChatPageScreen> {
           ),
 // Button send message
           Material(
+            color: Colors.white,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8),
+              margin: const EdgeInsets.symmetric(horizontal: 8),
               child: IconButton(
-                icon: Icon(Icons.send),
+                icon: const Icon(Icons.send),
                 onPressed: () {
-                  FirebaseFirestore.instance
-                      .collection("Messages")
-                      .doc(widget.groupChatId)
-                      .update({
-                    'Time': DateTime.now().toString(),
-                    'LastMessage': MessageController.text,
-                  });
                   onSendMessage(MessageController.text, TypeMessage.text);
                 },
                 color: primaryColor,
               ),
             ),
-            color: Colors.white,
           ),
         ],
       ),

@@ -33,7 +33,7 @@ class _ChatsScreen extends State<ChatsScreen> {
                       userImage: patient.image,
                       currentname: patient.username);
                 })
-            : Center(child: CircularProgressIndicator());
+            : const Center(child: CircularProgressIndicator());
       },
     );
   }
