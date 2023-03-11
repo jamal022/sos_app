@@ -303,7 +303,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                         borderSide: BorderSide.none,
                                       ),
                                       onPressed: () async {
-                                        Report report = await GetReportById(
+                                        Report report = await GetSpecificReport(
                                             appointments[i].reportId);
                                         Navigator.push(
                                           context,

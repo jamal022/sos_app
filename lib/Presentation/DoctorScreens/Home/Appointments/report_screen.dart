@@ -51,24 +51,22 @@ class _ReportScreenState extends State<ReportScreen> {
           child: Column(children: [
             Container(
               margin: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(children: <Widget>[
-                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Image.network(
+                    widget.report.image,
+                    width: size.width / 2,
+                    height: size.height / 4,
+                  ),
+                ),
                 Container(
-                    margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
-                    child: Center(
-                      child: Padding(
-                          padding: const EdgeInsets.all(10.5),
-                          child: Image.network(
-                            widget.report.image,
-                            width: size.width / 2,
-                            height: size.height / 4,
-                          )),
-                    )),
-                Container(
-                    margin: const EdgeInsets.all(20),
+                    //margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 10, 10),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -83,13 +81,28 @@ class _ReportScreenState extends State<ReportScreen> {
                                 style: const TextStyle(
                                     fontSize: fontfonty,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey)),
+                                    color: primaryColor)),
+                          ]),
+                          const SizedBox(height: 10),
+
+                          Row(children: <Widget>[
+                            const Text('Confidence:',
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
+                            Text("   ${widget.report.confidence}%",
+                                style: const TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor)),
                           ]),
                           const SizedBox(height: 10),
                           //Patient Name
                           Row(children: <Widget>[
                             const Text('Patient Name:',
-                                style: TextStyle(fontSize: fontfonty)),
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
                             Text("   ${widget.report.name}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
@@ -98,7 +111,9 @@ class _ReportScreenState extends State<ReportScreen> {
                           //Age
                           Row(children: <Widget>[
                             const Text('Age:',
-                                style: TextStyle(fontSize: fontfonty)),
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
                             Text("   ${widget.report.age}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
@@ -107,7 +122,9 @@ class _ReportScreenState extends State<ReportScreen> {
                           //Gender
                           Row(children: <Widget>[
                             const Text('Gender:',
-                                style: TextStyle(fontSize: fontfonty)),
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
                             Text("   ${widget.report.gender}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
@@ -116,7 +133,9 @@ class _ReportScreenState extends State<ReportScreen> {
                           //Phone Number
                           Row(children: <Widget>[
                             const Text('Phone Number:',
-                                style: TextStyle(fontSize: fontfonty)),
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
                             Text("   ${widget.report.phoneNumber}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
@@ -126,7 +145,9 @@ class _ReportScreenState extends State<ReportScreen> {
                           //Diabetes
                           Row(children: <Widget>[
                             const Text('Diabetes:',
-                                style: TextStyle(fontSize: fontfonty)),
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
                             Text("   ${widget.report.diabates}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
@@ -135,29 +156,35 @@ class _ReportScreenState extends State<ReportScreen> {
                           //Blood Pressure
                           Row(children: <Widget>[
                             const Text('Blood Pressure:',
-                                style: TextStyle(fontSize: fontfonty)),
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
                             Text("   ${widget.report.pressure}",
                                 style: const TextStyle(
                                     fontSize: fontfonty, color: Colors.grey)),
                           ]),
                           const SizedBox(height: 10),
                           //Cause of burn
-                          Row(children: const <Widget>[
-                            Text('Cause of burn:',
-                                style: TextStyle(fontSize: fontfonty)),
+                          Row(children: <Widget>[
+                            const Text('Cause of burn:',
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
+                            Text("  ${widget.report.causeOfBurn}",
+                                style: const TextStyle(
+                                    fontSize: fontfonty, color: Colors.grey))
                           ]),
-                          Text("   ${widget.report.causeOfBurn}",
-                              style: const TextStyle(
-                                  fontSize: fontfonty, color: Colors.grey)),
                           const SizedBox(height: 10),
                           //First aid
                           Row(children: const <Widget>[
-                            Text('First aid:',
-                                style: TextStyle(fontSize: fontfonty)),
+                            Text('First aid:\n',
+                                style: TextStyle(
+                                    fontSize: fontfonty,
+                                    fontWeight: FontWeight.bold)),
                           ]),
 
-                          const Text('Bla Bla Bla',
-                              style: TextStyle(
+                          Text(widget.report.firstAid,
+                              style: const TextStyle(
                                   fontSize: fontfonty, color: Colors.grey)),
                         ])),
                 const SizedBox(height: 20),

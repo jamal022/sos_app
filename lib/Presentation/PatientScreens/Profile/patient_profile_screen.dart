@@ -85,19 +85,18 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                                   Radius.circular(140.0)),
                               border: Border.all(
                                 color: primaryColor,
-                                width: size.width / 30,
+                                width: size.width / 35,
                               ),
-                              color: const Color.fromARGB(255, 255, 255, 255),
                             ),
-                            padding: const EdgeInsets.all(0.0),
-                            margin: const EdgeInsets.fromLTRB(
-                                50.0, 40.0, 50.0, 30.0),
                             child: CircleAvatar(
-                              maxRadius: 100,
+                              maxRadius: 80,
                               backgroundImage: NetworkImage(
                                 patient.image,
                               ),
                             )),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Text(patient.username,
                             style: const TextStyle(
                               color: black,

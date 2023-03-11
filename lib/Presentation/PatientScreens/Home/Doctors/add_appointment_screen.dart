@@ -75,7 +75,7 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                           backgroundImage: NetworkImage(
                             widget.doctor.image,
                           ),
-                          maxRadius: 80,
+                          maxRadius: 60,
                           backgroundColor: white),
                     ),
                     Container(

@@ -33,8 +33,8 @@ class _RecommendedDoctorsScreenState extends State<RecommendedDoctorsScreen> {
     for (var doctor in widget.doctors) {
       mymarkers.add(Marker(
           markerId: MarkerId("${doctor.id}"),
-          position: LatLng(double.parse(doctor.addressLat),
-              double.parse(doctor.addressLong)),
+          position: LatLng(double.parse(doctor.addressLat.toString()),
+              double.parse(doctor.addressLong.toString())),
           infoWindow: InfoWindow(
               title: doctor.username,
               onTap: () {
