@@ -232,20 +232,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.9"
-  firebase_ml_model_downloader:
-    dependency: "direct main"
-    description:
-      name: firebase_ml_model_downloader
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0+11"
-  firebase_ml_model_downloader_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_ml_model_downloader_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1+30"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -847,6 +833,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.12"
+  tflite:
+    dependency: "direct main"
+    description:
+      name: tflite
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   toggle_list:
     dependency: "direct main"
     description:
