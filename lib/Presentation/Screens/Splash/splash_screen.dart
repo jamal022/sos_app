@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sos_app/Presentation/AdminScreens/Home/admin_home_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Profile/doctor_profile_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/patient_home_screen.dart';
 import 'package:sos_app/Presentation/PatientScreens/Profile/patient_profile_screen.dart';
@@ -78,25 +79,33 @@ class SplashScreen extends StatelessWidget {
                             ),
                             (Route<dynamic> route) => false,
                           )
-                        : Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BottomNavBar(
-                                screens: [
-                                  SettingScreen(),
-                                  ChatsScreen(),
-                                  role == "Patient"
-                                      ? PatientHomeScreen()
-                                      : DoctorHomeScreen(),
-                                  NotificationsScreen(),
-                                  role == "Patient"
-                                      ? PatientProfileScreen()
-                                      : DoctorProfileScreen(),
-                                ],
-                              ),
-                            ),
-                            (Route<dynamic> route) => false,
-                          );
+                        : role == "admin"
+                            ? Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AdminHomeScreen()),
+                                (Route<dynamic> route) => false,
+                              )
+                            : Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BottomNavBar(
+                                    screens: [
+                                      SettingScreen(),
+                                      ChatsScreen(),
+                                      role == "Patient"
+                                          ? PatientHomeScreen()
+                                          : DoctorHomeScreen(),
+                                      NotificationsScreen(),
+                                      role == "Patient"
+                                          ? PatientProfileScreen()
+                                          : DoctorProfileScreen(),
+                                    ],
+                                  ),
+                                ),
+                                (Route<dynamic> route) => false,
+                              );
                   }),
             ),
           ]),

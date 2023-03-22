@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 const Color primaryColor = Color(0xEEED6023);
+const Color admincard = Color.fromARGB(235, 255, 252, 252);
+const Color adminback = Color.fromARGB(249, 220, 212, 200);
 const Color orange = Color(0xFFFF8C00);
 const Color transparentColor = Colors.transparent;
 const Color wordColor = Color.fromARGB(240, 248, 242, 242);

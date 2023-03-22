@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Hospital {
+  var hospitalId;
   var name;
   var image;
   var addressLang;
@@ -11,14 +13,15 @@ class Hospital {
   var ambulancePhone;
 
   Hospital({
-    required this.name,
-    required this.image,
-    required this.telephone1,
-    required this.telephone2,
-    required this.addressLang,
-    required this.addressLong,
-    required this.ambulancePhone,
-    required this.email,
+    this.hospitalId,
+    this.name,
+    this.image,
+    this.telephone1,
+    this.telephone2,
+    this.addressLang,
+    this.addressLong,
+    this.ambulancePhone,
+    this.email,
   });
 }
 
@@ -27,6 +30,7 @@ GetHospitals() async {
   await FirebaseFirestore.instance.collection("Hospitals").get().then((value) {
     for (var hos in value.docs) {
       Hospital h = Hospital(
+          hospitalId: hos.id,
           name: hos.data()["Name"],
           image: hos.data()["Image"],
           email: hos.data()["Email"],
@@ -39,4 +43,47 @@ GetHospitals() async {
     }
   });
   return hospitals;
+}
+
+Future<Hospital> GetSpecificHospital(id) async {
+  late Hospital hospital;
+  await FirebaseFirestore.instance
+      .collection("Hospitals")
+      .doc(id)
+      .get()
+      .then((value) {
+    hospital = Hospital(
+        hospitalId: value.id,
+        name: value.data()!["Name"],
+        image: value.data()!["Image"],
+        email: value.data()!["Email"],
+        telephone1: value.data()!["Telephone1"],
+        telephone2: value.data()!["Telephone2"],
+        ambulancePhone: value.data()!["AmbulancePhone"],
+        addressLang: value.data()!["AddressLang"],
+        addressLong: value.data()!["AddressLong"]);
+  });
+  return hospital;
+}
+
+UpdateHospital(Hospital hospital, formkey, context) async {
+  var formdata = formkey.currentState;
+  if (formdata!.validate()) {
+    formdata.save();
+    await FirebaseFirestore.instance
+        .collection("Hospitals")
+        .doc(hospital.hospitalId)
+        .update({
+      "Name": hospital.name,
+      "Email": hospital.email,
+      "Telephone1": hospital.telephone1,
+      "Telephone2": hospital.telephone2,
+      "AmbulancePhone": hospital.ambulancePhone,
+      "Image": hospital.image
+    });
+
+    Navigator.pop(context, "refresh");
+  } else {
+    print("not valid");
+  }
 }
