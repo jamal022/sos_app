@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
+import 'add_hospital_screen.dart';
 import 'admin_hospital_page.dart';
 
 class AdminHospitalsScreen extends StatefulWidget {
@@ -21,6 +22,7 @@ class _AdminHospitalsScreenState extends State<AdminHospitalsScreen> {
       List<Placemark> pl = await placemarkFromCoordinates(
           double.parse(hos.addressLang.toString()),
           double.parse(hos.addressLong.toString()));
+
       placemarks.add(pl);
     }
     setState(() {});
@@ -41,7 +43,16 @@ class _AdminHospitalsScreenState extends State<AdminHospitalsScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: black,
           child: const Icon(Icons.add),
-          onPressed: () {},
+          onPressed: () async {
+            var result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddHospitalScreen()),
+            );
+            if (result == "refresh") {
+              placemarks.clear();
+              _getHospitals();
+            }
+          },
           //Color.fromARGB(249, 220, 212, 200)
         ),
         appBar: AppBar(

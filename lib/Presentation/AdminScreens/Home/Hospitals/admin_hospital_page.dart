@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/add_hospital_screen.dart';
 import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/edit_hospital_screen.dart';
 import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/update_hospital_address.dart';
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
+import '../../../Styles/fonts.dart';
 
 class AdminHospitalPageScreen extends StatefulWidget {
   Hospital hospital;
@@ -80,7 +82,70 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
               icon: const Icon(Icons.edit, color: white, size: 30),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  useSafeArea: false,
+                  context: context,
+                  barrierColor: splashBack,
+                  builder: (ctx) => AlertDialog(
+                    content: const Text(
+                        "Are you sure, you want to delete this hospital?",
+                        style: TextStyle(
+                          fontSize: contentFont,
+                        )),
+                    actions: [
+                      Row(
+                        children: [
+                          //btn cancel
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.pop(ctx);
+                                },
+                                child: const Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    color: black,
+                                    fontSize: contentFont,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: MaterialButton(
+                                elevation: 6.0,
+                                color: Colors.redAccent,
+                                onPressed: () async {
+                                  var res = await DeleteHospital(
+                                      widget.hospital.hospitalId, context);
+                                  if (res == "deleted") {
+                                    Navigator.pop(context, "refresh");
+                                  }
+                                },
+                                child: const Text(
+                                  'Sure',
+                                  style: TextStyle(
+                                    color: white,
+                                    fontSize: contentFont,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
               icon: const Icon(Icons.delete, color: white, size: 30),
             ),
           ],

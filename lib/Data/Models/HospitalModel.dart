@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../Presentation/Widgets/loading_widget.dart';
+
 class Hospital {
   var hospitalId;
   var name;
@@ -58,9 +60,7 @@ UpdateHospital(Hospital hospital, formkey, context) async {
       "Telephone1": hospital.telephone1,
       "Telephone2": hospital.telephone2,
       "AmbulancePhone": hospital.ambulancePhone,
-      "Image": hospital.image,
-      "AddressLang": hospital.addressLang,
-      "AddressLong": hospital.addressLong
+      "Image": hospital.image
     });
 
     Navigator.pop(context, "refresh");
@@ -76,4 +76,25 @@ UpdateHospitalAddress(id, lat, long, context) async {
       .update({"AddressLang": lat, "AddressLong": long});
 
   Navigator.pop(context, "refresh");
+}
+
+AddHospital(Hospital hospital, context) async {
+  showLoading(context);
+  await FirebaseFirestore.instance.collection("Hospitals").add({
+    "Name": hospital.name,
+    "Email": hospital.email,
+    "Telephone1": hospital.telephone1,
+    "Telephone2": hospital.telephone2,
+    "AmbulancePhone": hospital.ambulancePhone,
+    "Image": hospital.image,
+    "AddressLang": hospital.addressLang,
+    "AddressLong": hospital.addressLong
+  }).then((value) => Navigator.pop(context));
+  return "Added";
+}
+
+DeleteHospital(id, context) async {
+  await FirebaseFirestore.instance.collection("Hospitals").doc(id).delete();
+  Navigator.pop(context);
+  return "deleted";
 }

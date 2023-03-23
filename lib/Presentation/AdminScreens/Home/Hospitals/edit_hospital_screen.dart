@@ -1,8 +1,5 @@
 import 'dart:math';
 import 'dart:io';
-import 'dart:math';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +8,6 @@ import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Widgets/admin_textFormField_widget.dart';
-import '../../../Widgets/loading_widget.dart';
 
 class EditHospitalScreen extends StatefulWidget {
   Hospital hospital;
