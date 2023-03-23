@@ -45,27 +45,6 @@ GetHospitals() async {
   return hospitals;
 }
 
-Future<Hospital> GetSpecificHospital(id) async {
-  late Hospital hospital;
-  await FirebaseFirestore.instance
-      .collection("Hospitals")
-      .doc(id)
-      .get()
-      .then((value) {
-    hospital = Hospital(
-        hospitalId: value.id,
-        name: value.data()!["Name"],
-        image: value.data()!["Image"],
-        email: value.data()!["Email"],
-        telephone1: value.data()!["Telephone1"],
-        telephone2: value.data()!["Telephone2"],
-        ambulancePhone: value.data()!["AmbulancePhone"],
-        addressLang: value.data()!["AddressLang"],
-        addressLong: value.data()!["AddressLong"]);
-  });
-  return hospital;
-}
-
 UpdateHospital(Hospital hospital, formkey, context) async {
   var formdata = formkey.currentState;
   if (formdata!.validate()) {
@@ -79,11 +58,22 @@ UpdateHospital(Hospital hospital, formkey, context) async {
       "Telephone1": hospital.telephone1,
       "Telephone2": hospital.telephone2,
       "AmbulancePhone": hospital.ambulancePhone,
-      "Image": hospital.image
+      "Image": hospital.image,
+      "AddressLang": hospital.addressLang,
+      "AddressLong": hospital.addressLong
     });
 
     Navigator.pop(context, "refresh");
   } else {
     print("not valid");
   }
+}
+
+UpdateHospitalAddress(id, lat, long, context) async {
+  await FirebaseFirestore.instance
+      .collection("Hospitals")
+      .doc(id)
+      .update({"AddressLang": lat, "AddressLong": long});
+
+  Navigator.pop(context, "refresh");
 }

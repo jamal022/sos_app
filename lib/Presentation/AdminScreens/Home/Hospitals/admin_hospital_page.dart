@@ -1,14 +1,16 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/edit_hospital_screen.dart';
+import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/update_hospital_address.dart';
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
 
 class AdminHospitalPageScreen extends StatefulWidget {
-  var id;
-  AdminHospitalPageScreen({super.key, required this.id});
+  Hospital hospital;
+  AdminHospitalPageScreen({super.key, required this.hospital});
 
   @override
   State<AdminHospitalPageScreen> createState() =>
@@ -22,29 +24,23 @@ List<Placemark> placemarks = [];
 late GoogleMapController gmc;
 
 Set<Marker> mymarkers = {};
-Hospital hospital = Hospital();
 
 class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
-  _getHospital() async {
-    hospital = await GetSpecificHospital(widget.id);
-    setState(() {});
-  }
-
   Future _getLatAndLong() async {
-    _getHospital();
     kGooglePlex = CameraPosition(
-      target: LatLng(double.parse(hospital.addressLang),
-          double.parse(hospital.addressLong)),
+      target: LatLng(double.parse(widget.hospital.addressLang.toString()),
+          double.parse(widget.hospital.addressLong.toString())),
       zoom: 12.0,
     );
 
     mymarkers.add(Marker(
       markerId: const MarkerId("initial"),
-      position: LatLng(double.parse(hospital.addressLang),
-          double.parse(hospital.addressLong)),
+      position: LatLng(double.parse(widget.hospital.addressLang.toString()),
+          double.parse(widget.hospital.addressLong.toString())),
     ));
     placemarks = await placemarkFromCoordinates(
-        double.parse(hospital.addressLang), double.parse(hospital.addressLong));
+        double.parse(widget.hospital.addressLang.toString()),
+        double.parse(widget.hospital.addressLong.toString()));
     setState(() {});
   }
 
@@ -60,10 +56,10 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
         backgroundColor: adminback,
         appBar: AppBar(
           title: Text(
-            "\t\t${hospital.name}",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            "\t\t${widget.hospital.name}",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          //centerTitle: true,
+          centerTitle: true,
           toolbarHeight: 60.2,
           elevation: 4,
           backgroundColor: black,
@@ -74,11 +70,11 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditHospitalScreen(
-                            hospital: hospital,
+                            hospital: widget.hospital,
                           )),
                 );
                 if (result == "refresh") {
-                  _getHospital();
+                  Navigator.pop(context, "refresh");
                 }
               },
               icon: const Icon(Icons.edit, color: white, size: 30),
@@ -89,7 +85,7 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
             ),
           ],
         ),
-        body: hospital != null
+        body: widget.hospital != null
             ? SingleChildScrollView(
                 child: Column(children: [
                   Padding(
@@ -98,7 +94,7 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           image: DecorationImage(
-                            image: NetworkImage(hospital.image),
+                            image: NetworkImage(widget.hospital.image),
                             fit: BoxFit.fill,
                           )),
                       height: 220,
@@ -126,7 +122,7 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            "  ${hospital.telephone1}\n  ${hospital.telephone2}",
+                            "  ${widget.hospital.telephone1}\n  ${widget.hospital.telephone2}",
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
@@ -152,7 +148,7 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            "  ${hospital.ambulancePhone}",
+                            "  ${widget.hospital.ambulancePhone}",
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
@@ -178,7 +174,7 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            "  ${hospital.email}",
+                            "  ${widget.hospital.email}",
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
@@ -198,10 +194,37 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                             size: 45,
                             color: black,
                           ),
-                          title: const Text(
-                            "Visit our Location",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                          title: Row(
+                            children: [
+                              const Text(
+                                "Visit our Location",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  var result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UpdateHospitalAddressScreen(
+                                              hospitalId:
+                                                  widget.hospital.hospitalId,
+                                              lat: widget.hospital.addressLang,
+                                              long: widget.hospital.addressLong,
+                                            )),
+                                  );
+                                  if (result == "refresh") {
+                                    Navigator.pop(context, "refresh");
+                                  }
+                                },
+                                icon: const Icon(Icons.edit_location_alt,
+                                    color: black, size: 28),
+                              ),
+                            ],
                           ),
                           subtitle: Container(
                             height: 150,
@@ -217,7 +240,7 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                                 MapsLauncher.launchCoordinates(
                                     argument.latitude,
                                     argument.longitude,
-                                    "${hospital.name}'s location");
+                                    "${widget.hospital.name}'s location");
                               },
                             ),
                           ),

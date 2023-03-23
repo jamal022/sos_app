@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:io';
 import 'dart:math';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +53,16 @@ var ambulanceController = TextEditingController();
 GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 class _EditHospitalScreen extends State<EditHospitalScreen> {
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.hospital.name;
+    emailController.text = widget.hospital.email;
+    tele1Controller.text = widget.hospital.telephone1;
+    tele2Controller.text = widget.hospital.telephone2;
+    ambulanceController.text = widget.hospital.ambulancePhone;
+  }
+
   Future _getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
     setState(() {
@@ -66,7 +78,7 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
       child: Column(
         children: [
           const Text(
-            "Choose Profile Photo",
+            "Choose Hospital Image",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(
@@ -81,12 +93,12 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
                 },
                 icon: const Icon(
                   Icons.camera,
-                  color: primaryColor,
+                  color: black,
                   size: 25,
                 ),
                 label: const Text(
                   "Camera",
-                  style: TextStyle(color: primaryColor, fontSize: 22),
+                  style: TextStyle(color: black, fontSize: 22),
                 ),
               ),
               TextButton.icon(
@@ -96,12 +108,12 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
                 },
                 icon: const Icon(
                   Icons.image,
-                  color: primaryColor,
+                  color: black,
                   size: 25,
                 ),
                 label: const Text(
                   "Gallery",
-                  style: TextStyle(color: primaryColor, fontSize: 22),
+                  style: TextStyle(color: black, fontSize: 22),
                 ),
               ),
             ],
@@ -112,17 +124,8 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    nameController.text = widget.hospital.name;
-    emailController.text = widget.hospital.email;
-    tele1Controller.text = widget.hospital.telephone1;
-    tele2Controller.text = widget.hospital.telephone2;
-    ambulanceController.text = widget.hospital.ambulancePhone;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: adminback,
       appBar: AppBar(
@@ -189,7 +192,7 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
               ),
               const SizedBox(height: 10),
               AdminTextFormField(
-                hintText: 'HospitalEmail@gmail.com',
+                hintText: 'Hospital Email',
                 icon: Icons.email,
                 type: TextInputType.emailAddress,
                 textController: emailController,
@@ -203,7 +206,7 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
               ),
               const SizedBox(height: 10),
               AdminTextFormField(
-                hintText: '0226548351',
+                hintText: 'Telephone 1',
                 icon: Icons.phone,
                 type: TextInputType.phone,
                 textController: tele1Controller,
@@ -217,7 +220,7 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
               ),
               const SizedBox(height: 10),
               AdminTextFormField(
-                hintText: '0224365825',
+                hintText: 'Telephone 2',
                 icon: Icons.phone,
                 type: TextInputType.phone,
                 textController: tele2Controller,
@@ -225,7 +228,7 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
               ),
               const SizedBox(height: 10),
               AdminTextFormField(
-                hintText: '01234567891',
+                hintText: 'Ambulance Phone',
                 icon: Icons.emergency,
                 type: TextInputType.phone,
                 textController: ambulanceController,
@@ -248,7 +251,6 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
                   ),
                   onPressed: () async {
                     if (image != null) {
-                      showLoading(context);
                       hospitalImage = await _addImage();
                       Hospital hos = Hospital(
                           hospitalId: widget.hospital.hospitalId,
@@ -257,22 +259,19 @@ class _EditHospitalScreen extends State<EditHospitalScreen> {
                           telephone1: tele1Controller.text,
                           telephone2: tele2Controller.text,
                           ambulancePhone: ambulanceController.text,
-                          image: hospitalImage,
-                          addressLang: widget.hospital.addressLang,
-                          addressLong: widget.hospital.addressLong);
+                          image: hospitalImage);
 
                       await UpdateHospital(hos, formKey, context);
                     } else {
                       Hospital hos = Hospital(
-                          hospitalId: widget.hospital.hospitalId,
-                          name: nameController.text,
-                          email: emailController.text,
-                          telephone1: tele1Controller.text,
-                          telephone2: tele2Controller.text,
-                          ambulancePhone: ambulanceController.text,
-                          image: widget.hospital.image,
-                          addressLang: widget.hospital.addressLang,
-                          addressLong: widget.hospital.addressLong);
+                        hospitalId: widget.hospital.hospitalId,
+                        name: nameController.text,
+                        email: emailController.text,
+                        telephone1: tele1Controller.text,
+                        telephone2: tele2Controller.text,
+                        ambulancePhone: ambulanceController.text,
+                        image: widget.hospital.image,
+                      );
 
                       await UpdateHospital(hos, formKey, context);
                     }

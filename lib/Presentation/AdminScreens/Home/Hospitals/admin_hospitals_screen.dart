@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
-import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
-
 import '../../../../Data/Models/HospitalModel.dart';
 import '../../../Styles/colors.dart';
 import 'admin_hospital_page.dart';
@@ -16,13 +13,15 @@ class AdminHospitalsScreen extends StatefulWidget {
 
 class _AdminHospitalsScreenState extends State<AdminHospitalsScreen> {
   List<Hospital> hospitalsList = [];
-  List<Placemark> placemarks = [];
+  List<List<Placemark>> placemarks = [];
 
   _getHospitals() async {
     hospitalsList = await GetHospitals();
     for (var hos in hospitalsList) {
-      placemarks = await placemarkFromCoordinates(
-          double.parse(hos.addressLang), double.parse(hos.addressLong));
+      List<Placemark> pl = await placemarkFromCoordinates(
+          double.parse(hos.addressLang.toString()),
+          double.parse(hos.addressLong.toString()));
+      placemarks.add(pl);
     }
     setState(() {});
   }
@@ -84,16 +83,20 @@ class _AdminHospitalsScreenState extends State<AdminHospitalsScreen> {
                                               fit: BoxFit.fill,
                                             ),
                                           ),
-                                          onTap: () {
-                                            Navigator.push(
+                                          onTap: () async {
+                                            var result = await Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       AdminHospitalPageScreen(
-                                                        id: hospitalsList[i]
-                                                            .hospitalId,
+                                                        hospital:
+                                                            hospitalsList[i],
                                                       )),
                                             );
+                                            if (result == "refresh") {
+                                              placemarks.clear();
+                                              _getHospitals();
+                                            }
                                           },
                                           title: Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -111,7 +114,7 @@ class _AdminHospitalsScreenState extends State<AdminHospitalsScreen> {
                                                   height: 10,
                                                 ), //SizedBox
                                                 Text(
-                                                  "Location:  ${placemarks[i].locality}",
+                                                  "Location:  ${placemarks[i][0].locality}",
                                                   style: const TextStyle(
                                                     fontSize: 17,
                                                     color: Color.fromARGB(
@@ -123,7 +126,7 @@ class _AdminHospitalsScreenState extends State<AdminHospitalsScreen> {
                                                 ),
 
                                                 Text(
-                                                  "Country:  ${placemarks[i].country}",
+                                                  "Country:  ${placemarks[i][0].country}",
                                                   style: const TextStyle(
                                                     fontSize: 17,
                                                     color: Color.fromARGB(
