@@ -7,6 +7,7 @@ const Color wordColor = Color.fromARGB(240, 248, 242, 242);
 const Color linkColor = Color.fromARGB(255, 44, 17, 99);
 const Color blueColor = Color(0xFF2666D5);
 const Color containerColor = Color.fromARGB(238, 235, 225, 225);
+const Color hoverColor = Color.fromARGB(236, 162, 153, 153);
 const Color splashBack = Color.fromARGB(235, 244, 231, 226);
 const Color homeback = Color.fromARGB(235, 250, 225, 215);
 const Color red = Color(0xEEED2323);

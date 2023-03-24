@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sos_app/Presentation/AdminScreens/Community/Community_screens.dart';
+import 'package:sos_app/Presentation/AdminScreens/Community/admin_community_screens.dart';
 import 'package:sos_app/Presentation/AdminScreens/Articles/admin_articles_screen.dart';
 import 'package:sos_app/Presentation/AdminScreens/Hospitals/admin_hospitals_screen.dart';
 import 'package:sos_app/Presentation/AdminScreens/Doctors/admin_doctors_screen.dart';

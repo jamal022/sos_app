@@ -62,8 +62,6 @@ class _NewQuestionScreenState extends State<NewQuestionScreen> {
                         ),
                       ),
                       Container(
-                          width: size.width / 0.4,
-                          height: size.height / 5.4,
                           decoration: const BoxDecoration(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25.0)),
