@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sos_app/Presentation/AdminScreens/Home/Community/Community_screens.dart';
-import 'package:sos_app/Presentation/AdminScreens/Home/Articles/admin_articles_screen.dart';
-import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/admin_hospitals_screen.dart';
-import 'package:sos_app/Presentation/AdminScreens/Home/Doctors/admin_doctors_screen.dart';
+import 'package:sos_app/Presentation/AdminScreens/Community/Community_screens.dart';
+import 'package:sos_app/Presentation/AdminScreens/Articles/admin_articles_screen.dart';
+import 'package:sos_app/Presentation/AdminScreens/Hospitals/admin_hospitals_screen.dart';
+import 'package:sos_app/Presentation/AdminScreens/Doctors/admin_doctors_screen.dart';
+import 'package:sos_app/Presentation/AdminScreens/admin_supports_screen.dart';
 import 'package:sos_app/Presentation/Views/home_card_widget.dart';
-import '../../Screens/Login/login_screen.dart';
-import '../../Styles/colors.dart';
-import '../../Styles/fonts.dart';
+import '../Screens/Login/login_screen.dart';
+import '../Styles/colors.dart';
+import '../Styles/fonts.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({Key? key}) : super(key: key);
@@ -84,6 +85,24 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.contact_support_outlined,
+                  color: black,
+                  size: 35,
+                ),
+                title: const Text(
+                  'Support Messages',
+                  style: TextStyle(
+                      color: black, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AdminSupportScreen()));
                 },
               ),
               ListTile(

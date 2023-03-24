@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import '../../../../Data/Models/HospitalModel.dart';
-import '../../../Styles/colors.dart';
+import '../../../Data/Models/HospitalModel.dart';
+import '../../Styles/colors.dart';
 import 'add_hospital_screen.dart';
 import 'admin_hospital_page.dart';
 

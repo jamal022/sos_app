@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
-import '../../../../Data/Models/HospitalModel.dart';
-import '../../../Widgets/admin_textFormField_widget.dart';
+import '../../../Data/Models/HospitalModel.dart';
+import '../../Widgets/admin_textFormField_widget.dart';
 
 class EditHospitalScreen extends StatefulWidget {
   Hospital hospital;

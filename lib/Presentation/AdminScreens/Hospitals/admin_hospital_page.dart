@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
-import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/add_hospital_screen.dart';
-import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/edit_hospital_screen.dart';
-import 'package:sos_app/Presentation/AdminScreens/Home/Hospitals/update_hospital_address.dart';
-import '../../../../Data/Models/HospitalModel.dart';
-import '../../../Styles/colors.dart';
-import '../../../Styles/fonts.dart';
+import 'package:sos_app/Presentation/AdminScreens/Hospitals/add_hospital_screen.dart';
+import 'package:sos_app/Presentation/AdminScreens/Hospitals/edit_hospital_screen.dart';
+import 'package:sos_app/Presentation/AdminScreens/Hospitals/update_hospital_address.dart';
+import '../../../Data/Models/HospitalModel.dart';
+import '../../Styles/colors.dart';
+import '../../Styles/fonts.dart';
 
 class AdminHospitalPageScreen extends StatefulWidget {
   Hospital hospital;

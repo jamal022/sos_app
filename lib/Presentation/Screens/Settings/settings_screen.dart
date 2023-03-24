@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -154,12 +155,30 @@ class _SettingScreenState extends State<SettingScreen> {
                                   size: 30,
                                   color: black,
                                 ),
-                                onTap: () {
-                                  Navigator.push(
+                                onTap: () async {
+                                  var name, email;
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  name = prefs.getString("FullName");
+                                  email = prefs.getString("Email");
+                                  var result = await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SupportScreen(),
+                                        builder: (context) => SupportScreen(
+                                          name: name,
+                                          email: email,
+                                        ),
                                       ));
+                                  if (result == "Added") {
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.success,
+                                      animType: AnimType.rightSlide,
+                                      headerAnimationLoop: false,
+                                      title: 'Success',
+                                      desc: 'Your support message is sent',
+                                    ).show();
+                                  }
                                 },
                               )),
 
