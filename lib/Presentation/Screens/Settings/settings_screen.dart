@@ -1,17 +1,14 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Presentation/Constants/constants.dart';
 import 'package:sos_app/Presentation/Screens/Settings/aboutus_screen.dart';
 import 'package:sos_app/Presentation/Screens/Settings/privacy_screen.dart';
-import 'package:sos_app/Presentation/Screens/SignUp/signup_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
-import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import 'package:toggle_list/toggle_list.dart';
 import '../../Constants/app_assets.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
 import '../Login/login_screen.dart';
@@ -67,8 +64,6 @@ class _SettingScreenState extends State<SettingScreen> {
                                     height: size.height / 20,
                                     child: LiteRollingSwitch(
                                       width: size.width / 4,
-                                      //initial value
-                                      value: true,
                                       textOn: 'On',
                                       textOff: 'Off',
                                       colorOn: primaryColor,
@@ -76,9 +71,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                       iconOn: Icons.done,
                                       iconOff: Icons.alarm_off,
                                       textSize: 16.0,
-                                      onChanged: (bool state) {
-                                        //Use it to manage the different states
-                                        print('The button is $state');
+                                      onChanged: (bool state) async {
+                                        if (state == false) {
+                                          await FirebaseMessaging.instance
+                                              .unsubscribeFromTopic('sos');
+                                        } else {
+                                          await FirebaseMessaging.instance
+                                              .subscribeToTopic('sos');
+                                        }
                                       },
                                       onTap: () {},
                                       onDoubleTap: () {},

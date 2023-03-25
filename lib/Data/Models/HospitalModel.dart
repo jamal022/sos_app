@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Data/Models/NotificationModel.dart';
 
 import '../../Presentation/Widgets/loading_widget.dart';
 
@@ -89,7 +90,10 @@ AddHospital(Hospital hospital, context) async {
     "Image": hospital.image,
     "AddressLang": hospital.addressLang,
     "AddressLong": hospital.addressLong
-  }).then((value) => Navigator.pop(context));
+  }).then((value) {
+    SendNotify("New Hospital was added ${hospital.name}");
+  });
+  Navigator.pop(context);
   return "Added";
 }
 
