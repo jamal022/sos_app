@@ -147,9 +147,11 @@ class _ArticlesHistoryScreenState extends State<ArticlesHistoryScreen> {
                                                               "deleted") {
                                                             var result =
                                                                 await DeleteArticle(
-                                                                    articles[i]
-                                                                        .articleId,
-                                                                    context);
+                                                                    articleId:
+                                                                        articles[i]
+                                                                            .articleId,
+                                                                    context:
+                                                                        context);
                                                             if (result ==
                                                                 "deleted") {
                                                               _getArticles();

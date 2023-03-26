@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Screens/Login/login_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import '../../../Data/Authentication/signup.dart';
 import '../../../Data/Models/patient.dart';
@@ -279,6 +280,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       var formdata = formKey.currentState;
                       if (formdata!.validate()) {
                         formdata.save();
+                        showLoading(context);
                         userImage = await addImage();
                         if (role == "patient") {
                           patient = Patient(

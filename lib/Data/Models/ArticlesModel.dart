@@ -36,6 +36,9 @@ AddArticle(Article article, context) async {
     "Likes": article.likes,
     "Dislikes": article.dislikes,
   }).then((value) {
+    if (article.content.length > 16) {
+      article.content = article.content.substring(0, 15) + "..";
+    }
     SendNotifyToTopic('New Article was added "${article.content}"');
   });
   Navigator.pop(context);
@@ -210,12 +213,28 @@ GetSpecificDoctorArticles(doctorId) async {
   return articles;
 }
 
-DeleteArticle(articleId, context) async {
+DeleteArticle({articleId, context, userId, content, role}) async {
+  var userToken;
   await FirebaseFirestore.instance
       .collection("Articles")
       .doc(articleId)
       .delete()
-      .then((value) => Navigator.pop(context));
+      .then((value) async {
+    if (role == "admin") {
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(userId)
+          .get()
+          .then((value) => userToken = value.data()!["Token"]);
+
+      if (content.length > 16) {
+        content = content.substring(0, 15) + "..";
+      }
+      SendNotifyToUser(
+          'The Admin deleted your article "${content}"', userToken!, userId!);
+    }
+  });
+  Navigator.pop(context);
   return "deleted";
 }
 

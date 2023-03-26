@@ -35,6 +35,9 @@ AddQuestion(Question question, context) async {
     "Content": question.content,
     "Answers": question.answers,
   }).then((value) {
+    if (question.content.length > 16) {
+      question.content = question.content.substring(0, 15) + "..";
+    }
     SendNotifyToTopic('New Question was added "${question.content}"');
   });
   Navigator.pop(context);
@@ -129,13 +132,29 @@ GetPatientQuestions(patientId) async {
   return questions;
 }
 
-DeleteQuestion(questionId, context) async {
+DeleteQuestion({questionId, content, userId, context, String? role}) async {
+  var userToken;
   await FirebaseFirestore.instance
       .collection("Questions")
       .doc(questionId)
       .delete()
       .then((value) async {
     await DeleteQuestionAnswers(questionId);
-  }).then((value) => Navigator.pop(context));
+  }).then((value) async {
+    if (role == "admin") {
+      await FirebaseFirestore.instance
+          .collection("Patients")
+          .doc(userId)
+          .get()
+          .then((value) => userToken = value.data()!["Token"]);
+
+      if (content.length > 16) {
+        content = content.substring(0, 15) + "..";
+      }
+      SendNotifyToUser(
+          'The Admin deleted your question "${content}"', userToken!, userId!);
+    }
+  });
+  Navigator.pop(context);
   return "deleted";
 }

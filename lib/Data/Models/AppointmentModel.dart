@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:sos_app/Data/Models/NotificationModel.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
@@ -34,6 +35,7 @@ class Appointment {
 
 AddAppointment({required Appointment app, scheduleId, timeId, context}) async {
   showLoading(context);
+  var userToken;
   await FirebaseFirestore.instance.collection("Appointments").add({
     "PatientId": app.patientId,
     "DoctorId": app.doctorId,
@@ -44,12 +46,21 @@ AddAppointment({required Appointment app, scheduleId, timeId, context}) async {
     "Rate": app.rate,
   }).then((value) async {
     await UpdateTimeStatus(scheduleId, timeId);
+    await FirebaseFirestore.instance
+        .collection("Doctors")
+        .doc(app.doctorId)
+        .get()
+        .then((value) => userToken = value.data()!["Token"]);
+
+    SendNotifyToUser(
+        'You have new appointment in ${app.date}', userToken, app.doctorId);
+
     Navigator.pop(context);
   });
   return "Added";
 }
 
-GetDoctorAppointments(doctorId) async {
+GetDoctorAppointments(doctorId, doctorName) async {
   List<Appointment> appointments = [];
   await FirebaseFirestore.instance
       .collection("Appointments")
@@ -67,6 +78,7 @@ GetDoctorAppointments(doctorId) async {
       Appointment s = Appointment(
           appointmentId: app.id,
           doctorId: app.data()["DoctorId"],
+          doctorName: doctorName,
           patientId: app.data()["PatientId"],
           patientName: patientName,
           reportId: app.data()["ReportId"],
@@ -164,7 +176,7 @@ GetInProgressAppointments(patientId) async {
   return appointments;
 }
 
-ChangeAppointmentToEnded(appId) async {
+ChangeAppointmentToEnded({appId, date, patientId}) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
       .doc(appId)
@@ -173,16 +185,50 @@ ChangeAppointmentToEnded(appId) async {
     await FirebaseFirestore.instance
         .collection("Appointments")
         .doc(value.id)
-        .update({"Status": "Ended"});
+        .update({"Status": "Ended"}).then((value) async {
+      var userToken;
+      await FirebaseFirestore.instance
+          .collection("Patients")
+          .doc(patientId)
+          .get()
+          .then((value) => userToken = value.data()!["Token"]);
+      SendNotifyToUser("Your appointment in ${date} is done please rate it",
+          userToken, patientId);
+    });
   });
   return "changed";
 }
 
-DeleteAppointment(appId) async {
+DeleteAppointment({appId, patientId, doctorId, date, doctorName, role}) async {
   await FirebaseFirestore.instance
       .collection("Appointments")
       .doc(appId)
-      .delete();
+      .delete()
+      .then((value) async {
+    var userToken;
+
+    if (role == "Patient") {
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(doctorId)
+          .get()
+          .then((value) => userToken = value.data()!["Token"]);
+      SendNotifyToUser(
+          "Your appointment in ${date} was canceled by the patient",
+          userToken,
+          doctorId);
+    } else if (role == "Doctor") {
+      await FirebaseFirestore.instance
+          .collection("Patients")
+          .doc(patientId)
+          .get()
+          .then((value) => userToken = value.data()!["Token"]);
+      SendNotifyToUser(
+          "Your appointment in ${date} with doctor ${doctorName} is canceled by the doctor",
+          userToken,
+          patientId);
+    }
+  });
   return "deleted";
 }
 

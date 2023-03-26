@@ -155,10 +155,19 @@ class _AdminCommunityScreenState extends State<AdminCommunityScreen> {
                                                                 onPressed:
                                                                     () async {
                                                                   var result = await DeleteQuestion(
-                                                                      questions[
+                                                                      content: questions[
                                                                               i]
-                                                                          .questionId,
-                                                                      context);
+                                                                          .content,
+                                                                      userId: questions[
+                                                                              i]
+                                                                          .patientId,
+                                                                      questionId:
+                                                                          questions[i]
+                                                                              .questionId,
+                                                                      context:
+                                                                          context,
+                                                                      role:
+                                                                          "admin");
                                                                   if (result ==
                                                                       "deleted") {
                                                                     _getQuestions();

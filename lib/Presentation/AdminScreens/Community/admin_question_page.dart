@@ -234,6 +234,15 @@ class _AdminQuestionPageState extends State<AdminQuestionPage> {
                                                             onPressed:
                                                                 () async {
                                                               var result = await DeleteAnswer(
+                                                                  content: answers[
+                                                                          i]
+                                                                      .content,
+                                                                  userId:
+                                                                      answers[i]
+                                                                          .userId,
+                                                                  userRole:
+                                                                      answers[i]
+                                                                          .role,
                                                                   questionId:
                                                                       answers[i]
                                                                           .questionId,
@@ -241,7 +250,9 @@ class _AdminQuestionPageState extends State<AdminQuestionPage> {
                                                                       answers[i]
                                                                           .answerId,
                                                                   context:
-                                                                      context);
+                                                                      context,
+                                                                  role:
+                                                                      "admin");
                                                               if (result ==
                                                                   "deleted") {
                                                                 _getAnswers();

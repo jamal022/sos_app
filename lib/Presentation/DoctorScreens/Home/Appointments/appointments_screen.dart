@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ReportModel.dart';
-import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Appointments/report_screen.dart';
-import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import '../../../../Data/Models/AppointmentModel.dart';
 import '../../../Styles/colors.dart';
 import '../../../Styles/fonts.dart';
@@ -21,7 +19,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   _getApp() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString("Id");
-    appointments = await GetDoctorAppointments(id);
+    var name = prefs.getString("FullName");
+    appointments = await GetDoctorAppointments(id, name);
     setState(() {});
   }
 
@@ -172,10 +171,16 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                       color:
                                                           Colors.green.shade800,
                                                       onPressed: () async {
-                                                        var result =
-                                                            await ChangeAppointmentToEnded(
+                                                        var result = await ChangeAppointmentToEnded(
+                                                            appId: appointments[
+                                                                    i]
+                                                                .appointmentId,
+                                                            date:
                                                                 appointments[i]
-                                                                    .appointmentId);
+                                                                    .date,
+                                                            patientId:
+                                                                appointments[i]
+                                                                    .patientId);
                                                         if (result ==
                                                             "changed") {
                                                           Navigator.pop(ctx);
@@ -255,10 +260,23 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                       elevation: 6.0,
                                                       color: Colors.redAccent,
                                                       onPressed: () async {
-                                                        var result =
-                                                            await DeleteAppointment(
+                                                        var result = await DeleteAppointment(
+                                                            appId: appointments[
+                                                                    i]
+                                                                .appointmentId,
+                                                            date:
                                                                 appointments[i]
-                                                                    .appointmentId);
+                                                                    .date,
+                                                            doctorName:
+                                                                appointments[i]
+                                                                    .doctorName,
+                                                            patientId:
+                                                                appointments[i]
+                                                                    .patientId,
+                                                            doctorId:
+                                                                appointments[i]
+                                                                    .doctorId,
+                                                            role: "Doctor");
                                                         if (result ==
                                                             "deleted") {
                                                           Navigator.pop(ctx);

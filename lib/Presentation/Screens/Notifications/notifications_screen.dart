@@ -15,14 +15,10 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreen extends State<NotificationsScreen> {
   List<NotificationModel> notifications = [];
-  var id;
-
-  _getPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    id = prefs.getString("Id");
-  }
 
   _getNotifications() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString("Id");
     notifications = await GetNotifications(id);
 
     // await FirebaseMessaging.onMessage.listen((message) {
@@ -35,7 +31,6 @@ class _NotificationsScreen extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    _getPrefs();
     _getNotifications();
   }
 

@@ -63,6 +63,9 @@ AddAnswer(Answer answer, context) async {
         questionContent = value.data()!["Content"];
       },
     );
+    if (questionContent.length > 16) {
+      questionContent = questionContent.substring(0, 15) + "..";
+    }
     SendNotifyToUser('Someone answered your question "${questionContent}"',
         userToken, userId);
   });
@@ -108,13 +111,43 @@ DeleteQuestionAnswers(questionId) async {
   });
 }
 
-DeleteAnswer({questionId, answerId, context}) async {
+DeleteAnswer(
+    {questionId,
+    answerId,
+    content,
+    userId,
+    userRole,
+    context,
+    String? role}) async {
+  var userToken;
   await FirebaseFirestore.instance
       .collection("Answers")
       .doc(answerId)
       .delete()
       .then((value) async {
     await DeleteAnswerFromQuestion(questionId);
-  }).then((value) => Navigator.pop(context));
+  }).then((value) async {
+    if (role == "admin") {
+      if (userRole == "Patient") {
+        await FirebaseFirestore.instance
+            .collection("Patients")
+            .doc(userId)
+            .get()
+            .then((value) => userToken = value.data()!["Token"]);
+      } else if (userRole == "Doctor") {
+        await FirebaseFirestore.instance
+            .collection("Doctors")
+            .doc(userId)
+            .get()
+            .then((value) => userToken = value.data()!["Token"]);
+      }
+      if (content.length > 16) {
+        content = content.substring(0, 15) + "..";
+      }
+      SendNotifyToUser(
+          'The Admin deleted your answer "${content}"', userToken!, userId!);
+    }
+  });
+  Navigator.pop(context);
   return "deleted";
 }

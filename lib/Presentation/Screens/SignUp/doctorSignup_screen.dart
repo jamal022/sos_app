@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:sos_app/Data/Authentication/signup.dart';
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import '../../../Data/Models/doctor.dart';
 import '../../Styles/colors.dart';
 import '../../Widgets/textFormField_widget.dart';
@@ -197,6 +198,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                       var formdata = formKey.currentState;
                       if (formdata!.validate()) {
                         formdata.save();
+                        showLoading(context);
                         idImage = await addImage();
                         doctor = Doctor(
                             username: widget.name,
@@ -214,7 +216,8 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                             bio: bioController.text,
                             idImage: idImage,
                             rate: 0,
-                            verified: false);
+                            verified: false,
+                            token: "0");
 
                         Register(context: context, doctor: doctor);
                       }

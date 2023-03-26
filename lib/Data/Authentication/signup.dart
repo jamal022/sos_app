@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../Presentation/Screens/Login/login_screen.dart';
 import '../../Presentation/Widgets/loading_widget.dart';
+import '../Models/NotificationModel.dart';
 import '../Models/doctor.dart';
 import '../Models/patient.dart';
 
@@ -97,8 +98,10 @@ AddDoctor(Doctor? doctor, id, context) async {
     "Verified": doctor?.verified,
     "IdImage": doctor?.idImage,
     "Rate": doctor?.rate,
-    "Token": "0"
+    "Token": doctor?.token,
   }).then((value) {
+    SendNotifyToUser('Your account was pending until the admin verify it',
+        doctor?.token, id);
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),

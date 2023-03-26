@@ -298,12 +298,23 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                                       inProgressAppointments[
                                                                               i]
                                                                           .time);
-                                                                  var result =
-                                                                      await DeleteAppointment(
-                                                                    inProgressAppointments[
-                                                                            i]
-                                                                        .appointmentId,
-                                                                  );
+                                                                  var result = await DeleteAppointment(
+                                                                      appId: inProgressAppointments[i]
+                                                                          .appointmentId,
+                                                                      date: inProgressAppointments[
+                                                                              i]
+                                                                          .date,
+                                                                      doctorId:
+                                                                          inProgressAppointments[i]
+                                                                              .doctorId,
+                                                                      doctorName:
+                                                                          inProgressAppointments[i]
+                                                                              .doctorName,
+                                                                      patientId:
+                                                                          inProgressAppointments[i]
+                                                                              .patientId,
+                                                                      role:
+                                                                          "Patient");
                                                                   if (result ==
                                                                       "deleted") {
                                                                     Navigator.pop(

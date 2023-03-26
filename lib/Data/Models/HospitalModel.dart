@@ -91,7 +91,7 @@ AddHospital(Hospital hospital, context) async {
     "AddressLang": hospital.addressLang,
     "AddressLong": hospital.addressLong
   }).then((value) {
-    // SendNotify("New Hospital was added ${hospital.name}");
+    SendNotifyToTopic('New Hospital was added "${hospital.name}"');
   });
   Navigator.pop(context);
   return "Added";

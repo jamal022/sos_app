@@ -133,12 +133,21 @@ class _AdminArticlesScreenState extends State<AdminArticlesScreen> {
                                                                 .redAccent,
                                                             onPressed:
                                                                 () async {
-                                                              var result =
-                                                                  await DeleteArticle(
+                                                              var result = await DeleteArticle(
+                                                                  articleId:
                                                                       articles[
                                                                               i]
                                                                           .articleId,
-                                                                      context);
+                                                                  context:
+                                                                      context,
+                                                                  content:
+                                                                      articles[
+                                                                              i]
+                                                                          .content,
+                                                                  role: "admin",
+                                                                  userId: articles[
+                                                                          i]
+                                                                      .doctorId);
                                                               if (result ==
                                                                   "deleted") {
                                                                 _getArticles();

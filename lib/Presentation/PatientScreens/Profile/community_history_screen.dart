@@ -214,9 +214,13 @@ class _CommunityHistoryScreenState extends State<CommunityHistoryScreen> {
                                                                             .redAccent,
                                                                         onPressed:
                                                                             () async {
-                                                                          var result = await DeleteQuestion(
-                                                                              questions[i].questionId,
-                                                                              context);
+                                                                          var result =
+                                                                              await DeleteQuestion(
+                                                                            questionId:
+                                                                                questions[i].questionId,
+                                                                            context:
+                                                                                context,
+                                                                          );
                                                                           if (result ==
                                                                               "deleted") {
                                                                             _getQuestions();
