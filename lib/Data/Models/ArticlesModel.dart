@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Data/Models/NotificationModel.dart';
 import '../../Presentation/Widgets/loading_widget.dart';
 
 class Article {
@@ -34,7 +35,10 @@ AddArticle(Article article, context) async {
     "Content": article.content,
     "Likes": article.likes,
     "Dislikes": article.dislikes,
-  }).then((value) => Navigator.pop(context));
+  }).then((value) {
+    SendNotifyToTopic('New Article was added "${article.content}"');
+  });
+  Navigator.pop(context);
   return "Added";
 }
 
@@ -58,12 +62,15 @@ GetAllArticles() async {
 }
 
 AddLikeToArticle(articleId) async {
+  var articleContent, userToken, userId;
   await FirebaseFirestore.instance
       .collection("Articles")
       .doc(articleId)
       .get()
       .then((value) async {
     var like;
+    articleContent = value.data()!["Content"];
+    userId = value.data()!["DoctorId"];
     if (value.data()!["Likes"] == 0) {
       like = 1;
     } else {
@@ -73,6 +80,16 @@ AddLikeToArticle(articleId) async {
         .collection("Articles")
         .doc(value.id)
         .update({"Likes": like});
+  }).then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Doctors")
+        .doc(userId)
+        .get()
+        .then((value) => userToken = value.data()!["Token"]);
+    SendNotifyToUser(
+        'Someone Likes your article "${articleContent.substring(0, 15)}..."',
+        userToken,
+        userId);
   });
 }
 
@@ -96,12 +113,15 @@ DeleteLikeFromArticle(articleId) async {
 }
 
 AddDislikeToArticle(articleId) async {
+  var articleContent, userToken, userId;
   await FirebaseFirestore.instance
       .collection("Articles")
       .doc(articleId)
       .get()
       .then((value) async {
     var dislike;
+    articleContent = value.data()!["Content"];
+    userId = value.data()!["DoctorId"];
     if (value.data()!["Dislikes"] == 0) {
       dislike = 1;
     } else {
@@ -111,6 +131,16 @@ AddDislikeToArticle(articleId) async {
         .collection("Articles")
         .doc(value.id)
         .update({"Dislikes": dislike});
+  }).then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Doctors")
+        .doc(userId)
+        .get()
+        .then((value) => userToken = value.data()!["Token"]);
+    SendNotifyToUser(
+        'Someone dislikes your article "${articleContent.substring(0, 15)}..."',
+        userToken,
+        userId);
   });
 }
 

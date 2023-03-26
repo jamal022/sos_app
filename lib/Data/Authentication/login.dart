@@ -19,7 +19,8 @@ import '../Models/patient.dart';
 Patient? patient;
 late Doctor doctor;
 
-savePatientPrefs(id, name, email, password, age, gender, phone, image) async {
+savePatientPrefs(
+    id, name, email, password, age, gender, phone, image, token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("Id", id);
   prefs.setString("FullName", name);
@@ -29,6 +30,7 @@ savePatientPrefs(id, name, email, password, age, gender, phone, image) async {
   prefs.setString("Age", age);
   prefs.setString("Gender", gender);
   prefs.setString("Image", image);
+  prefs.setString("Token", token);
   prefs.setString("Role", "Patient");
 }
 
@@ -48,7 +50,8 @@ saveDoctorPrefs(
     addLat,
     addLong,
     rate,
-    verified}) async {
+    verified,
+    token}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("Id", id);
   prefs.setString("FullName", name);
@@ -66,6 +69,7 @@ saveDoctorPrefs(
   prefs.setString("AddressLongitude", addLong.toString());
   prefs.setString("Rate", rate);
   prefs.setString("Verified", verified);
+  prefs.setString("Token", token);
   prefs.setString("Role", "Doctor");
 }
 
@@ -86,24 +90,28 @@ void route(id, context) async {
         .then((value) async {
       if (value.docs.isNotEmpty) {
         patient = Patient(
-            id: value.docs[0].id,
-            username: value.docs[0].data()['FullName'],
-            email: value.docs[0].data()['Email'],
-            phoneNumber: value.docs[0].data()['PhoneNumber'],
-            password: value.docs[0].data()['Password'],
-            age: value.docs[0].data()['Age'],
-            gender: value.docs[0].data()['Gender'],
-            image: value.docs[0].data()['Image']);
+          id: value.docs[0].id,
+          username: value.docs[0].data()['FullName'],
+          email: value.docs[0].data()['Email'],
+          phoneNumber: value.docs[0].data()['PhoneNumber'],
+          password: value.docs[0].data()['Password'],
+          age: value.docs[0].data()['Age'],
+          gender: value.docs[0].data()['Gender'],
+          image: value.docs[0].data()['Image'],
+          token: value.docs[0].data()['Token'],
+        );
 
         await savePatientPrefs(
-            value.docs[0].id,
-            value.docs[0].data()['FullName'],
-            value.docs[0].data()['Email'],
-            value.docs[0].data()['Password'],
-            value.docs[0].data()['Age'],
-            value.docs[0].data()['Gender'],
-            value.docs[0].data()['PhoneNumber'],
-            value.docs[0].data()['Image']);
+          value.docs[0].id,
+          value.docs[0].data()['FullName'],
+          value.docs[0].data()['Email'],
+          value.docs[0].data()['Password'],
+          value.docs[0].data()['Age'],
+          value.docs[0].data()['Gender'],
+          value.docs[0].data()['PhoneNumber'],
+          value.docs[0].data()['Image'],
+          value.docs[0].data()['Token'],
+        );
 
         List<Widget> patientScreens = [
           const SettingScreen(),
@@ -142,7 +150,8 @@ void route(id, context) async {
               addressLong: snapshot.data()?['AddressLongitude'],
               bio: snapshot.data()?['Bio'],
               rate: snapshot.data()?["Rate"],
-              verified: snapshot.data()?["Verified"]);
+              verified: snapshot.data()?["Verified"],
+              token: snapshot.data()?["Token"]);
         });
 
         await saveDoctorPrefs(
@@ -161,7 +170,8 @@ void route(id, context) async {
             addLat: doctor.addressLat,
             addLong: doctor.addressLong,
             rate: doctor.rate.toString(),
-            verified: doctor.verified.toString());
+            verified: doctor.verified.toString(),
+            token: doctor.token);
 
         List<Widget> doctorScreens = [
           const SettingScreen(),

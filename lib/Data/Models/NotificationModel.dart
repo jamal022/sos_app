@@ -7,11 +7,13 @@ class NotificationModel {
   var notificationId;
   var userId;
   var message;
+  var date;
 
   NotificationModel({
     this.notificationId,
     required this.userId,
     required this.message,
+    required this.date,
   });
 }
 
@@ -19,35 +21,32 @@ AddNotification(NotificationModel notification) async {
   await FirebaseFirestore.instance.collection("Notifications").add({
     "UserId": notification.userId,
     "Message": notification.message,
+    "Date": notification.date,
   });
   return "sent";
 }
 
-GetNotifications() async {
+GetNotifications(userId) async {
   List<NotificationModel> notifications = [];
   await FirebaseFirestore.instance
       .collection("Notifications")
+      .where("UserId", isEqualTo: userId)
+      .orderBy("Date", descending: true)
       .get()
       .then((value) {
     for (var notify in value.docs) {
       notifications.add(NotificationModel(
           userId: notify.data()["UserId"],
           message: notify.data()["Message"],
+          date: notify.data()["Date"],
           notificationId: notify.id));
     }
   });
+
   return notifications;
 }
 
-DeleteNotification(notificationId) async {
-  await FirebaseFirestore.instance
-      .collection("Notifications")
-      .doc(notificationId)
-      .delete();
-  return "deleted";
-}
-
-SendNotify(String body) async {
+SendNotifyToUser(String body, String token, String userId) async {
   var serverToken =
       "AAAA49edij8:APA91bGmk1SrTIStsQZgdj3WWDtgrWX__yQWhOnNTghDe7Gy6C9tVyWb3EN-FshKBmPjnvkY0CccbXFggo4GEgZ6K-JErp41RnmcWeVqgx2QZQJKfuBm1OdcJK9Ox0-spgYkv0kH4ETM";
   await http.post(
@@ -65,9 +64,36 @@ SendNotify(String body) async {
       'data': <String, dynamic>{
         'click-action': 'FLUTTER_NOTIFICATION_CLICK',
       },
-      'to':
-          "dJdi9YiwTK-DJARRbcN1s8:APA91bE6cT7jM_3AYIeQrG3pU2Y9eUn-0cGQ4j-SFTXB-6AMweIHht0HmsDi_77k6ul72mL7RIrZuKU2zIbM66AifGR4Xyg-N07npyzsXGKIQtIZSHXUYdH80Rrd-W-vAb-NG2-bHSqC",
+      'to': token,
     }),
   );
-  AddNotification(NotificationModel(userId: '1220', message: body));
+  var date =
+      "${DateTime.now().year} - ${DateTime.now().month} - ${DateTime.now().day}";
+  AddNotification(NotificationModel(userId: userId, message: body, date: date));
+}
+
+SendNotifyToTopic(String body) async {
+  var serverToken =
+      "AAAA49edij8:APA91bGmk1SrTIStsQZgdj3WWDtgrWX__yQWhOnNTghDe7Gy6C9tVyWb3EN-FshKBmPjnvkY0CccbXFggo4GEgZ6K-JErp41RnmcWeVqgx2QZQJKfuBm1OdcJK9Ox0-spgYkv0kH4ETM";
+  await http.post(
+    Uri.parse('https://fcm.googleapis.com/fcm/send'),
+    headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': 'Key=$serverToken',
+    },
+    body: jsonEncode(<String, dynamic>{
+      'notification': <String, dynamic>{
+        'body': body.toString(),
+        'title': "New Notification"
+      },
+      'priority': 'high',
+      'data': <String, dynamic>{
+        'click-action': 'FLUTTER_NOTIFICATION_CLICK',
+      },
+      'to': "/topics/sos",
+    }),
+  );
+  var date =
+      "${DateTime.now().year} - ${DateTime.now().month} - ${DateTime.now().day}";
+  AddNotification(NotificationModel(userId: "sos", message: body, date: date));
 }

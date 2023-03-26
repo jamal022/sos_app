@@ -65,6 +65,7 @@ AddPatient(Patient? patient, id, context) async {
     "Gender": patient?.gender,
     "Age": patient?.age,
     "Image": patient?.image,
+    "Token": "0"
   }).then((value) {
     Navigator.pushAndRemoveUntil(
       context,
@@ -96,6 +97,7 @@ AddDoctor(Doctor? doctor, id, context) async {
     "Verified": doctor?.verified,
     "IdImage": doctor?.idImage,
     "Rate": doctor?.rate,
+    "Token": "0"
   }).then((value) {
     Navigator.pushAndRemoveUntil(
       context,

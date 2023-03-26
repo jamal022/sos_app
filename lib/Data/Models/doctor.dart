@@ -25,6 +25,7 @@ class Doctor extends Patient {
       age,
       gender,
       image,
+      token,
       this.verified,
       this.rate,
       this.idImage,
@@ -41,7 +42,8 @@ class Doctor extends Patient {
             password: password,
             age: age,
             gender: gender,
-            image: image) {}
+            image: image,
+            token: token) {}
 
   Update_Doctor(Doctor doctor, formdata, context) async {
     if (formdata!.validate()) {
@@ -77,7 +79,8 @@ class Doctor extends Patient {
           doctor.addressLat,
           doctor.addressLong,
           doctor.rate.toString(),
-          doctor.verified.toString());
+          doctor.verified.toString(),
+          doctor.token);
 
       Navigator.pop(context, "refresh");
     } else {
@@ -87,7 +90,7 @@ class Doctor extends Patient {
 }
 
 updateDoctorsPrefs(id, name, email, password, age, gender, phone, image, field,
-    price, experience, bio, lan, lon, rate, verified) async {
+    price, experience, bio, lan, lon, rate, verified, token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.clear();
   prefs.setString("Id", id);
@@ -106,6 +109,7 @@ updateDoctorsPrefs(id, name, email, password, age, gender, phone, image, field,
   prefs.setString("AddressLongitude", lon);
   prefs.setString("Role", "Doctor");
   prefs.setString("Rate", rate);
+  prefs.setString("Token", token);
   prefs.setString("Verified", verified);
 }
 
@@ -130,7 +134,8 @@ UpdateAddress({doctor, lat, long, context}) async {
       lat.toString(),
       long.toString(),
       doctor.rate.toString(),
-      doctor.verified.toString());
+      doctor.verified.toString(),
+      doctor.token);
   Navigator.pop(context, "refresh");
 }
 
@@ -155,10 +160,22 @@ getDoctors() async {
         price: value.docs[i].data()['TicketPrice'],
         verified: value.docs[i].data()["Verified"],
         rate: value.docs[i].data()["Rate"],
+        token: value.docs[i].data()["Token"],
       );
 
       doctors.insert(i, dr);
     }
   });
   return doctors;
+}
+
+UpdateDoctorToken(doctorId, token) async {
+  await FirebaseFirestore.instance
+      .collection("Doctors")
+      .doc(doctorId)
+      .update({"Token": token}).then((value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("Token", token);
+  });
+  return "updated";
 }

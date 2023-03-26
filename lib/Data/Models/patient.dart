@@ -19,6 +19,7 @@ class Patient {
   var gender;
   var image;
   var id;
+  var token;
 
   Patient(
       {this.username,
@@ -28,10 +29,11 @@ class Patient {
       this.password,
       this.age,
       this.gender,
-      this.image});
+      this.image,
+      this.token});
 
   updatePatientPrefs(
-      id, name, email, password, age, gender, phone, image) async {
+      id, name, email, password, age, gender, phone, image, token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     prefs.setString("Id", id);
@@ -42,6 +44,7 @@ class Patient {
     prefs.setString("Age", age);
     prefs.setString("Gender", gender);
     prefs.setString("Image", image);
+    prefs.setString("Token", token);
     prefs.setString("Role", "Patient");
   }
 
@@ -69,11 +72,23 @@ class Patient {
           patient.age,
           patient.gender,
           patient.phoneNumber,
-          patient.image);
+          patient.image,
+          patient.token);
 
       Navigator.pop(context, "refresh");
     } else {
       print("not valid");
     }
   }
+}
+
+UpdatePatientToken(patientId, token) async {
+  await FirebaseFirestore.instance
+      .collection("Patients")
+      .doc(patientId)
+      .update({"Token": token}).then((value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("Token", token);
+  });
+  return "updated";
 }

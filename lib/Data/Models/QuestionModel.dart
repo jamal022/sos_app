@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/AnswerModel.dart';
+import 'package:sos_app/Data/Models/NotificationModel.dart';
 
 import '../../Presentation/Widgets/loading_widget.dart';
 
@@ -33,7 +34,10 @@ AddQuestion(Question question, context) async {
     "Date": question.date,
     "Content": question.content,
     "Answers": question.answers,
-  }).then((value) => Navigator.pop(context));
+  }).then((value) {
+    SendNotifyToTopic('New Question was added "${question.content}"');
+  });
+  Navigator.pop(context);
   return "Added";
 }
 

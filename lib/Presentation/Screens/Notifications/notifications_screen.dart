@@ -1,7 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/NotificationModel.dart';
 import '../../Styles/colors.dart';
+import '../../Styles/fonts.dart';
 
 class NotificationsScreen extends StatefulWidget {
   NotificationsScreen({Key? key}) : super(key: key);
@@ -12,22 +15,28 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreen extends State<NotificationsScreen> {
   List<NotificationModel> notifications = [];
+  var id;
 
-  getNotifications() async {
-    notifications = await GetNotifications();
-    var userToken = await FirebaseMessaging.instance.getToken();
-    print("token========= ${userToken}=====");
+  _getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = prefs.getString("Id");
+  }
+
+  _getNotifications() async {
+    notifications = await GetNotifications(id);
+
     // await FirebaseMessaging.onMessage.listen((message) {
-    //   notifications.add(message.notification!.body.toString());
+    //   notifications.add(NotificationModel(
+    //       userId: "151", message: message.notification!.body.toString()));
     // });
     setState(() {});
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getNotifications();
+    _getPrefs();
+    _getNotifications();
   }
 
   @override
@@ -36,18 +45,18 @@ class _NotificationsScreen extends State<NotificationsScreen> {
     return Scaffold(
         backgroundColor: const Color.fromARGB(253, 243, 222, 195),
         body: notifications.length != 0
-            ? Column(
-                children: [
-                  for (var i = 0; i < notifications.length; i++)
-                    Column(
-                      children: [
-                        Text(notifications[i].message),
-                        const SizedBox(
-                          height: 10,
-                        )
-                      ],
-                    ),
-                ],
+            ? Center(
+                child: ListView(
+                  children: [
+                    for (var i = 0; i < notifications.length; i++)
+                      ListTile(
+                        title: Text(
+                          notifications[i].message,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      )
+                  ],
+                ),
               )
             : Center(
                 child: Column(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sos_app/Data/Models/NotificationModel.dart';
 import 'package:sos_app/Data/Models/QuestionModel.dart';
 
 import '../../Presentation/Widgets/loading_widget.dart';
@@ -35,7 +36,37 @@ AddAnswer(Answer answer, context) async {
     "Role": answer.role,
   }).then((value) async {
     await AddAnswerToQuestion(answer.questionId);
-  }).then((value) => Navigator.pop(context));
+  }).then((value) async {
+    var userToken;
+    var userId;
+    var questionContent;
+    if (answer.role == "Patient") {
+      await FirebaseFirestore.instance
+          .collection("Patients")
+          .doc(answer.userId)
+          .get()
+          .then((value) => userToken = value.data()!["Token"]);
+    } else if (answer.role == "Doctor") {
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(answer.userId)
+          .get()
+          .then((value) => userToken = value.data()!["Token"]);
+    }
+    await FirebaseFirestore.instance
+        .collection("Questions")
+        .doc(answer.questionId)
+        .get()
+        .then(
+      (value) {
+        userId = value.data()!["PatientId"];
+        questionContent = value.data()!["Content"];
+      },
+    );
+    SendNotifyToUser('Someone answered your question "${questionContent}"',
+        userToken, userId);
+  });
+  Navigator.pop(context);
   return "Added";
 }
 

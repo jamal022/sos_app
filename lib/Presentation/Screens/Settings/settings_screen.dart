@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sos_app/Data/Models/doctor.dart';
+import 'package:sos_app/Data/Models/patient.dart';
 import 'package:sos_app/Presentation/Screens/Settings/aboutus_screen.dart';
 import 'package:sos_app/Presentation/Screens/Settings/privacy_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
@@ -10,7 +12,6 @@ import 'package:sos_app/Presentation/Styles/fonts.dart';
 import 'package:toggle_list/toggle_list.dart';
 import '../../Constants/app_assets.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
-
 import '../Login/login_screen.dart';
 import 'SupportScreen.dart';
 
@@ -21,7 +22,25 @@ class SettingScreen extends StatefulWidget {
   State<SettingScreen> createState() => _SettingScreenState();
 }
 
+var _token;
+var _role;
+var _id;
+
 class _SettingScreenState extends State<SettingScreen> {
+  _getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString("Token");
+    _role = prefs.getString("Role");
+    _id = prefs.getString("Id");
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getPrefs();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -64,6 +83,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     height: size.height / 20,
                                     child: LiteRollingSwitch(
                                       width: size.width / 4,
+                                      value: _token == "0" ? false : true,
                                       textOn: 'On',
                                       textOff: 'Off',
                                       colorOn: primaryColor,
@@ -75,9 +95,35 @@ class _SettingScreenState extends State<SettingScreen> {
                                         if (state == false) {
                                           await FirebaseMessaging.instance
                                               .unsubscribeFromTopic('sos');
+                                          var result;
+                                          _token = "0";
+                                          if (_role == "Patient") {
+                                            result = await UpdatePatientToken(
+                                                _id, _token);
+                                          } else if (_role == "Doctor") {
+                                            result = await UpdateDoctorToken(
+                                                _id, _token);
+                                          }
+                                          if (result == "updated") {
+                                            _getPrefs();
+                                          }
                                         } else {
                                           await FirebaseMessaging.instance
                                               .subscribeToTopic('sos');
+                                          var result;
+                                          _token = await FirebaseMessaging
+                                              .instance
+                                              .getToken();
+                                          if (_role == "Patient") {
+                                            result = await UpdatePatientToken(
+                                                _id, _token);
+                                          } else if (_role == "Doctor") {
+                                            result = await UpdateDoctorToken(
+                                                _id, _token);
+                                          }
+                                          if (result == "updated") {
+                                            _getPrefs();
+                                          }
                                         }
                                       },
                                       onTap: () {},
