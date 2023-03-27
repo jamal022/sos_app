@@ -216,7 +216,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                             bio: bioController.text,
                             idImage: idImage,
                             rate: 0,
-                            verified: false,
+                            verified: 0,
                             token: "0");
 
                         Register(context: context, doctor: doctor);

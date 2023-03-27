@@ -51,7 +51,8 @@ saveDoctorPrefs(
     addLong,
     rate,
     verified,
-    token}) async {
+    token,
+    idImage}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("Id", id);
   prefs.setString("FullName", name);
@@ -68,9 +69,10 @@ saveDoctorPrefs(
   prefs.setString("AddressLatitude", addLat.toString());
   prefs.setString("AddressLongitude", addLong.toString());
   prefs.setString("Rate", rate);
-  prefs.setString("Verified", verified);
+  prefs.setInt("Verified", verified);
   prefs.setString("Token", token);
   prefs.setString("Role", "Doctor");
+  prefs.setString("IdImage", idImage);
 }
 
 void route(id, context) async {
@@ -151,7 +153,8 @@ void route(id, context) async {
               bio: snapshot.data()?['Bio'],
               rate: snapshot.data()?["Rate"],
               verified: snapshot.data()?["Verified"],
-              token: snapshot.data()?["Token"]);
+              token: snapshot.data()?["Token"],
+              idImage: snapshot.data()?["IdImage"]);
         });
 
         await saveDoctorPrefs(
@@ -170,8 +173,9 @@ void route(id, context) async {
             addLat: doctor.addressLat,
             addLong: doctor.addressLong,
             rate: doctor.rate.toString(),
-            verified: doctor.verified.toString(),
-            token: doctor.token);
+            verified: doctor.verified,
+            token: doctor.token,
+            idImage: doctor.idImage);
 
         List<Widget> doctorScreens = [
           const SettingScreen(),

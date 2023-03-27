@@ -1,10 +1,16 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:path/path.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Profile/articles_history_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Profile/community_history_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Profile/update_address_screen.dart';
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import '../../../Data/Models/doctor.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
@@ -36,7 +42,9 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
       addLong,
       id,
       rate,
-      verified;
+      verified,
+      idImage;
+
   Doctor doctor = Doctor();
 
   List<Placemark> placemarks = [];
@@ -59,7 +67,8 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
     addLat = prefs.getString("AddressLatitude");
     addLong = prefs.getString("AddressLongitude");
     rate = prefs.getString("Rate");
-    verified = prefs.getString("Verified");
+    verified = prefs.getInt("Verified");
+    idImage = prefs.getString("IdImage");
 
     setState(() {
       doctor = Doctor(
@@ -78,11 +87,95 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
           addressLong: addLong,
           bio: bio,
           rate: rate,
-          verified: verified);
+          verified: verified,
+          idImage: idImage);
     });
     placemarks = await placemarkFromCoordinates(
         double.parse(doctor.addressLat), double.parse(doctor.addressLong));
     setState(() {});
+  }
+
+  XFile? cardImage;
+  final ImagePicker picker = ImagePicker();
+  Reference? ref;
+  File? file;
+  String? imageurl;
+  bool flag = false;
+
+  _addImage() async {
+    if (picker != null) {
+      file = File(cardImage!.path);
+      var rand = Random().nextInt(100000);
+      var imagename = "$rand" + basename(cardImage!.path);
+      ref = FirebaseStorage.instance.ref("images").child("$imagename");
+      await ref!.putFile(file!);
+      imageurl = await ref!.getDownloadURL();
+      cardImage = null;
+      ref = null;
+      file = null;
+
+      return imageurl;
+    }
+  }
+
+  Future _getImage(ImageSource media) async {
+    var img = await picker.pickImage(source: media);
+    setState(() {
+      cardImage = img;
+    });
+  }
+
+  Widget bottomSheet(context) {
+    return Container(
+      height: 150,
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Column(
+        children: [
+          const Text(
+            "Choose Profile Photo",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Column(
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _getImage(ImageSource.camera);
+                },
+                icon: const Icon(
+                  Icons.camera,
+                  color: primaryColor,
+                  size: 25,
+                ),
+                label: const Text(
+                  "Camera",
+                  style: TextStyle(color: primaryColor, fontSize: 22),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _getImage(ImageSource.gallery);
+                },
+                icon: const Icon(
+                  Icons.image,
+                  color: primaryColor,
+                  size: 25,
+                ),
+                label: const Text(
+                  "Gallery",
+                  style: TextStyle(color: primaryColor, fontSize: 22),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -106,7 +199,7 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                                const EdgeInsets.fromLTRB(0, 0.0, 0.0, 0.0),
                             child: CircleAvatar(
                                 backgroundImage: NetworkImage(
                                   doctor.image,
@@ -154,7 +247,7 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                doctor.verified == "true"
+                                doctor.verified == 1
                                     ? IconButton(
                                         icon: const Icon(Icons.verified),
                                         onPressed: () {},
@@ -166,7 +259,7 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                                             Icons.do_not_disturb_alt_sharp),
                                         onPressed: () {},
                                         tooltip:
-                                            "Your account isn't approved yet",
+                                            "Your account isn't verified yet",
                                         color: Colors.redAccent.shade700,
                                       )
                               ],
@@ -214,6 +307,114 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                   const SizedBox(
                     height: 10,
                   ),
+                  doctor.verified == 2 && flag == false
+                      ? Column(
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white60,
+                                ),
+                                width: size.width / 0.7,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                  child: Column(
+                                    children: [
+                                      const Text(
+                                        "Update your ID card to verify your account",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Stack(children: [
+                                            cardImage == null
+                                                ? CircleAvatar(
+                                                    maxRadius: 60,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            doctor.idImage),
+                                                  )
+                                                : CircleAvatar(
+                                                    maxRadius: 60,
+                                                    backgroundImage: FileImage(
+                                                      File(
+                                                        cardImage!.path,
+                                                      ),
+                                                    ),
+                                                  ),
+                                            Positioned(
+                                              bottom: 10,
+                                              right: 25,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      builder: ((context) =>
+                                                          bottomSheet(
+                                                              context)));
+                                                },
+                                                child: const Icon(
+                                                  Icons.camera_alt_rounded,
+                                                  color: white,
+                                                  size: 28,
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          MaterialButton(
+                                            elevation: 4.0,
+                                            color: Colors.white,
+                                            shape: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            onPressed: () async {
+                                              if (cardImage != null) {
+                                                showLoading(context);
+                                                var doctorCardImage =
+                                                    await _addImage();
+                                                var result =
+                                                    await UpdateDoctorIdCard(
+                                                        doctor.id,
+                                                        doctorCardImage,
+                                                        context);
+                                                if (result == "updated") {
+                                                  _getPrefs();
+                                                }
+                                              }
+                                            },
+                                            child: const Text(
+                                              'Update',
+                                              style: TextStyle(
+                                                color: black,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            const SizedBox(
+                              height: 20,
+                            )
+                          ],
+                        )
+                      : Container(),
                   Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
