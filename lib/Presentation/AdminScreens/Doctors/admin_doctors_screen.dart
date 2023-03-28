@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:printing/printing.dart';
 import 'package:sos_app/Data/Models/doctor.dart';
-import 'package:sos_app/Presentation/Constants/app_assets.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -166,8 +164,31 @@ class _AdminDoctorsScreenState extends State<AdminDoctorsScreen> {
                       ),
                     ),
                   )
-                : const Center(
-                    child: Text("There is no doctors"),
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        const Padding(
+                            padding: EdgeInsets.fromLTRB(25, 2, 25, 5)),
+                        const Icon(
+                          Icons.warning_amber_rounded,
+                          size: 100,
+                          color: black,
+                        ),
+                        SizedBox(
+                          height: size.height / 40,
+                        ),
+                        const Text(
+                          'There is no Doctors',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: black),
+                        ),
+                      ],
+                    ),
                   )
             : const Center(
                 child: CircularProgressIndicator(),

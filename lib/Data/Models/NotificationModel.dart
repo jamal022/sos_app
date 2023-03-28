@@ -82,38 +82,16 @@ SendNotifyToUser(String body, String token, String userId) async {
       }),
     );
     var date =
-        "${DateTime.now().year} - ${DateTime.now().month} - ${DateTime.now().day}";
+        "${DateTime.now().hour}:${DateTime.now().minute} - ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
     AddNotification(
         NotificationModel(userId: userId, message: body, date: date));
   }
 }
 
-SendNotifyToTopic(String body) async {
-  var serverToken =
-      "AAAA49edij8:APA91bGmk1SrTIStsQZgdj3WWDtgrWX__yQWhOnNTghDe7Gy6C9tVyWb3EN-FshKBmPjnvkY0CccbXFggo4GEgZ6K-JErp41RnmcWeVqgx2QZQJKfuBm1OdcJK9Ox0-spgYkv0kH4ETM";
-  await http
-      .post(
-    Uri.parse('https://fcm.googleapis.com/fcm/send'),
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'Key=$serverToken',
-    },
-    body: jsonEncode(<String, dynamic>{
-      'notification': <String, dynamic>{
-        'body': body.toString(),
-        'title': "New Notification"
-      },
-      'priority': 'high',
-      'data': <String, dynamic>{
-        'click-action': 'FLUTTER_NOTIFICATION_CLICK',
-      },
-      'to': "/topics/sos",
-    }),
-  )
-      .then((value) {
-    var date =
-        "${DateTime.now().year} - ${DateTime.now().month} - ${DateTime.now().day}";
-    AddNotification(
-        NotificationModel(userId: "sos", message: body, date: date));
-  });
+DeleteNotificatin(notificationId) async {
+  await FirebaseFirestore.instance
+      .collection("Notifications")
+      .doc(notificationId)
+      .delete();
+  return "deleted";
 }

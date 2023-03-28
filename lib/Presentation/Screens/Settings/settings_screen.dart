@@ -80,57 +80,43 @@ class _SettingScreenState extends State<SettingScreen> {
                                   ),
                                   onTap: () {},
                                   trailing: SizedBox(
-                                    height: size.height / 20,
-                                    child: LiteRollingSwitch(
-                                      width: size.width / 4,
-                                      value: _token == "0" ? false : true,
-                                      textOn: 'On',
-                                      textOff: 'Off',
-                                      colorOn: primaryColor,
-                                      colorOff: bubbles,
-                                      iconOn: Icons.done,
-                                      iconOff: Icons.alarm_off,
-                                      textSize: 16.0,
-                                      onChanged: (bool state) async {
-                                        if (state == false) {
-                                          await FirebaseMessaging.instance
-                                              .unsubscribeFromTopic('sos');
-                                          var result;
-                                          _token = "0";
-                                          if (_role == "Patient") {
-                                            result = await UpdatePatientToken(
-                                                _id, _token);
-                                          } else if (_role == "Doctor") {
-                                            result = await UpdateDoctorToken(
-                                                _id, _token);
+                                      height: size.height / 20,
+                                      child: Switch(
+                                        value: _token == "0" ? false : true,
+                                        onChanged: (bool state) async {
+                                          if (state == false) {
+                                            var result;
+                                            _token = "0";
+                                            if (_role == "Patient") {
+                                              result = await UpdatePatientToken(
+                                                  _id, _token);
+                                            } else if (_role == "Doctor") {
+                                              result = await UpdateDoctorToken(
+                                                  _id, _token);
+                                            }
+                                            if (result == "updated") {
+                                              _getPrefs();
+                                            }
+                                          } else {
+                                            var result;
+                                            _token = await FirebaseMessaging
+                                                .instance
+                                                .getToken();
+                                            if (_role == "Patient") {
+                                              result = await UpdatePatientToken(
+                                                  _id, _token);
+                                            } else if (_role == "Doctor") {
+                                              result = await UpdateDoctorToken(
+                                                  _id, _token);
+                                            }
+                                            if (result == "updated") {
+                                              _getPrefs();
+                                            }
                                           }
-                                          if (result == "updated") {
-                                            _getPrefs();
-                                          }
-                                        } else {
-                                          await FirebaseMessaging.instance
-                                              .subscribeToTopic('sos');
-                                          var result;
-                                          _token = await FirebaseMessaging
-                                              .instance
-                                              .getToken();
-                                          if (_role == "Patient") {
-                                            result = await UpdatePatientToken(
-                                                _id, _token);
-                                          } else if (_role == "Doctor") {
-                                            result = await UpdateDoctorToken(
-                                                _id, _token);
-                                          }
-                                          if (result == "updated") {
-                                            _getPrefs();
-                                          }
-                                        }
-                                      },
-                                      onTap: () {},
-                                      onDoubleTap: () {},
-                                      onSwipe: () {},
-                                    ),
-                                  ))),
+                                        },
+                                        activeColor: primaryColor,
+                                        inactiveThumbColor: white,
+                                      )))),
                           //Privacy and Policies
                           SizedBox(height: size.height / 40),
                           Card(

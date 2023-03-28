@@ -6,6 +6,7 @@ import 'package:group_button/group_button.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sos_app/Data/Models/AppointmentModel.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import '../../../../Data/Models/ReportModel.dart';
 import '../../../../Data/Models/doctor.dart';
 import '../../../Screens/App_Layout/bottom_nav_bar.dart';
@@ -336,12 +337,22 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                                     date: _date,
                                     time: time,
                                     rate: 0);
-                                await AddAppointment(
+                                var result = await AddAppointment(
                                     app: app,
                                     context: context,
                                     scheduleId: scheduleId,
                                     timeId: timeId);
-                                Navigator.pop(context);
+                                if (result == "Added") {
+                                  Navigator.pop(context);
+                                } else if (result == "Error") {
+                                  AwesomeDialog(
+                                    context: context,
+                                    title: "Error",
+                                    body: const Text(
+                                      "There is an appointment in that day",
+                                    ),
+                                  ).show();
+                                }
                               } else {
                                 AwesomeDialog(
                                   context: context,

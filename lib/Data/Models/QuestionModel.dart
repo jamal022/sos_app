@@ -34,11 +34,6 @@ AddQuestion(Question question, context) async {
     "Date": question.date,
     "Content": question.content,
     "Answers": question.answers,
-  }).then((value) {
-    if (question.content.length > 16) {
-      question.content = question.content.substring(0, 15) + "..";
-    }
-    SendNotifyToTopic('New Question was added "${question.content}"');
   });
   Navigator.pop(context);
   return "Added";

@@ -74,21 +74,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               ),
               ListTile(
                 leading: const Icon(
-                  Icons.person,
-                  color: black,
-                  size: 35,
-                ),
-                title: const Text(
-                  'Profile',
-                  style: TextStyle(
-                      color: black, fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(
                   Icons.contact_support_outlined,
                   color: black,
                   size: 35,

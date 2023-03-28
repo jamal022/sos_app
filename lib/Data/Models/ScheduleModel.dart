@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Data/Models/AppointmentModel.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 class Schedule {
@@ -206,16 +207,42 @@ UpdateTimeInCancel(doctorId, date, time) async {
   });
 }
 
-DeleteSchedule(id) async {
+DeleteSchedule(id, doctorId, doctorName, context) async {
+  showLoading(context);
   DocumentReference sch =
       await FirebaseFirestore.instance.collection("Schedules").doc(id);
   await sch.collection("TimeSlots").get().then((value) async {
     for (var time in value.docs) {
       await sch.collection("TimeSlots").doc(time.id).delete();
     }
-  }).then((value) {
+  }).then((value) async {
+    await FirebaseFirestore.instance
+        .collection("Schedules")
+        .doc(id)
+        .get()
+        .then((value) async {
+      var date =
+          "${value.data()!["Day"]} / ${value.data()!["Month"]} / ${value.data()!["Year"]}";
+      await FirebaseFirestore.instance
+          .collection("Appointments")
+          .where("Date", isEqualTo: date)
+          .get()
+          .then((value) async {
+        for (var i = 0; i < value.docs.length; i++) {
+          DeleteAppointment(
+              appId: value.docs[i].id,
+              date: date,
+              doctorId: doctorId,
+              doctorName: doctorName,
+              patientId: value.docs[i].data()["PatientId"],
+              role: "Doctor");
+        }
+      });
+    });
+
     sch.delete();
   });
+  Navigator.pop(context);
 
   return "deleted";
 }

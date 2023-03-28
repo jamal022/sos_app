@@ -379,7 +379,9 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                               price: priceController.text,
                               bio: bioController.text,
                               rate: widget.doctor.rate,
-                              verified: widget.doctor.verified);
+                              verified: widget.doctor.verified,
+                              idImage: widget.doctor.idImage,
+                              token: widget.doctor.token);
 
                           await doc.Update_Doctor(doc, formdata, context);
                         }

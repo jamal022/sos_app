@@ -35,11 +35,6 @@ AddArticle(Article article, context) async {
     "Content": article.content,
     "Likes": article.likes,
     "Dislikes": article.dislikes,
-  }).then((value) {
-    if (article.content.length > 16) {
-      article.content = article.content.substring(0, 15) + "..";
-    }
-    SendNotifyToTopic('New Article was added "${article.content}"');
   });
   Navigator.pop(context);
   return "Added";

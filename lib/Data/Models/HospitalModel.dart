@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sos_app/Data/Models/NotificationModel.dart';
-
-import '../../Presentation/Widgets/loading_widget.dart';
 
 class Hospital {
   var hospitalId;
@@ -80,7 +77,6 @@ UpdateHospitalAddress(id, lat, long, context) async {
 }
 
 AddHospital(Hospital hospital, context) async {
-  showLoading(context);
   await FirebaseFirestore.instance.collection("Hospitals").add({
     "Name": hospital.name,
     "Email": hospital.email,
@@ -90,8 +86,6 @@ AddHospital(Hospital hospital, context) async {
     "Image": hospital.image,
     "AddressLang": hospital.addressLang,
     "AddressLong": hospital.addressLong
-  }).then((value) {
-    SendNotifyToTopic('New Hospital was added "${hospital.name}"');
   });
   Navigator.pop(context);
   return "Added";

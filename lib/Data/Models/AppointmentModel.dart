@@ -34,30 +34,43 @@ class Appointment {
 }
 
 AddAppointment({required Appointment app, scheduleId, timeId, context}) async {
-  showLoading(context);
   var userToken;
-  await FirebaseFirestore.instance.collection("Appointments").add({
-    "PatientId": app.patientId,
-    "DoctorId": app.doctorId,
-    "ReportId": app.reportId,
-    "Date": app.date,
-    "Status": app.status,
-    "Time": app.time,
-    "Rate": app.rate,
-  }).then((value) async {
-    await UpdateTimeStatus(scheduleId, timeId);
-    await FirebaseFirestore.instance
-        .collection("Doctors")
-        .doc(app.doctorId)
-        .get()
-        .then((value) => userToken = value.data()!["Token"]);
+  var flag = false;
+  showLoading(context);
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("Date", isEqualTo: app.date)
+      .where("PatientId", isEqualTo: app.patientId)
+      .get()
+      .then((value) async {
+    if (value.docs.length == 0) {
+      await FirebaseFirestore.instance.collection("Appointments").add({
+        "PatientId": app.patientId,
+        "DoctorId": app.doctorId,
+        "ReportId": app.reportId,
+        "Date": app.date,
+        "Status": app.status,
+        "Time": app.time,
+        "Rate": app.rate,
+      }).then((value) async {
+        await UpdateTimeStatus(scheduleId, timeId);
+        await FirebaseFirestore.instance
+            .collection("Doctors")
+            .doc(app.doctorId)
+            .get()
+            .then((value) => userToken = value.data()!["Token"]);
 
-    SendNotifyToUser(
-        'You have new appointment in ${app.date}', userToken, app.doctorId);
-
-    Navigator.pop(context);
+        SendNotifyToUser('You have a new appointment in ${app.date}', userToken,
+            app.doctorId);
+        flag = true;
+      });
+    }
   });
-  return "Added";
+  Navigator.pop(context);
+  if (flag == true)
+    return "Added";
+  else
+    return "Error";
 }
 
 GetDoctorAppointments(doctorId, doctorName) async {

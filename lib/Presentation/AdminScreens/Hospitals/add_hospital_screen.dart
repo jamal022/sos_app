@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import '../../../Data/Models/HospitalModel.dart';
 import '../../Widgets/admin_textFormField_widget.dart';
 
@@ -32,7 +33,7 @@ _addImage() async {
     file = File(image!.path);
     var rand = Random().nextInt(100000);
     var imagename = "$rand" + basename(image!.path);
-    ref = FirebaseStorage.instance.ref("images").child("$imagename");
+    ref = FirebaseStorage.instance.ref("hospitalsPhotos").child("$imagename");
     await ref!.putFile(file!);
     imageurl = await ref!.getDownloadURL();
     image = null;
@@ -350,6 +351,7 @@ class _AddHospitalScreen extends State<AddHospitalScreen> {
                     if (formdata!.validate()) {
                       formdata.save();
                       if (image != null) {
+                        showLoading(context);
                         hospitalImage = await _addImage();
                         Hospital hos = Hospital(
                             name: nameController.text,
