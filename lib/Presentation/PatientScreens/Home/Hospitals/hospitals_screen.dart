@@ -15,13 +15,17 @@ class HospitalsScreen extends StatefulWidget {
 List<Hospital> hospitalsList = [];
 List<Placemark> placemarks = [];
 
+bool _flag = false;
+
 class _HospitalsScreenState extends State<HospitalsScreen> {
   _getHospitals() async {
     hospitalsList = await GetHospitals();
     for (var hos in hospitalsList) {
       placemarks = await placemarkFromCoordinates(
-          double.parse(hos.addressLang), double.parse(hos.addressLong));
+          double.parse(hos.addressLang.toString()),
+          double.parse(hos.addressLong.toString()));
     }
+    _flag = true;
     setState(() {});
   }
 
@@ -36,11 +40,11 @@ class _HospitalsScreenState extends State<HospitalsScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-        backgroundColor: const Color.fromARGB(253, 243, 222, 195),
+        backgroundColor: back,
         appBar: AppBar(
           title: const Text(
-            "\t\Hospitals",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+            "Hospitals",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
           ),
           centerTitle: true,
           toolbarHeight: 60.2,
@@ -62,31 +66,64 @@ class _HospitalsScreenState extends State<HospitalsScreen> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(children: [
-            Container(
-              color: const Color.fromARGB(253, 243, 222, 195),
-              //width: MediaQuery.of(context).size.width * 0.65,
+        body: _flag == true
+            ? hospitalsList.length != 0
+                ? SingleChildScrollView(
+                    child: Column(children: [
+                      Container(
+                        color: const Color.fromARGB(253, 243, 222, 195),
+                        //width: MediaQuery.of(context).size.width * 0.65,
 
-              child: Column(children: <Widget>[
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              for (var i = 0; i < hospitalsList.length; i++)
-                                HospitalCard(
-                                  hospital: hospitalsList[i],
-                                  placemarks: placemarks[i],
-                                )
-                            ],
-                          ))
-                    ])
-              ]),
-            )
-          ]),
-        ));
+                        child: Column(children: <Widget>[
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: Column(
+                                      children: [
+                                        for (var i = 0;
+                                            i < hospitalsList.length;
+                                            i++)
+                                          HospitalCard(
+                                            hospital: hospitalsList[i],
+                                            placemarks: placemarks[i],
+                                          )
+                                      ],
+                                    ))
+                              ])
+                        ]),
+                      )
+                    ]),
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        const Padding(
+                            padding: EdgeInsets.fromLTRB(25, 2, 25, 5)),
+                        const Icon(
+                          Icons.warning_amber_rounded,
+                          size: 100,
+                          color: black,
+                        ),
+                        SizedBox(
+                          height: size.height / 40,
+                        ),
+                        const Text(
+                          'There is no Hospitals',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: black),
+                        ),
+                      ],
+                    ),
+                  )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ));
   }
 }

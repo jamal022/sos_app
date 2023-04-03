@@ -11,7 +11,6 @@ import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
 import 'package:toggle_list/toggle_list.dart';
 import '../../Constants/app_assets.dart';
-import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import '../Login/login_screen.dart';
 import 'SupportScreen.dart';
 

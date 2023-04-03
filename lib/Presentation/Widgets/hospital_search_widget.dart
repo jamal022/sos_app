@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/HospitalModel.dart';
-import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/Hospitals/hospital_page_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
-import '../PatientScreens/Home/Doctors/doctor_page_screen.dart';
 
 class HospitalSearchDelegate extends SearchDelegate {
 // clear the search text
@@ -39,10 +35,11 @@ class HospitalSearchDelegate extends SearchDelegate {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection("Hospitals").snapshots(),
       builder: (context, snapshot) {
-        List<Hospital> hospitals = [];
-        List<String> names = [];
         List<Hospital> results = [];
-        if (snapshot.data!.docs.isNotEmpty) {
+        if (snapshot.hasData) {
+          List<Hospital> hospitals = [];
+          List<String> names = [];
+
           for (var hos in snapshot.data!.docs) {
             Hospital hospital = Hospital(
               name: hos.data()["Name"],
@@ -62,44 +59,45 @@ class HospitalSearchDelegate extends SearchDelegate {
               results.add(hospitals[i]);
             }
           }
-        } else {
-          return const Center(
-              child: Text(
-            'This doctor does not exist',
-            style: TextStyle(
-              fontSize: 20,
-              color: primaryColor,
-            ),
-          ));
         }
-        return ListView(
-            children: results
-                .map<Widget>(
-                  (element) => ListTile(
-                    title: Text(
-                      element.name,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HospitalPageScreen(
-                              hospital: Hospital(
-                                  addressLang: element.addressLang,
-                                  addressLong: element.addressLong,
-                                  name: element.name,
-                                  ambulancePhone: element.ambulancePhone,
-                                  email: element.email,
-                                  image: element.image,
-                                  telephone1: element.telephone1,
-                                  telephone2: element.telephone2),
-                            ),
-                          ));
-                    },
-                  ),
-                )
-                .toList());
+
+        return results.length != 0
+            ? ListView(
+                children: results
+                    .map<Widget>(
+                      (element) => ListTile(
+                        title: Text(
+                          element.name,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HospitalPageScreen(
+                                  hospital: Hospital(
+                                      addressLang: element.addressLang,
+                                      addressLong: element.addressLong,
+                                      name: element.name,
+                                      ambulancePhone: element.ambulancePhone,
+                                      email: element.email,
+                                      image: element.image,
+                                      telephone1: element.telephone1,
+                                      telephone2: element.telephone2),
+                                ),
+                              ));
+                        },
+                      ),
+                    )
+                    .toList())
+            : const Center(
+                child: Text(
+                'This hospital does not exist',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: primaryColor,
+                ),
+              ));
       },
     );
   }

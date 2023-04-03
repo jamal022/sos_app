@@ -53,7 +53,7 @@ class _NewQuestionScreenState extends State<NewQuestionScreen> {
                               backgroundImage: NetworkImage(widget.image),
                               backgroundColor:
                                   const Color.fromARGB(255, 255, 255, 255),
-                              radius: 35,
+                              radius: 28,
                             ),
                             Text('  ${widget.name}',
                                 style: const TextStyle(

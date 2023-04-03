@@ -18,17 +18,10 @@ class PrivacyScreen extends StatelessWidget {
         title: const Text(
           "Privacy and Policies",
           style: (TextStyle(
-            fontSize: titleInfoFont,
+            fontSize: 28,
             fontWeight: FontWeight.w500,
             color: Colors.white,
           )),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            return Navigator.pop(context);
-          },
-          icon:
-              const Icon(Icons.arrow_back_ios_rounded, color: white, size: 30),
         ),
       ),
       body: Container(

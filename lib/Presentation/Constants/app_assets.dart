@@ -54,5 +54,5 @@ List<AboutUSModel> AboutUSList = [
 
 List<ContactUSModel> ContactUsList = [
   ContactUSModel(
-      question: "Contact Us", answer: "Email: SOS_SaveYourSkin@gmail.com"),
+      question: "Contact Us", answer: "Email: SOS_SaveOurSkin@gmail.com"),
 ];

@@ -35,10 +35,11 @@ class DoctorSearchDelegate extends SearchDelegate {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection("Doctors").snapshots(),
       builder: (context, snapshot) {
-        List<Doctor> doctors = [];
-        List<String> names = [];
         List<Doctor> results = [];
-        if (snapshot.data!.docs.isNotEmpty) {
+        if (snapshot.hasData) {
+          List<Doctor> doctors = [];
+          List<String> names = [];
+
           for (var doc in snapshot.data!.docs) {
             Doctor doctor = Doctor(
                 username: doc.data()["FullName"],
@@ -63,50 +64,51 @@ class DoctorSearchDelegate extends SearchDelegate {
               results.add(doctors[i]);
             }
           }
-        } else {
-          return const Center(
-              child: Text(
-            'This doctor does not exist',
-            style: TextStyle(
-              fontSize: 20,
-              color: primaryColor,
-            ),
-          ));
         }
-        return ListView(
-            children: results
-                .map<Widget>(
-                  (element) => ListTile(
-                    title: Text(
-                      element.username,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DoctorPageScreen(
-                              doctor: Doctor(
-                                  id: element.id,
-                                  age: element.age,
-                                  email: element.email,
-                                  gender: element.gender,
-                                  image: element.image,
-                                  password: element.password,
-                                  phoneNumber: element.phoneNumber,
-                                  username: element.username,
-                                  addressLat: element.addressLat,
-                                  addressLong: element.addressLong,
-                                  bio: element.bio,
-                                  experience: element.experience,
-                                  field: element.field,
-                                  price: element.price),
-                            ),
-                          ));
-                    },
-                  ),
-                )
-                .toList());
+
+        return results.length != 0
+            ? ListView(
+                children: results
+                    .map<Widget>(
+                      (element) => ListTile(
+                        title: Text(
+                          element.username,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DoctorPageScreen(
+                                  doctor: Doctor(
+                                      id: element.id,
+                                      age: element.age,
+                                      email: element.email,
+                                      gender: element.gender,
+                                      image: element.image,
+                                      password: element.password,
+                                      phoneNumber: element.phoneNumber,
+                                      username: element.username,
+                                      addressLat: element.addressLat,
+                                      addressLong: element.addressLong,
+                                      bio: element.bio,
+                                      experience: element.experience,
+                                      field: element.field,
+                                      price: element.price),
+                                ),
+                              ));
+                        },
+                      ),
+                    )
+                    .toList())
+            : const Center(
+                child: Text(
+                'This doctor does not exist',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: primaryColor,
+                ),
+              ));
       },
     );
   }

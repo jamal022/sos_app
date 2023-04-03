@@ -24,25 +24,24 @@ Set<Marker> mymarkers = {};
 class _HospitalPageScreenState extends State<HospitalPageScreen> {
   Future _getLatAndLong() async {
     kGooglePlex = CameraPosition(
-      target: LatLng(double.parse(widget.hospital.addressLang),
-          double.parse(widget.hospital.addressLong)),
+      target: LatLng(double.parse(widget.hospital.addressLang.toString()),
+          double.parse(widget.hospital.addressLong.toString())),
       zoom: 12.0,
     );
 
     mymarkers.add(Marker(
       markerId: MarkerId("initial"),
-      position: LatLng(double.parse(widget.hospital.addressLang),
-          double.parse(widget.hospital.addressLong)),
+      position: LatLng(double.parse(widget.hospital.addressLang.toString()),
+          double.parse(widget.hospital.addressLong.toString())),
     ));
     placemarks = await placemarkFromCoordinates(
-        double.parse(widget.hospital.addressLang),
-        double.parse(widget.hospital.addressLong));
+        double.parse(widget.hospital.addressLang.toString()),
+        double.parse(widget.hospital.addressLong.toString()));
     setState(() {});
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getLatAndLong();
   }
