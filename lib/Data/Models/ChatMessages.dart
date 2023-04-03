@@ -84,3 +84,31 @@ Future<Stream<QuerySnapshot>> getUserChats(String itIsMyName) async {
       .where("Users", arrayContains: itIsMyName)
       .snapshots();
 }
+
+GetuserToken(String userid) async {
+  var userToken;
+  await FirebaseFirestore.instance
+      .collection("Doctors")
+      .doc(userid)
+      .get()
+      .then((value) {
+    if (value == null) {
+      FirebaseFirestore.instance
+          .collection("Patients")
+          .doc(userid)
+          .get()
+          .then((value) {
+        userToken = value.data()!["Token"];
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(userid)
+          .get()
+          .then((value) {
+        userToken = value.data()!["Token"];
+      });
+    }
+  });
+  return userToken;
+}

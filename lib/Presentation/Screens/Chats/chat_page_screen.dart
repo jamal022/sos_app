@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Data/Models/NotificationModel.dart';
 import 'package:sos_app/Data/Models/patient.dart';
 import '../../../Data/Models/ChatMessages.dart';
 import '../../Styles/colors.dart';
@@ -56,16 +57,6 @@ class _ChatPageScreen extends State<ChatPageScreen> {
       sendMessage(
           content, type, widget.groupChatId, widget.currentuser, widget.peerId);
     }
-  }
-
-  @override
-  void initState() {
-    () async {
-      readLocal();
-      setState(() {});
-    }();
-
-    super.initState();
   }
 
   @override
@@ -147,6 +138,12 @@ class _ChatPageScreen extends State<ChatPageScreen> {
               child: IconButton(
                 icon: const Icon(Icons.send),
                 onPressed: () {
+                  var userToken = GetuserToken(widget.peerId);
+                  readLocal();
+                  SendNotifyToUser(
+                      "You Have A New Message From ${widget.currentname}",
+                      userToken.toString(),
+                      widget.peerId);
                   onSendMessage(MessageController.text, TypeMessage.text);
                 },
                 color: primaryColor,
