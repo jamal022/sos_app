@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/patient.dart';
-import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 import 'NotificationModel.dart';
 
@@ -47,16 +47,20 @@ class Doctor extends Patient {
             gender: gender,
             image: image,
             token: token) {}
+}
 
-  Update_Doctor(Doctor doctor, formdata, context) async {
-    if (formdata!.validate()) {
-      formdata.save();
+Update_Doctor(Doctor doctor, password, context) async {
+  final user = await FirebaseAuth.instance.currentUser;
+  final cred =
+      EmailAuthProvider.credential(email: doctor.email, password: password);
+
+  user?.reauthenticateWithCredential(cred).then((value) {
+    user.updatePassword(doctor.password).then((value) async {
       await FirebaseFirestore.instance
           .collection("Doctors")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
         "FullName": doctor.username,
-        "Email": doctor.email,
         'Password': doctor.password,
         "PhoneNumber": doctor.phoneNumber,
         "Age": doctor.age,
@@ -66,64 +70,36 @@ class Doctor extends Patient {
         "Bio": doctor.bio,
         "Image": doctor.image,
       });
-      await updateDoctorsPrefs(
-          doctor.id,
-          doctor.username,
-          doctor.email,
-          doctor.password,
-          doctor.age,
-          doctor.gender,
-          doctor.phoneNumber,
-          doctor.image,
-          doctor.field,
-          doctor.price,
-          doctor.experience,
-          doctor.bio,
-          doctor.addressLat,
-          doctor.addressLong,
-          doctor.rate.toString(),
-          doctor.verified,
-          doctor.token,
-          doctor.idImage);
-
+      await updateDoctorsPrefs(doctor);
+      Navigator.pop(context);
       Navigator.pop(context, "refresh");
-    } else {
-      print("not valid");
-    }
-  }
+    });
+  });
 }
 
-updateDoctorsPrefs(id, name, email, password, age, gender, phone, image, field,
-    price, experience, bio, lan, lon, rate, verified, token, idImage) async {
+DeleteDoctorProfile(image) async {
+  await FirebaseStorage.instance.refFromURL(image).delete();
+}
+
+updateDoctorsPrefs(Doctor doctor) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.clear();
-  prefs.setString("Id", id);
-  prefs.setString("FullName", name);
-  prefs.setString("Email", email);
-  prefs.setString("Password", password);
-  prefs.setString("PhoneNumber", phone);
-  prefs.setString("Age", age);
-  prefs.setString("Gender", gender);
-  prefs.setString("Image", image);
-  prefs.setString("Field", field);
-  prefs.setString("TicketPrice", price);
-  prefs.setString("YearsOfExperience", experience);
-  prefs.setString("Bio", bio);
-  prefs.setString("AddressLatitude", lan);
-  prefs.setString("AddressLongitude", lon);
-  prefs.setString("Role", "Doctor");
-  prefs.setString("Rate", rate);
-  prefs.setString("Token", token);
-  prefs.setInt("Verified", verified);
-  prefs.setString("IdImage", idImage);
+  prefs.setString("FullName", doctor.username);
+  prefs.setString("Password", doctor.password);
+  prefs.setString("PhoneNumber", doctor.phoneNumber);
+  prefs.setString("Age", doctor.age);
+  prefs.setString("Image", doctor.image);
+  prefs.setString("Field", doctor.field);
+  prefs.setString("TicketPrice", doctor.price);
+  prefs.setString("YearsOfExperience", doctor.experience);
+  prefs.setString("Bio", doctor.bio);
 }
 
 UpdateAddress({doctor, lat, long, context}) async {
   await FirebaseFirestore.instance.collection("Doctors").doc(doctor.id).update(
       {"AddressLatitude": lat, "AddressLongitude": long}).then((value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("AddressLatitude", lat);
-    prefs.setString("AddressLongitude", long);
+    prefs.setDouble("AddressLatitude", lat);
+    prefs.setDouble("AddressLongitude", long);
   });
 
   Navigator.pop(context, "refresh");

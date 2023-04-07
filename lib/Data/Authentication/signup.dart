@@ -1,71 +1,99 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:sos_app/Presentation/Screens/SignUp/doctorSignup_screen.dart';
 import '../../Presentation/Screens/Login/login_screen.dart';
-import '../../Presentation/Widgets/loading_widget.dart';
 import '../Models/NotificationModel.dart';
 import '../Models/doctor.dart';
 import '../Models/patient.dart';
 
-Register({Patient? patient, Doctor? doctor, BuildContext? context}) async {
-  late UserCredential _user;
-
-  showLoading(context);
-
+Register(
+    {BuildContext? context,
+    username,
+    email,
+    password,
+    phone,
+    age,
+    gender,
+    image,
+    role}) async {
   try {
-    if (patient != null) {
-      _user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: patient.email, password: patient.password);
-    } else if (doctor != null) {
-      _user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: doctor.email, password: doctor.password);
-    }
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((value) {
+      if (role == "patient") {
+        Patient patient = Patient(
+            username: username,
+            email: email,
+            phoneNumber: phone,
+            password: password,
+            age: age,
+            gender: gender,
+            image: image,
+            token: FirebaseMessaging.instance.getToken());
+        AddPatient(patient, value.user!.uid, context);
+      } else if (role == "doctor") {
+        Navigator.of(context!).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (_) => DoctorSignupScreen(
+                  name: username,
+                  email: email,
+                  phone: phone,
+                  password: password,
+                  age: age,
+                  gender: gender,
+                  image: image,
+                  id: value.user!.uid)),
+          (Route<dynamic> route) => false,
+        );
+      }
+    });
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
       Navigator.of(context!).pop();
       AwesomeDialog(
-              context: context,
-              title: "Error",
-              body: const Text("Password is too weak"))
-          .show();
+        context: context,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        headerAnimationLoop: false,
+        title: 'Error',
+        desc: 'Password is too weak',
+      ).show();
     } else if (e.code == 'email-already-in-use') {
       Navigator.of(context!).pop();
       AwesomeDialog(
-              context: context,
-              title: "Error",
-              body: const Text("email-already-in-use"))
-          .show();
+        context: context,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        headerAnimationLoop: false,
+        title: 'Error',
+        desc: 'Email-already-in-use',
+      ).show();
     }
   } catch (e) {
     Navigator.of(context!).pop();
     AwesomeDialog(
       context: context,
-      title: "Error",
-      body: Text("$e"),
+      dialogType: DialogType.error,
+      animType: AnimType.rightSlide,
+      headerAnimationLoop: false,
+      title: 'Error',
+      desc: "$e",
     ).show();
-  }
-  if (patient != null) {
-    AddPatient(patient, _user.user!.uid, context);
-  } else if (doctor != null) {
-    AddDoctor(doctor, _user.user!.uid, context);
   }
 }
 
-AddPatient(Patient? patient, id, context) async {
-  showLoading(context);
-  await FirebaseFirestore.instance
-      .collection("Patients")
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .set({
-    "UserId": id,
-    "FullName": patient?.username,
-    "Email": patient?.email,
-    "Password": patient?.password,
-    "PhoneNumber": patient?.phoneNumber,
-    "Gender": patient?.gender,
-    "Age": patient?.age,
-    "Image": patient?.image,
+AddPatient(Patient patient, id, context) async {
+  await FirebaseFirestore.instance.collection("Patients").doc(id).set({
+    "FullName": patient.username,
+    "Email": patient.email,
+    "Password": patient.password,
+    "PhoneNumber": patient.phoneNumber,
+    "Gender": patient.gender,
+    "Age": patient.age,
+    "Image": patient.image,
     "Token": "0"
   }).then((value) {
     Navigator.pushAndRemoveUntil(
@@ -76,12 +104,8 @@ AddPatient(Patient? patient, id, context) async {
   });
 }
 
-AddDoctor(Doctor? doctor, id, context) async {
-  await FirebaseFirestore.instance
-      .collection("Doctors")
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .set({
-    "UserId": id,
+AddDoctor(Doctor? doctor, context, id) async {
+  await FirebaseFirestore.instance.collection("Doctors").doc(id).set({
     "FullName": doctor?.username,
     "Email": doctor?.email,
     "Password": doctor?.password,

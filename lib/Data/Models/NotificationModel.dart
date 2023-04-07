@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
 class NotificationModel {
@@ -26,37 +25,11 @@ AddNotification(NotificationModel notification) async {
   return "sent";
 }
 
-GetNotifications(userId) async {
-  List<NotificationModel> notifications = [];
-  await FirebaseFirestore.instance
+Stream<QuerySnapshot> getNotifications(userId) {
+  return FirebaseFirestore.instance
       .collection("Notifications")
       .where("UserId", isEqualTo: userId)
-      .get()
-      .then((value) {
-    for (var notify in value.docs) {
-      notifications.add(NotificationModel(
-          userId: notify.data()["UserId"],
-          message: notify.data()["Message"],
-          date: notify.data()["Date"],
-          notificationId: notify.id));
-    }
-  }).then((value) async {
-    await FirebaseFirestore.instance
-        .collection("Notifications")
-        .where("UserId", isEqualTo: "sos")
-        .get()
-        .then((value) {
-      for (var notify in value.docs) {
-        notifications.add(NotificationModel(
-            userId: notify.data()["UserId"],
-            message: notify.data()["Message"],
-            date: notify.data()["Date"],
-            notificationId: notify.id));
-      }
-    });
-  });
-
-  return notifications;
+      .snapshots();
 }
 
 SendNotifyToUser(String body, String token, String userId) async {

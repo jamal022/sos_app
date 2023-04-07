@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:date_format/date_format.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ _addImage() async {
     file = File(image!.path);
     var rand = Random().nextInt(100000);
     var imagename = "$rand" + basename(image!.path);
-    ref = FirebaseStorage.instance.ref("images").child("$imagename");
+    ref = FirebaseStorage.instance.ref("Profiles").child("$imagename");
     await ref!.putFile(file!);
     imageurl = await ref!.getDownloadURL();
     image = null;
@@ -268,33 +269,46 @@ class _PatientEditScreen extends State<PatientEditScreen> {
                         borderSide: BorderSide.none,
                       ),
                       onPressed: () async {
-                        if (image != null) {
-                          showLoading(context);
-                          patientImage = await _addImage();
-                          Patient pat = Patient(
-                              id: widget.patient.id,
-                              username: nameController.text,
-                              email: emailController.text,
-                              phoneNumber: phoneController.text,
-                              password: passwordController.text,
-                              age: ageController.text,
-                              gender: widget.patient.gender,
-                              image: patientImage);
+                        var formdata = formKey.currentState;
+                        if (formdata!.validate()) {
+                          formdata.save();
+                          if (image != null) {
+                            showLoading(context);
+                            DeletePatientProfile(widget.patient.image);
+                            patientImage = await _addImage();
+                            Patient pat = Patient(
+                                id: widget.patient.id,
+                                username: nameController.text,
+                                email: emailController.text,
+                                phoneNumber: phoneController.text,
+                                password: passwordController.text,
+                                age: ageController.text,
+                                gender: widget.patient.gender,
+                                image: patientImage);
 
-                          await pat.Update_Patient(pat, formKey, context);
-                          Navigator.pop(context, "refresh");
+                            await Update_Patient(
+                                pat, widget.patient.password, context);
+                          } else {
+                            showLoading(context);
+                            Patient pat = Patient(
+                                id: widget.patient.id,
+                                username: nameController.text,
+                                email: emailController.text,
+                                phoneNumber: phoneController.text,
+                                password: passwordController.text,
+                                age: ageController.text,
+                                gender: widget.patient.gender,
+                                image: widget.patient.image);
+
+                            await Update_Patient(
+                                pat, widget.patient.password, context);
+                          }
                         } else {
-                          Patient pat = Patient(
-                              id: widget.patient.id,
-                              username: nameController.text,
-                              email: emailController.text,
-                              phoneNumber: phoneController.text,
-                              password: passwordController.text,
-                              age: ageController.text,
-                              gender: widget.patient.gender,
-                              image: widget.patient.image);
-
-                          await pat.Update_Patient(pat, formKey, context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Enter valid values to continue"),
+                                behavior: SnackBarBehavior.floating),
+                          );
                         }
                       },
                       child: const Text(

@@ -16,67 +16,45 @@ import '../../Presentation/Widgets/loading_widget.dart';
 import '../Models/doctor.dart';
 import '../Models/patient.dart';
 
-Patient? patient;
-late Doctor doctor;
-
-savePatientPrefs(
-    id, name, email, password, age, gender, phone, image, token) async {
+savePatientPrefs(Patient pat) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString("Id", id);
-  prefs.setString("FullName", name);
-  prefs.setString("Email", email);
-  prefs.setString("Password", password);
-  prefs.setString("PhoneNumber", phone);
-  prefs.setString("Age", age);
-  prefs.setString("Gender", gender);
-  prefs.setString("Image", image);
-  prefs.setString("Token", token);
+  prefs.setString("Id", pat.id);
+  prefs.setString("FullName", pat.username);
+  prefs.setString("Email", pat.email);
+  prefs.setString("Password", pat.password);
+  prefs.setString("PhoneNumber", pat.phoneNumber);
+  prefs.setString("Age", pat.age);
+  prefs.setString("Gender", pat.gender);
+  prefs.setString("Image", pat.image);
+  prefs.setString("Token", pat.token);
   prefs.setString("Role", "Patient");
 }
 
-saveDoctorPrefs(
-    {id,
-    name,
-    email,
-    password,
-    age,
-    gender,
-    phone,
-    image,
-    field,
-    price,
-    experience,
-    bio,
-    addLat,
-    addLong,
-    rate,
-    verified,
-    token,
-    idImage}) async {
+saveDoctorPrefs(Doctor doc) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString("Id", id);
-  prefs.setString("FullName", name);
-  prefs.setString("Email", email);
-  prefs.setString("Password", password);
-  prefs.setString("PhoneNumber", phone);
-  prefs.setString("Age", age);
-  prefs.setString("Gender", gender);
-  prefs.setString("Image", image);
-  prefs.setString("Field", field);
-  prefs.setString("YearsOfExperience", experience);
-  prefs.setString("TicketPrice", price);
-  prefs.setString("Bio", bio);
-  prefs.setString("AddressLatitude", addLat.toString());
-  prefs.setString("AddressLongitude", addLong.toString());
-  prefs.setString("Rate", rate);
-  prefs.setInt("Verified", verified);
-  prefs.setString("Token", token);
+  prefs.setString("Id", doc.id);
+  prefs.setString("FullName", doc.username);
+  prefs.setString("Email", doc.email);
+  prefs.setString("Password", doc.password);
+  prefs.setString("PhoneNumber", doc.phoneNumber);
+  prefs.setString("Age", doc.age);
+  prefs.setString("Gender", doc.gender);
+  prefs.setString("Image", doc.image);
+  prefs.setString("Field", doc.field);
+  prefs.setString("YearsOfExperience", doc.experience);
+  prefs.setString("TicketPrice", doc.price);
+  prefs.setString("Bio", doc.bio);
+  prefs.setDouble("AddressLatitude", doc.addressLat);
+  prefs.setDouble("AddressLongitude", doc.addressLong);
+  prefs.setString("Rate", doc.rate);
+  prefs.setInt("Verified", doc.verified);
+  prefs.setString("Token", doc.token);
   prefs.setString("Role", "Doctor");
-  prefs.setString("IdImage", idImage);
+  prefs.setString("IdImage", doc.idImage);
 }
 
 void route(id, context) async {
-  if (id == "6yjDMHENTaPhFHQKBHQRqZcRwh63") {
+  if (id == "Tl8TuHlLYpVf9lWdPcJmu79h6sj2") {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("Role", "admin");
     Navigator.pushAndRemoveUntil(
@@ -87,33 +65,23 @@ void route(id, context) async {
   } else {
     FirebaseFirestore.instance
         .collection('Patients')
-        .where("UserId", isEqualTo: id)
+        .doc(id)
         .get()
         .then((value) async {
-      if (value.docs.isNotEmpty) {
-        patient = Patient(
-          id: value.docs[0].id,
-          username: value.docs[0].data()['FullName'],
-          email: value.docs[0].data()['Email'],
-          phoneNumber: value.docs[0].data()['PhoneNumber'],
-          password: value.docs[0].data()['Password'],
-          age: value.docs[0].data()['Age'],
-          gender: value.docs[0].data()['Gender'],
-          image: value.docs[0].data()['Image'],
-          token: value.docs[0].data()['Token'],
+      if (value.exists) {
+        Patient patient = Patient(
+          id: value.id,
+          username: value.data()!['FullName'],
+          email: value.data()!['Email'],
+          phoneNumber: value.data()!['PhoneNumber'],
+          password: value.data()!['Password'],
+          age: value.data()!['Age'],
+          gender: value.data()!['Gender'],
+          image: value.data()!['Image'],
+          token: value.data()!['Token'],
         );
 
-        await savePatientPrefs(
-          value.docs[0].id,
-          value.docs[0].data()['FullName'],
-          value.docs[0].data()['Email'],
-          value.docs[0].data()['Password'],
-          value.docs[0].data()['Age'],
-          value.docs[0].data()['Gender'],
-          value.docs[0].data()['PhoneNumber'],
-          value.docs[0].data()['Image'],
-          value.docs[0].data()['Token'],
-        );
+        await savePatientPrefs(patient);
 
         List<Widget> patientScreens = [
           const SettingScreen(),
@@ -135,63 +103,43 @@ void route(id, context) async {
             .collection('Doctors')
             .doc(id)
             .get()
-            .then((snapshot) async {
-          doctor = Doctor(
-              id: id,
-              username: snapshot.data()?['FullName'],
-              email: snapshot.data()?['Email'],
-              phoneNumber: snapshot.data()?['PhoneNumber'],
-              password: snapshot.data()?['Password'],
-              age: snapshot.data()?['Age'],
-              gender: snapshot.data()?['Gender'],
-              image: snapshot.data()?['Image'],
-              field: snapshot.data()?['Field'],
-              experience: snapshot.data()?['YearsOfExperience'],
-              price: snapshot.data()?['TicketPrice'],
-              addressLat: snapshot.data()?['AddressLatitude'],
-              addressLong: snapshot.data()?['AddressLongitude'],
-              bio: snapshot.data()?['Bio'],
-              rate: snapshot.data()?["Rate"],
-              verified: snapshot.data()?["Verified"],
-              token: snapshot.data()?["Token"],
-              idImage: snapshot.data()?["IdImage"]);
+            .then((value) async {
+          Doctor doctor = Doctor(
+              id: value.id,
+              username: value.data()?['FullName'],
+              email: value.data()?['Email'],
+              phoneNumber: value.data()?['PhoneNumber'],
+              password: value.data()?['Password'],
+              age: value.data()?['Age'],
+              gender: value.data()?['Gender'],
+              image: value.data()?['Image'],
+              field: value.data()?['Field'],
+              experience: value.data()?['YearsOfExperience'],
+              price: value.data()?['TicketPrice'],
+              addressLat: value.data()?['AddressLatitude'],
+              addressLong: value.data()?['AddressLongitude'],
+              bio: value.data()?['Bio'],
+              rate: value.data()?["Rate"],
+              verified: value.data()?["Verified"],
+              token: value.data()?["Token"],
+              idImage: value.data()?["IdImage"]);
+          await saveDoctorPrefs(doctor);
+          List<Widget> doctorScreens = [
+            const SettingScreen(),
+            ChatsScreen(),
+            const DoctorHomeScreen(),
+            NotificationsScreen(),
+            DoctorProfileScreen(),
+          ];
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BottomNavBar(
+                      screens: doctorScreens,
+                    )),
+            (Route<dynamic> route) => false,
+          );
         });
-
-        await saveDoctorPrefs(
-            id: doctor.id,
-            name: doctor.username,
-            email: doctor.email,
-            password: doctor.password,
-            age: doctor.age,
-            gender: doctor.gender,
-            phone: doctor.phoneNumber,
-            image: doctor.image,
-            field: doctor.field,
-            price: doctor.price,
-            experience: doctor.experience,
-            bio: doctor.bio,
-            addLat: doctor.addressLat,
-            addLong: doctor.addressLong,
-            rate: doctor.rate.toString(),
-            verified: doctor.verified,
-            token: doctor.token,
-            idImage: doctor.idImage);
-
-        List<Widget> doctorScreens = [
-          const SettingScreen(),
-          ChatsScreen(),
-          const DoctorHomeScreen(),
-          NotificationsScreen(),
-          DoctorProfileScreen(),
-        ];
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => BottomNavBar(
-                    screens: doctorScreens,
-                  )),
-          (Route<dynamic> route) => false,
-        );
       }
     });
   }
@@ -203,26 +151,30 @@ signIn(email, password, context, formKey) async {
     formdata.save();
     try {
       showLoading(context);
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      route(userCredential.user!.uid, context);
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) => route(value.user!.uid, context));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Navigator.of(context).pop();
         AwesomeDialog(
           context: context,
-          title: "Error",
-          body: const Text(
-            "No user found for that email",
-          ),
+          dialogType: DialogType.error,
+          animType: AnimType.rightSlide,
+          headerAnimationLoop: false,
+          title: 'Error',
+          desc: 'No user found for that email',
         ).show();
       } else if (e.code == 'wrong-password') {
         Navigator.of(context).pop();
         AwesomeDialog(
-                context: context,
-                title: "Error",
-                body: const Text("Wrong password provided for that user"))
-            .show();
+          context: context,
+          dialogType: DialogType.error,
+          animType: AnimType.rightSlide,
+          headerAnimationLoop: false,
+          title: 'Error',
+          desc: 'Wrong password provided for that user',
+        ).show();
       }
     }
   } else {

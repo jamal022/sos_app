@@ -1,5 +1,11 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:path/path.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sos_app/Presentation/Screens/Login/login_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
@@ -7,7 +13,6 @@ import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import '../../../Data/Authentication/signup.dart';
 import '../../../Data/Models/patient.dart';
 import '../../Styles/fonts.dart';
-import '../../Widgets/upoladPhoto_widget.dart';
 import 'doctorSignup_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -28,7 +33,91 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late Patient patient;
   String? gender;
   String? role;
-  var userImage;
+
+  XFile? _image;
+  final ImagePicker _picker = ImagePicker();
+  Reference? _ref;
+  File? _file;
+  String? _imageurl;
+  var _userImage;
+
+  _addImage() async {
+    if (_picker != null) {
+      _file = File(_image!.path);
+      var _rand = Random().nextInt(100000);
+      var _imagename = "$_rand" + basename(_image!.path);
+      _ref = FirebaseStorage.instance.ref("Profiles").child("$_imagename");
+      await _ref!.putFile(_file!);
+      _imageurl = await _ref!.getDownloadURL();
+      _image = null;
+      _ref = null;
+      _file = null;
+
+      return _imageurl;
+    }
+  }
+
+  Future _getImage(ImageSource media) async {
+    var _img = await _picker.pickImage(source: media);
+    setState(() {
+      _image = _img;
+    });
+  }
+
+  Widget bottomSheet(context) {
+    return Container(
+      height: 150,
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Column(
+        children: [
+          const Text(
+            "Choose Profile Photo",
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Column(
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _getImage(ImageSource.camera);
+                },
+                icon: const Icon(
+                  Icons.camera,
+                  color: primaryColor,
+                  size: 25,
+                ),
+                label: const Text(
+                  "Camera",
+                  style: TextStyle(color: primaryColor, fontSize: 22),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _getImage(ImageSource.gallery);
+                },
+                icon: const Icon(
+                  Icons.image,
+                  color: primaryColor,
+                  size: 25,
+                ),
+                label: const Text(
+                  "Gallery",
+                  style: TextStyle(color: primaryColor, fontSize: 22),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
   String? passwordMatching(String password, String confirmPassword) {
     if (password == confirmPassword) {
       return null;
@@ -223,10 +312,57 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                 ),
-                //CheckboxesWidget(text1: 'Male', text2: 'Female'),
                 const SizedBox(height: 20),
                 textFieldTitle('Upload Image'),
-                const UploadPhotoWidget(text: 'Upload Image'),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: Row(
+                    children: [
+                      MaterialButton(
+                          elevation: 5.0,
+                          color: primaryColor,
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: ((context) => bottomSheet(context)));
+                          },
+                          child: const Text(
+                            'Upload Image',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          )),
+                      _image != null
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(
+                                  //to show image, you type like this.
+                                  File(_image!.path),
+                                  fit: BoxFit.cover,
+                                  width: 100,
+                                  height: 100,
+                                ),
+                              ),
+                            )
+                          : const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                "No Image",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            )
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 30),
                 textFieldTitle('Role'),
                 Container(
@@ -280,32 +416,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       var formdata = formKey.currentState;
                       if (formdata!.validate()) {
                         formdata.save();
-                        showLoading(context);
-                        userImage = await addImage();
-                        if (role == "patient") {
-                          patient = Patient(
+                        if (_image != null) {
+                          if (role != null) {
+                            showLoading(context);
+                            _userImage = await _addImage();
+                            Register(
                               username: nameController.text,
                               email: emailController.text,
-                              phoneNumber: phoneController.text,
+                              phone: phoneController.text,
                               password: passwordController.text,
                               age: ageController.text,
                               gender: gender,
-                              image: userImage);
-                          Register(context: context, patient: patient);
-                        } else if (role == "doctor") {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (_) => DoctorSignupScreen(
-                                    name: nameController.text,
-                                    email: emailController.text,
-                                    phone: phoneController.text,
-                                    password: passwordController.text,
-                                    age: ageController.text,
-                                    gender: gender,
-                                    image: userImage)),
-                            (Route<dynamic> route) => false,
-                          );
+                              image: _userImage,
+                              context: context,
+                              role: role,
+                            );
+                          } else {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error',
+                              desc: 'You must select the role',
+                            ).show();
+                          }
+                        } else {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.error,
+                            animType: AnimType.rightSlide,
+                            headerAnimationLoop: false,
+                            title: 'Error',
+                            desc: 'You must select an image',
+                          ).show();
                         }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("Enter valid values to continue"),
+                              behavior: SnackBarBehavior.floating),
+                        );
                       }
                     },
                     child: const Text(

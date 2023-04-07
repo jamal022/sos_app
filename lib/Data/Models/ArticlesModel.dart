@@ -84,10 +84,11 @@ AddLikeToArticle(articleId) async {
         .doc(userId)
         .get()
         .then((value) => userToken = value.data()!["Token"]);
+    if (articleContent.length > 16) {
+      articleContent = articleContent.substring(0, 15) + "..";
+    }
     SendNotifyToUser(
-        'Someone Likes your article "${articleContent.substring(0, 15)}..."',
-        userToken,
-        userId);
+        'Someone Likes your article ${articleContent}', userToken, userId);
   });
 }
 
@@ -135,10 +136,11 @@ AddDislikeToArticle(articleId) async {
         .doc(userId)
         .get()
         .then((value) => userToken = value.data()!["Token"]);
+    if (articleContent.length > 16) {
+      articleContent = articleContent.substring(0, 15) + "..";
+    }
     SendNotifyToUser(
-        'Someone dislikes your article "${articleContent.substring(0, 15)}..."',
-        userToken,
-        userId);
+        'Someone dislikes your article "${articleContent}"', userToken, userId);
   });
 }
 

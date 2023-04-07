@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Presentation/PatientScreens/Home/patient_home_screen.dart';
@@ -31,55 +32,46 @@ class Patient {
       this.gender,
       this.image,
       this.token});
+}
 
-  updatePatientPrefs(
-      id, name, email, password, age, gender, phone, image, token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    prefs.setString("Id", id);
-    prefs.setString("FullName", name);
-    prefs.setString("Email", email);
-    prefs.setString("Password", password);
-    prefs.setString("PhoneNumber", phone);
-    prefs.setString("Age", age);
-    prefs.setString("Gender", gender);
-    prefs.setString("Image", image);
-    prefs.setString("Token", token);
-    prefs.setString("Role", "Patient");
-  }
+updatePatientPrefs(Patient patient) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  Update_Patient(Patient patient, formkey, context) async {
-    var formdata = formKey.currentState;
-    if (formdata!.validate()) {
-      formdata.save();
-      final PUser = await FirebaseFirestore.instance
+  prefs.setString("FullName", patient.username);
+  prefs.setString("Password", patient.password);
+  prefs.setString("PhoneNumber", patient.phoneNumber);
+  prefs.setString("Age", patient.age);
+  prefs.setString("Image", patient.image);
+}
+
+Update_Patient(Patient patient, password, context) async {
+  final user = await FirebaseAuth.instance.currentUser;
+  final cred =
+      EmailAuthProvider.credential(email: patient.email, password: password);
+
+  user?.reauthenticateWithCredential(cred).then((value) {
+    user.updatePassword(patient.password).then((value) async {
+      await FirebaseFirestore.instance
           .collection("Patients")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
         "FullName": patient.username,
-        "Email": patient.email,
         'Password': patient.password,
         "PhoneNumber": patient.phoneNumber,
         "Age": patient.age,
         "Image": patient.image,
       });
 
-      await updatePatientPrefs(
-          patient.id,
-          patient.username,
-          patient.email,
-          patient.password,
-          patient.age,
-          patient.gender,
-          patient.phoneNumber,
-          patient.image,
-          patient.token);
+      await updatePatientPrefs(patient);
 
+      Navigator.pop(context);
       Navigator.pop(context, "refresh");
-    } else {
-      print("not valid");
-    }
-  }
+    });
+  });
+}
+
+DeletePatientProfile(image) async {
+  await FirebaseStorage.instance.refFromURL(image).delete();
 }
 
 UpdatePatientToken(patientId, token) async {

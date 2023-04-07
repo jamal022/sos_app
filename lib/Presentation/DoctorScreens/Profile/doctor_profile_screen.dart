@@ -26,72 +26,35 @@ class DoctorProfileScreen extends StatefulWidget {
 class _DoctorProfileScreen extends State<DoctorProfileScreen> {
   final maxLines = 5;
 
-  var role,
-      name,
-      email,
-      password,
-      phone,
-      image,
-      age,
-      gender,
-      bio,
-      field,
-      price,
-      experience,
-      addLat,
-      addLong,
-      id,
-      rate,
-      verified,
-      idImage;
-
+  var role;
   Doctor doctor = Doctor();
 
   List<Placemark> placemarks = [];
 
   _getPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    id = prefs.getString("Id");
+    doctor.id = prefs.getString("Id");
     role = prefs.getString("Role");
-    name = prefs.getString("FullName");
-    email = prefs.getString("Email");
-    password = prefs.getString("Password");
-    phone = prefs.getString("PhoneNumber");
-    age = prefs.getString("Age");
-    gender = prefs.getString("Gender");
-    image = prefs.getString("Image");
-    field = prefs.getString("Field");
-    experience = prefs.getString("YearsOfExperience");
-    price = prefs.getString("TicketPrice");
-    bio = prefs.getString("Bio");
-    addLat = prefs.getString("AddressLatitude");
-    addLong = prefs.getString("AddressLongitude");
-    rate = prefs.getString("Rate");
-    verified = prefs.getInt("Verified");
-    idImage = prefs.getString("IdImage");
+    doctor.username = prefs.getString("FullName");
+    doctor.email = prefs.getString("Email");
+    doctor.password = prefs.getString("Password");
+    doctor.phoneNumber = prefs.getString("PhoneNumber");
+    doctor.age = prefs.getString("Age");
+    doctor.gender = prefs.getString("Gender");
+    doctor.image = prefs.getString("Image");
+    doctor.field = prefs.getString("Field");
+    doctor.experience = prefs.getString("YearsOfExperience");
+    doctor.price = prefs.getString("TicketPrice");
+    doctor.bio = prefs.getString("Bio");
+    doctor.addressLat = prefs.getDouble("AddressLatitude");
+    doctor.addressLong = prefs.getDouble("AddressLongitude");
+    doctor.rate = prefs.getString("Rate");
+    doctor.verified = prefs.getInt("Verified");
+    doctor.idImage = prefs.getString("IdImage");
 
-    setState(() {
-      doctor = Doctor(
-          id: id,
-          username: name,
-          email: email,
-          phoneNumber: phone,
-          password: password,
-          age: age,
-          gender: gender,
-          image: image,
-          field: field,
-          experience: experience,
-          price: price,
-          addressLat: addLat,
-          addressLong: addLong,
-          bio: bio,
-          rate: rate,
-          verified: verified,
-          idImage: idImage);
-    });
-    placemarks = await placemarkFromCoordinates(
-        double.parse(doctor.addressLat), double.parse(doctor.addressLong));
+    setState(() {});
+    placemarks =
+        await placemarkFromCoordinates(doctor.addressLat, doctor.addressLong);
     setState(() {});
   }
 
@@ -426,8 +389,7 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                         child: Text(
                           doctor.bio,
                           style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                             color: Colors.black,
                           ),
                           textAlign: TextAlign.left,

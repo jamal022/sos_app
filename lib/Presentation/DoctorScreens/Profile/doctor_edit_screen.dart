@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sos_app/Data/Authentication/login.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import 'package:sos_app/Presentation/Styles/fonts.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
@@ -30,7 +29,7 @@ _addImage() async {
     file = File(image!.path);
     var rand = Random().nextInt(100000);
     var imagename = "$rand" + basename(image!.path);
-    ref = FirebaseStorage.instance.ref("images").child("$imagename");
+    ref = FirebaseStorage.instance.ref("Profiles").child("$imagename");
     await ref!.putFile(file!);
     imageurl = await ref!.getDownloadURL();
     image = null;
@@ -185,7 +184,7 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                           },
                           child: const Icon(
                             Icons.camera_alt_rounded,
-                            color: white,
+                            color: black,
                             size: 28,
                           ),
                         ),
@@ -337,53 +336,63 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
                         borderSide: BorderSide.none,
                       ),
                       onPressed: () async {
-                        if (image != null) {
-                          showLoading(context);
-                          doctorImage = await _addImage();
-                          var formdata = _formKey.currentState;
-                          Doctor doc = Doctor(
-                              id: widget.doctor.id,
-                              username: nameController.text,
-                              email: emailController.text,
-                              phoneNumber: phoneController.text,
-                              password: passwordController.text,
-                              age: ageController.text,
-                              gender: widget.doctor.gender,
-                              image: doctorImage,
-                              field: fieldController.text,
-                              experience: experienceController.text,
-                              addressLat: widget.doctor.addressLat,
-                              addressLong: widget.doctor.addressLong,
-                              price: priceController.text,
-                              bio: bioController.text,
-                              rate: widget.doctor.rate,
-                              verified: widget.doctor.verified);
+                        var formdata = _formKey.currentState;
+                        if (formdata!.validate()) {
+                          formdata.save();
+                          if (image != null) {
+                            showLoading(context);
+                            DeleteDoctorProfile(widget.doctor.image);
+                            doctorImage = await _addImage();
+                            Doctor doc = Doctor(
+                                id: widget.doctor.id,
+                                username: nameController.text,
+                                email: emailController.text,
+                                phoneNumber: phoneController.text,
+                                password: passwordController.text,
+                                age: ageController.text,
+                                gender: widget.doctor.gender,
+                                image: doctorImage,
+                                field: fieldController.text,
+                                experience: experienceController.text,
+                                addressLat: widget.doctor.addressLat,
+                                addressLong: widget.doctor.addressLong,
+                                price: priceController.text,
+                                bio: bioController.text,
+                                rate: widget.doctor.rate,
+                                verified: widget.doctor.verified);
 
-                          await doc.Update_Doctor(doc, formdata, context);
-                          Navigator.pop(context, "refresh");
+                            Update_Doctor(doc, widget.doctor.password, context);
+                          } else {
+                            showLoading(context);
+                            Doctor doc = Doctor(
+                                id: widget.doctor.id,
+                                username: nameController.text,
+                                email: emailController.text,
+                                phoneNumber: phoneController.text,
+                                password: passwordController.text,
+                                age: ageController.text,
+                                gender: widget.doctor.gender,
+                                image: widget.doctor.image,
+                                field: fieldController.text,
+                                experience: experienceController.text,
+                                addressLat: widget.doctor.addressLat,
+                                addressLong: widget.doctor.addressLong,
+                                price: priceController.text,
+                                bio: bioController.text,
+                                rate: widget.doctor.rate,
+                                verified: widget.doctor.verified,
+                                idImage: widget.doctor.idImage,
+                                token: widget.doctor.token);
+
+                            await Update_Doctor(
+                                doc, widget.doctor.password, context);
+                          }
                         } else {
-                          var formdata = _formKey.currentState;
-                          Doctor doc = Doctor(
-                              id: widget.doctor.id,
-                              username: nameController.text,
-                              email: emailController.text,
-                              phoneNumber: phoneController.text,
-                              password: passwordController.text,
-                              age: ageController.text,
-                              gender: widget.doctor.gender,
-                              image: widget.doctor.image,
-                              field: fieldController.text,
-                              experience: experienceController.text,
-                              addressLat: widget.doctor.addressLat,
-                              addressLong: widget.doctor.addressLong,
-                              price: priceController.text,
-                              bio: bioController.text,
-                              rate: widget.doctor.rate,
-                              verified: widget.doctor.verified,
-                              idImage: widget.doctor.idImage,
-                              token: widget.doctor.token);
-
-                          await doc.Update_Doctor(doc, formdata, context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Enter valid values to continue"),
+                                behavior: SnackBarBehavior.floating),
+                          );
                         }
                       },
                       child: const Text(

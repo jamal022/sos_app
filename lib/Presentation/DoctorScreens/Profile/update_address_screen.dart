@@ -26,8 +26,8 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
   Set<Marker> mymarkers = {};
 
   Future _getLatAndLong() async {
-    latitude = double.parse(widget.lat);
-    longitude = double.parse(widget.long);
+    latitude = widget.lat;
+    longitude = widget.long;
     kGooglePlex = CameraPosition(
       target: LatLng(latitude, longitude),
       zoom: 12.0,
