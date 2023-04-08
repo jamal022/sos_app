@@ -418,6 +418,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                                 schedules: schedules,
                                 reports: reports,
                                 doctor: widget.doctor,
+                                placemarks: placemarks,
                               ),
                             ));
                       },

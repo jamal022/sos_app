@@ -209,6 +209,7 @@ UpdateDoctorIdCard(doctorId, idImage, context) async {
       .update({"Verified": 0, "IdImage": idImage}).then((value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("Verified", 0);
+    prefs.setString("IdImage", idImage);
   });
   Navigator.pop(context);
   return "updated";

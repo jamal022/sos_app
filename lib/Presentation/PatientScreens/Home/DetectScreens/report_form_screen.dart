@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/Screens/Login/login_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import 'package:date_format/date_format.dart';
 import '../../../../Data/Models/ReportModel.dart';
@@ -247,6 +248,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                       borderSide: BorderSide.none,
                     ),
                     onPressed: () async {
+                      showLoading(context);
                       var firstAid;
                       if (widget.degree == "First Degree") {
                         firstAid = firstAidList[0];
@@ -262,7 +264,6 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                           causeOfBurn: causeController.text,
                           firstAid: firstAid,
                           burnDegree: widget.degree,
-                          confidence: widget.confidence,
                           diabates: isDiabetes == false ? "No" : "Yes",
                           pressure: isPresure == true
                               ? "Hypertension"

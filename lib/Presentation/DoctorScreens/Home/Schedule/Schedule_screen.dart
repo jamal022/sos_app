@@ -60,99 +60,102 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             ? SingleChildScrollView(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(children: <Widget>[
-                  Container(
-                      alignment: Alignment.bottomRight,
-                      child: MaterialButton(
-                        elevation: 5.0,
-                        color: Colors.red,
-                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                        shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          borderSide: BorderSide.none,
-                        ),
-                        child: const Text(
-                          "Delete",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: contentFont,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onPressed: () {
-                          showDialog(
-                            useSafeArea: false,
-                            context: context,
-                            barrierColor: splashBack,
-                            builder: (ctx) => AlertDialog(
-                              content: Text(
-                                  "Are you sure,you want to delete this date ${schedule.day}/${schedule.month}/${schedule.year}?",
-                                  style: const TextStyle(
-                                    fontSize: contentFont,
-                                  )),
-                              actions: [
-                                Row(
-                                  children: [
-                                    //btn cancel
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: OutlinedButton(
-                                          onPressed: () {
-                                            Navigator.pop(ctx);
-                                          },
-                                          child: const Text(
-                                            "Cancel",
-                                            style: TextStyle(
-                                              color: primaryColor,
-                                              fontSize: contentFont,
-                                              fontWeight: FontWeight.bold,
+                  _date != null
+                      ? Container(
+                          alignment: Alignment.bottomRight,
+                          child: MaterialButton(
+                            elevation: 5.0,
+                            color: Colors.red,
+                            padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                            shape: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              borderSide: BorderSide.none,
+                            ),
+                            child: const Text(
+                              "Delete",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: contentFont,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                useSafeArea: false,
+                                context: context,
+                                barrierColor: splashBack,
+                                builder: (ctx) => AlertDialog(
+                                  content: Text(
+                                      "Are you sure,you want to delete this date ${schedule.day}/${schedule.month}/${schedule.year}?",
+                                      style: const TextStyle(
+                                        fontSize: contentFont,
+                                      )),
+                                  actions: [
+                                    Row(
+                                      children: [
+                                        //btn cancel
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: OutlinedButton(
+                                              onPressed: () {
+                                                Navigator.pop(ctx);
+                                              },
+                                              child: const Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                  color: primaryColor,
+                                                  fontSize: contentFont,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
 
-                                    //btn sure
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: MaterialButton(
-                                          elevation: 6.0,
-                                          color: Colors.redAccent,
-                                          onPressed: () async {
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            var name =
-                                                prefs.getString("FullName");
-                                            var result = await DeleteSchedule(
-                                                schedule.scheduleId,
-                                                schedule.doctorId,
-                                                name,
-                                                context);
-                                            if (result == "deleted") {
-                                              Navigator.pop(ctx);
-                                              _getSchedules();
-                                            }
-                                          },
-                                          child: const Text(
-                                            'Delete',
-                                            style: TextStyle(
-                                              color: white,
-                                              fontSize: contentFont,
-                                              fontWeight: FontWeight.bold,
+                                        //btn sure
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: MaterialButton(
+                                              elevation: 6.0,
+                                              color: Colors.redAccent,
+                                              onPressed: () async {
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                var name =
+                                                    prefs.getString("FullName");
+                                                var result =
+                                                    await DeleteSchedule(
+                                                        schedule.scheduleId,
+                                                        schedule.doctorId,
+                                                        name,
+                                                        context);
+                                                if (result == "deleted") {
+                                                  Navigator.pop(ctx);
+                                                  _getSchedules();
+                                                }
+                                              },
+                                              child: const Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                  color: white,
+                                                  fontSize: contentFont,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      )),
+                              );
+                            },
+                          ))
+                      : Container(),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Container(

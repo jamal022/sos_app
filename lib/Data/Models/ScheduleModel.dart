@@ -45,10 +45,11 @@ AddSchedule(Schedule schedule, context) async {
   if (exist == true) {
     AwesomeDialog(
       context: context,
-      title: "Error",
-      body: const Text(
-        "This Schedule is already exist",
-      ),
+      dialogType: DialogType.error,
+      animType: AnimType.rightSlide,
+      headerAnimationLoop: false,
+      title: 'Error',
+      desc: 'This Schedule is already exist',
     ).show();
   } else {
     showLoading(context);
@@ -150,22 +151,13 @@ GetSchedulesForPatient(doctorId) async {
   return schedules;
 }
 
-GetTimeSlots(id) async {
-  List<TimeSlots> ts = [];
+Stream<QuerySnapshot> GetTimeSlots(id) {
   DocumentReference schedule =
-      await FirebaseFirestore.instance.collection("Schedules").doc(id);
-  await schedule
+      FirebaseFirestore.instance.collection("Schedules").doc(id);
+  return schedule
       .collection("TimeSlots")
       .where("Status", isEqualTo: 0)
-      .get()
-      .then((value) {
-    for (var t in value.docs) {
-      TimeSlots timeslot = TimeSlots(
-          timeSlotId: t.id, status: t.data()["Status"], time: t.data()["Time"]);
-      ts.add(timeslot);
-    }
-  });
-  return ts;
+      .snapshots();
 }
 
 UpdateTimeStatus(scheduleId, timeId) async {

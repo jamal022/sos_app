@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Data/Models/patient.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import '../../../../Data/Models/ReportModel.dart';
@@ -85,18 +84,6 @@ class _ReportScreenState extends State<ReportScreen> {
                           ]),
                           const SizedBox(height: 10),
 
-                          Row(children: <Widget>[
-                            const Text('Confidence:',
-                                style: TextStyle(
-                                    fontSize: fontfonty,
-                                    fontWeight: FontWeight.bold)),
-                            Text("   ${widget.report.confidence}%",
-                                style: const TextStyle(
-                                    fontSize: fontfonty,
-                                    fontWeight: FontWeight.bold,
-                                    color: primaryColor)),
-                          ]),
-                          const SizedBox(height: 10),
                           //Patient Name
                           Row(children: <Widget>[
                             const Text('Patient Name:',

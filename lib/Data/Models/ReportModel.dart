@@ -23,7 +23,6 @@ class Report {
   var pressure;
   var causeOfBurn;
   var date;
-  var confidence;
   var firstAid;
 
   Report(
@@ -39,12 +38,10 @@ class Report {
       this.causeOfBurn,
       this.date,
       this.patientId,
-      this.confidence,
       this.firstAid});
 }
 
 AddReport(Report report, context) async {
-  showLoading(context);
   await FirebaseFirestore.instance.collection("Reports").add({
     "PatientId": report.patientId,
     "Image": report.image,
@@ -53,7 +50,6 @@ AddReport(Report report, context) async {
     "BloodPressure": report.pressure,
     "Date": report.date,
     "CauseOfBurn": report.causeOfBurn,
-    "Confidence": report.confidence,
     "FirstAid": report.firstAid
   }).then((value) async {
     report.reportId = value.id;
@@ -97,7 +93,6 @@ GetSpecificReport(reportId) async {
     });
     report.reportId = value.id;
     report.image = value.data()!["Image"];
-    report.confidence = value.data()!["Confidence"];
     report.firstAid = value.data()!["FirstAid"];
     report.burnDegree = value.data()!["BurnDegree"];
     report.causeOfBurn = value.data()!["CauseOfBurn"];
@@ -123,7 +118,6 @@ GetReports(Patient patient, context) async {
           image: report.data()["Image"],
           burnDegree: report.data()["BurnDegree"],
           name: patient.username,
-          confidence: report.data()["Confidence"],
           firstAid: report.data()["FirstAid"],
           age: patient.age,
           gender: patient.gender,

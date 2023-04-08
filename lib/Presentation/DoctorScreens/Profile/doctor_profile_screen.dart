@@ -70,7 +70,7 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
       file = File(cardImage!.path);
       var rand = Random().nextInt(100000);
       var imagename = "$rand" + basename(cardImage!.path);
-      ref = FirebaseStorage.instance.ref("images").child("$imagename");
+      ref = FirebaseStorage.instance.ref("Profiles").child("$imagename");
       await ref!.putFile(file!);
       imageurl = await ref!.getDownloadURL();
       cardImage = null;
@@ -346,6 +346,8 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                                             onPressed: () async {
                                               if (cardImage != null) {
                                                 showLoading(context);
+                                                await DeleteDoctorProfile(
+                                                    doctor.idImage);
                                                 var doctorCardImage =
                                                     await _addImage();
                                                 var result =
