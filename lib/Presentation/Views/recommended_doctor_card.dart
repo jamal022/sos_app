@@ -60,26 +60,26 @@ class _RecommendedDoctorCardState extends State<RecommendedDoctorCard> {
               const SizedBox(
                 height: 5,
               ),
-
               RatingBar(
-                  initialRating: 0,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemSize: 30,
-                  ratingWidget: RatingWidget(
-                      full: const Icon(Icons.star, color: primaryColor),
-                      half: const Icon(
-                        Icons.star_half,
-                        color: primaryColor,
-                      ),
-                      empty: const Icon(
-                        Icons.star_outline,
-                        color: primaryColor,
-                      )),
-                  onRatingUpdate: (value) {
-                    setState(() {});
-                  }),
+                ignoreGestures: true,
+                initialRating: double.parse(widget.doctor.rate),
+                itemSize: 20,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                tapOnlyMode: true,
+                ratingWidget: RatingWidget(
+                    full: const Icon(Icons.star, color: primaryColor),
+                    half: const Icon(
+                      Icons.star_half,
+                      color: primaryColor,
+                    ),
+                    empty: const Icon(
+                      Icons.star_outline,
+                      color: primaryColor,
+                    )),
+                onRatingUpdate: ((value) {}),
+              )
             ],
           ),
         ));

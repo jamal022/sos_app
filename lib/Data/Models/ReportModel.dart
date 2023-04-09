@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/patient.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/report_screen.dart';
@@ -144,6 +145,10 @@ Future<void> printReport(Report report) async {
       }));
   await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => doc.save());
+}
+
+DeleteReportImage(image) async {
+  await FirebaseStorage.instance.refFromURL(image).delete();
 }
 
 DeleteReport(reportId, context) async {

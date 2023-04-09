@@ -81,25 +81,25 @@ class DoctorCardWidget extends StatelessWidget {
                 height: 10,
               ),
               RatingBar(
-                  //initialRating: 0,
-                  direction: Axis.horizontal,
-                  itemSize: 25.0,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  ratingWidget: RatingWidget(
-                      full: const Icon(
-                        Icons.star,
-                        color: primaryColor,
-                      ),
-                      half: const Icon(
-                        Icons.star_half,
-                        color: primaryColor,
-                      ),
-                      empty: const Icon(
-                        Icons.star_outline,
-                        color: primaryColor,
-                      )),
-                  onRatingUpdate: (value) {}),
+                ignoreGestures: true,
+                initialRating: double.parse(doctor.rate),
+                itemSize: 20,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                tapOnlyMode: true,
+                ratingWidget: RatingWidget(
+                    full: const Icon(Icons.star, color: primaryColor),
+                    half: const Icon(
+                      Icons.star_half,
+                      color: primaryColor,
+                    ),
+                    empty: const Icon(
+                      Icons.star_outline,
+                      color: primaryColor,
+                    )),
+                onRatingUpdate: ((value) {}),
+              )
             ]),
           ),
         ),

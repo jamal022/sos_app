@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:sos_app/Data/Models/NotificationModel.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
+import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 class Appointment {
@@ -16,7 +17,8 @@ class Appointment {
   var status;
   var time;
   var price;
-  var place;
+  var placeLat;
+  var placeLong;
   var rate;
   Appointment(
       {this.appointmentId,
@@ -29,7 +31,8 @@ class Appointment {
       required this.date,
       required this.time,
       this.price,
-      this.place,
+      this.placeLat,
+      this.placeLong,
       required this.rate});
 }
 
@@ -125,10 +128,7 @@ GetEndedAppointments(patientId) async {
         lat = value.data()!["AddressLatitude"];
         long = value.data()!["AddressLongitude"];
       });
-      List<Placemark> placemarks = [];
-      placemarks = await placemarkFromCoordinates(
-          double.parse(lat.toString()), double.parse(long.toString()));
-      var place = placemarks[0].locality;
+
       Appointment s = Appointment(
           appointmentId: app.id,
           doctorId: app.data()["DoctorId"],
@@ -138,7 +138,8 @@ GetEndedAppointments(patientId) async {
           date: app.data()["Date"],
           status: app.data()["Status"],
           time: app.data()["Time"],
-          place: place,
+          placeLat: lat,
+          placeLong: long,
           price: price,
           rate: app.data()["Rate"]);
       appointments.add(s);
@@ -167,10 +168,7 @@ GetInProgressAppointments(patientId) async {
         lat = value.data()!["AddressLatitude"];
         long = value.data()!["AddressLongitude"];
       });
-      List<Placemark> placemarks = [];
-      placemarks = await placemarkFromCoordinates(
-          double.parse(lat.toString()), double.parse(long.toString()));
-      var place = placemarks[0].locality;
+
       Appointment s = Appointment(
           appointmentId: app.id,
           doctorId: app.data()["DoctorId"],
@@ -180,7 +178,8 @@ GetInProgressAppointments(patientId) async {
           date: app.data()["Date"],
           status: app.data()["Status"],
           time: app.data()["Time"],
-          place: place,
+          placeLat: lat,
+          placeLong: long,
           price: price,
           rate: app.data()["Rate"]);
       appointments.add(s);
@@ -246,15 +245,18 @@ DeleteAppointment({appId, patientId, doctorId, date, doctorName, role}) async {
 }
 
 UpdateRate(appId, rate, context) async {
+  var docId;
   await FirebaseFirestore.instance
       .collection("Appointments")
       .doc(appId)
       .get()
       .then((value) async {
+    docId = value.data()!["DoctorId"];
     await FirebaseFirestore.instance
         .collection("Appointments")
         .doc(value.id)
         .update({"Rate": rate});
-  }).then((value) => Navigator.pop(context));
+  }).then((value) => UpdateDoctorRate(docId));
+  Navigator.pop(context);
   return "changed";
 }

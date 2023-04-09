@@ -81,6 +81,8 @@ class _SpecificReportScreenState extends State<SpecificReportScreen> {
                                     elevation: 6.0,
                                     color: Colors.redAccent,
                                     onPressed: () async {
+                                      await DeleteReportImage(
+                                          widget.report.image);
                                       var res = await DeleteReport(
                                           widget.report.reportId, context);
                                       if (res == "deleted") {

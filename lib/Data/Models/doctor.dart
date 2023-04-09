@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/patient.dart';
-
 import 'NotificationModel.dart';
 
 class Doctor extends Patient {
@@ -114,7 +114,6 @@ getDoctors() async {
           username: value.docs[i].data()['FullName'],
           email: value.docs[i].data()['Email'],
           phoneNumber: value.docs[i].data()['PhoneNumber'],
-          password: value.docs[i].data()['Password'],
           age: value.docs[i].data()['Age'],
           gender: value.docs[i].data()['Gender'],
           image: value.docs[i].data()['Image'],
@@ -213,4 +212,61 @@ UpdateDoctorIdCard(doctorId, idImage, context) async {
   });
   Navigator.pop(context);
   return "updated";
+}
+
+UpdateDoctorRate(docId) async {
+  var rate = 0.0;
+  var avRate = 0.0;
+  await FirebaseFirestore.instance
+      .collection("Appointments")
+      .where("DoctorId", isEqualTo: docId)
+      .where("Status", isEqualTo: "Ended")
+      .get()
+      .then((value) {
+    for (var app in value.docs) {
+      rate = rate + app.data()["Rate"];
+    }
+    avRate = rate / value.docs.length;
+  });
+  await FirebaseFirestore.instance
+      .collection("Doctors")
+      .doc(docId)
+      .update({"Rate": avRate.toString()});
+}
+
+GetRecommendedDoctors(lat, long) async {
+  List<Doctor> doctors = [];
+  await FirebaseFirestore.instance
+      .collection("Doctors")
+      .get()
+      .then((value) async {
+    for (var doc in value.docs) {
+      var distance = await Geolocator.distanceBetween(lat, long,
+          doc.data()["AddressLatitude"], doc.data()['AddressLongitude']);
+      if (double.parse(doc.data()["Rate"]) >= 4 &&
+          double.parse(doc.data()["Rate"]) <= 5 &&
+          int.parse(doc.data()["YearsOfExperience"]) >= 4 &&
+          distance <= 3000) {
+        doctors.add(Doctor(
+            id: doc.id,
+            username: doc.data()['FullName'],
+            email: doc.data()['Email'],
+            phoneNumber: doc.data()['PhoneNumber'],
+            age: doc.data()['Age'],
+            gender: doc.data()['Gender'],
+            image: doc.data()['Image'],
+            field: doc.data()['Field'],
+            addressLat: doc.data()['AddressLatitude'],
+            addressLong: doc.data()['AddressLongitude'],
+            bio: doc.data()['Bio'],
+            experience: doc.data()['YearsOfExperience'],
+            price: doc.data()['TicketPrice'],
+            verified: doc.data()["Verified"],
+            rate: doc.data()["Rate"],
+            idImage: doc.data()["IdImage"]));
+      }
+      print(distance);
+    }
+  });
+  return doctors;
 }

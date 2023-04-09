@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ScheduleModel.dart';
 import '../../../Data/Models/AppointmentModel.dart';
@@ -18,6 +18,8 @@ class AppointmentsScreen extends StatefulWidget {
 List<Appointment> inProgressAppointments = [];
 List<Appointment> endedAppointments = [];
 var _ratingValue;
+bool _inflag = false;
+bool _enflag = false;
 Patient pt = Patient();
 getPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -61,6 +63,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     var id = prefs.getString("Id");
     inProgressAppointments = await GetInProgressAppointments(id);
     endedAppointments = await GetEndedAppointments(id);
+    _inflag = true;
+    _enflag = true;
     setState(() {});
   }
 
@@ -74,405 +78,373 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+        backgroundColor: back,
         body: DefaultTabController(
-      length: 2,
-      child: TabBarView(children: [
-        CustomScrollView(
-          slivers: [
-            showSliverAppBar('My Appointments'),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Container(
-                  height: size.height,
-                  color: back,
-                  child: inProgressAppointments.isEmpty
-                      ? const Center(
-                          child: Text(
-                            "There is no appointments",
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: primaryColor),
-                          ),
-                        )
-                      : Column(children: [
-                          for (var i = 0;
-                              i < inProgressAppointments.length;
-                              i++)
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(children: [
-                                    Row(
-                                      children: const [
-                                        Text(
-                                          'Doctor Name',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                        SizedBox(
-                                          width: 50,
-                                        ),
-                                        Text(
-                                          '   Date  ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                        SizedBox(
-                                          width: 60,
-                                        ),
-                                        Text(
-                                          'Time',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                              " ${inProgressAppointments[i].doctorName}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 16,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5))),
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                          Text(
-                                              '  ${inProgressAppointments[i].date}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 16,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5))),
-                                          const SizedBox(
-                                            width: 50,
-                                          ),
-                                          Text(
-                                              '${inProgressAppointments[i].time}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 16,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5))),
-                                        ],
+          length: 2,
+          child: TabBarView(children: [
+            CustomScrollView(
+              slivers: [
+                showSliverAppBar('My Appointments'),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    _inflag == true
+                        ? inProgressAppointments.length != 0
+                            ? Column(children: [
+                                for (var i = 0;
+                                    i < inProgressAppointments.length;
+                                    i++)
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Card(
+                                      elevation: 5,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Column(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(children: [
+                                          Row(
                                             children: [
                                               const Text(
-                                                'Price',
+                                                'Doctor Name',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18),
                                               ),
-                                              const SizedBox(
-                                                height: 5,
+                                              SizedBox(
+                                                width: size.width / 8,
                                               ),
-                                              Text(
-                                                  "${inProgressAppointments[i].price} EGP",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 16,
-                                                      color: Colors.black
-                                                          .withOpacity(0.5))),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            width: 40,
-                                          ),
-                                          Column(
-                                            children: [
                                               const Text(
-                                                'Place',
+                                                'Date',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18),
                                               ),
-                                              const SizedBox(
-                                                height: 5,
+                                              SizedBox(
+                                                width: size.width / 6,
                                               ),
-                                              Text(
-                                                  '${inProgressAppointments[i].place}    ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 16,
-                                                      color: Colors.black
-                                                          .withOpacity(0.5))),
+                                              const Text(
+                                                'Time',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18),
+                                              ),
                                             ],
                                           ),
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                          MaterialButton(
-                                              elevation: 5.0,
-                                              color: Colors.red,
-                                              padding: const EdgeInsets.all(10),
-                                              shape: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              onPressed: () {
-                                                showDialog(
-                                                  useSafeArea: false,
-                                                  context: context,
-                                                  barrierColor: splashBack,
-                                                  builder: (ctx) => AlertDialog(
-                                                    content: const Text(
-                                                        "Are you sure, you want to cancel this appointment?",
-                                                        style: TextStyle(
-                                                          fontSize: contentFont,
-                                                        )),
-                                                    actions: [
-                                                      Row(
-                                                        children: [
-                                                          //btn cancel
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child:
-                                                                  OutlinedButton(
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      ctx);
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                  "Cancel",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color:
-                                                                        primaryColor,
-                                                                    fontSize:
-                                                                        contentFont,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child:
-                                                                  MaterialButton(
-                                                                elevation: 6.0,
-                                                                color: Colors
-                                                                    .redAccent,
-                                                                onPressed:
-                                                                    () async {
-                                                                  await UpdateTimeInCancel(
-                                                                      inProgressAppointments[
-                                                                              i]
-                                                                          .doctorId,
-                                                                      inProgressAppointments[
-                                                                              i]
-                                                                          .date,
-                                                                      inProgressAppointments[
-                                                                              i]
-                                                                          .time);
-                                                                  var result = await DeleteAppointment(
-                                                                      appId: inProgressAppointments[i]
-                                                                          .appointmentId,
-                                                                      date: inProgressAppointments[
-                                                                              i]
-                                                                          .date,
-                                                                      doctorId:
-                                                                          inProgressAppointments[i]
-                                                                              .doctorId,
-                                                                      doctorName:
-                                                                          inProgressAppointments[i]
-                                                                              .doctorName,
-                                                                      patientId:
-                                                                          inProgressAppointments[i]
-                                                                              .patientId,
-                                                                      role:
-                                                                          "Patient");
-                                                                  if (result ==
-                                                                      "deleted") {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    _getApp();
-                                                                  }
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                  'Sure',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color:
-                                                                        white,
-                                                                    fontSize:
-                                                                        contentFont,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                              child: const Text(
-                                                '  Cancel  ',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                    "${inProgressAppointments[i].doctorName}",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 16,
+                                                        color: Colors.black
+                                                            .withOpacity(0.5))),
+                                                SizedBox(
+                                                  width: size.width / 5,
                                                 ),
-                                              )),
-                                        ],
+                                                Text(
+                                                    '${inProgressAppointments[i].date}',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 16,
+                                                        color: Colors.black
+                                                            .withOpacity(0.5))),
+                                                SizedBox(
+                                                  width: size.width / 12,
+                                                ),
+                                                Text(
+                                                    '${inProgressAppointments[i].time}',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 16,
+                                                        color: Colors.black
+                                                            .withOpacity(0.5))),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    const Text(
+                                                      'Price',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                        "${inProgressAppointments[i].price} EGP",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            fontSize: 16,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.5))),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: size.width / 5,
+                                                ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      MapsLauncher.launchCoordinates(
+                                                          inProgressAppointments[
+                                                                  i]
+                                                              .placeLat,
+                                                          inProgressAppointments[
+                                                                  i]
+                                                              .placeLong,
+                                                          "Dr ${inProgressAppointments[i].doctorName}'s location");
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.location_on,
+                                                      size: 30,
+                                                    )),
+                                                SizedBox(
+                                                  width: size.width / 8,
+                                                ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      showDialog(
+                                                        useSafeArea: false,
+                                                        context: context,
+                                                        barrierColor:
+                                                            splashBack,
+                                                        builder: (ctx) =>
+                                                            AlertDialog(
+                                                          content: const Text(
+                                                              "Are you sure, you want to cancel this appointment?",
+                                                              style: TextStyle(
+                                                                fontSize:
+                                                                    contentFont,
+                                                              )),
+                                                          actions: [
+                                                            Row(
+                                                              children: [
+                                                                //btn cancel
+                                                                Expanded(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child:
+                                                                        OutlinedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            ctx);
+                                                                      },
+                                                                      child:
+                                                                          const Text(
+                                                                        "Cancel",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              primaryColor,
+                                                                          fontSize:
+                                                                              contentFont,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+
+                                                                Expanded(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child:
+                                                                        MaterialButton(
+                                                                      elevation:
+                                                                          6.0,
+                                                                      color: Colors
+                                                                          .redAccent,
+                                                                      onPressed:
+                                                                          () async {
+                                                                        await UpdateTimeInCancel(
+                                                                            inProgressAppointments[i].doctorId,
+                                                                            inProgressAppointments[i].date,
+                                                                            inProgressAppointments[i].time);
+                                                                        var result = await DeleteAppointment(
+                                                                            appId:
+                                                                                inProgressAppointments[i].appointmentId,
+                                                                            date: inProgressAppointments[i].date,
+                                                                            doctorId: inProgressAppointments[i].doctorId,
+                                                                            doctorName: inProgressAppointments[i].doctorName,
+                                                                            patientId: inProgressAppointments[i].patientId,
+                                                                            role: "Patient");
+                                                                        if (result ==
+                                                                            "deleted") {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          _getApp();
+                                                                        }
+                                                                      },
+                                                                      child:
+                                                                          const Text(
+                                                                        'Sure',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              white,
+                                                                          fontSize:
+                                                                              contentFont,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.cancel,
+                                                      size: 35,
+                                                      color: Colors.red,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ]),
                                       ),
                                     ),
-                                  ]),
+                                  ),
+                              ])
+                            : Container(
+                                height: size.height,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    const Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(25, 2, 25, 5)),
+                                    const Icon(
+                                      Icons.warning_amber_rounded,
+                                      size: 100,
+                                      color: primaryColor,
+                                    ),
+                                    SizedBox(
+                                      height: size.height / 40,
+                                    ),
+                                    const Text(
+                                      'There is no Appointments',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: primaryColor),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ),
-                        ]),
+                              )
+                        : Container(
+                            height: size.height,
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                  ]),
                 ),
-              ]),
+              ],
             ),
-          ],
-        ),
-        CustomScrollView(
-          slivers: [
-            showSliverAppBar('My Appointments'),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Container(
-                  height: size.height,
-                  color: back,
-                  child: endedAppointments.isEmpty
-                      ? const Center(
-                          child: Text(
-                            "There is no appointments",
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: primaryColor),
-                          ),
-                        )
-                      : Column(children: [
-                          for (var i = 0; i < endedAppointments.length; i++)
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Padding(
+            CustomScrollView(slivers: [
+              showSliverAppBar('My Appointments'),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  _enflag == true
+                      ? endedAppointments.length != 0
+                          ? Column(children: [
+                              for (var i = 0; i < endedAppointments.length; i++)
+                                Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Column(children: [
-                                    Row(
-                                      children: const [
-                                        Text(
-                                          'Doctor Name',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                        SizedBox(
-                                          width: 50,
-                                        ),
-                                        Text(
-                                          '   Date  ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                        SizedBox(
-                                          width: 60,
-                                        ),
-                                        Text(
-                                          'Time',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                      ],
+                                  child: Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                              " ${endedAppointments[i].doctorName}",
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              'Doctor Name',
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 16,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5))),
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                          Text('  ${endedAppointments[i].date}',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                            SizedBox(
+                                              width: size.width / 8,
+                                            ),
+                                            const Text(
+                                              'Date',
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 16,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5))),
-                                          const SizedBox(
-                                            width: 50,
-                                          ),
-                                          Text('${endedAppointments[i].time}',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                            SizedBox(
+                                              width: size.width / 6,
+                                            ),
+                                            const Text(
+                                              'Time',
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 16,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5))),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Column(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Row(
                                             children: [
-                                              const Text(
-                                                'Price',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
+                                              Text(
+                                                  "${endedAppointments[i].doctorName}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 16,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5))),
+                                              SizedBox(
+                                                width: size.width / 5,
                                               ),
                                               Text(
-                                                  "${endedAppointments[i].price} EGP",
+                                                  '${endedAppointments[i].date}',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 16,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5))),
+                                              SizedBox(
+                                                width: size.width / 12,
+                                              ),
+                                              Text(
+                                                  '${endedAppointments[i].time}',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w800,
@@ -481,36 +453,57 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                           .withOpacity(0.5))),
                                             ],
                                           ),
-                                          const SizedBox(
-                                            width: 40,
-                                          ),
-                                          Column(
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
                                             children: [
-                                              const Text(
-                                                'Place',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
+                                              Column(
+                                                children: [
+                                                  const Text(
+                                                    'Price',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                      "${endedAppointments[i].price} EGP",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 16,
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                                  0.5))),
+                                                ],
                                               ),
-                                              const SizedBox(
-                                                height: 5,
+                                              SizedBox(
+                                                width: size.width / 8,
                                               ),
-                                              Text(
-                                                  '${endedAppointments[i].place}    ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 16,
-                                                      color: Colors.black
-                                                          .withOpacity(0.5))),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                          Container(
-                                            child:
-                                                endedAppointments[i].rate == 0
+                                              IconButton(
+                                                  onPressed: () {
+                                                    MapsLauncher.launchCoordinates(
+                                                        endedAppointments[i]
+                                                            .placeLat,
+                                                        endedAppointments[i]
+                                                            .placeLong,
+                                                        "Dr ${endedAppointments[i].doctorName}'s location");
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.location_on,
+                                                    size: 30,
+                                                  )),
+                                              SizedBox(
+                                                width: size.width / 10,
+                                              ),
+                                              Container(
+                                                child: endedAppointments[i]
+                                                            .rate ==
+                                                        0
                                                     ? MaterialButton(
                                                         elevation: 5.0,
                                                         color: primaryColor,
@@ -713,21 +706,52 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                                           )
                                                         ],
                                                       ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ]),
                                     ),
-                                  ]),
+                                  ),
                                 ),
+                            ])
+                          : Container(
+                              height: size.height,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  const Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(25, 2, 25, 5)),
+                                  const Icon(
+                                    Icons.warning_amber_rounded,
+                                    size: 100,
+                                    color: primaryColor,
+                                  ),
+                                  SizedBox(
+                                    height: size.height / 40,
+                                  ),
+                                  const Text(
+                                    'There is no Appointments',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryColor),
+                                  ),
+                                ],
                               ),
-                            ),
-                        ]),
-                ),
-              ]),
-            ),
-          ],
-        )
-      ]),
-    ));
+                            )
+                      : Container(
+                          height: size.height,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          )),
+                ]),
+              ),
+            ])
+          ]),
+        ));
   }
 }
