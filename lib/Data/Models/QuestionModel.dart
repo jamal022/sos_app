@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/AnswerModel.dart';
 import 'package:sos_app/Data/Models/NotificationModel.dart';
-
 import '../../Presentation/Widgets/loading_widget.dart';
 
 class Question {
@@ -17,8 +16,8 @@ class Question {
   Question({
     this.questionId,
     required this.patientId,
-    required this.patientName,
-    required this.patientImage,
+    this.patientName,
+    this.patientImage,
     required this.content,
     required this.answers,
     required this.date,
@@ -29,8 +28,6 @@ AddQuestion(Question question, context) async {
   showLoading(context);
   await FirebaseFirestore.instance.collection("Questions").add({
     "PatientId": question.patientId,
-    "PatientName": question.patientName,
-    "PatientImage": question.patientImage,
     "Date": question.date,
     "Content": question.content,
     "Answers": question.answers,
@@ -41,13 +38,26 @@ AddQuestion(Question question, context) async {
 
 GetAllQuestions() async {
   List<Question> questions = [];
-  await FirebaseFirestore.instance.collection("Questions").get().then((value) {
+  await FirebaseFirestore.instance
+      .collection("Questions")
+      .orderBy("Answers", descending: true)
+      .get()
+      .then((value) async {
     for (var quest in value.docs) {
+      var name, image;
+      await FirebaseFirestore.instance
+          .collection("Patients")
+          .doc(quest.data()["PatientId"])
+          .get()
+          .then((value) {
+        name = value.data()!["FullName"];
+        image = value.data()!["Image"];
+      });
       Question q = Question(
         questionId: quest.id,
         patientId: quest.data()["PatientId"],
-        patientName: quest.data()["PatientName"],
-        patientImage: quest.data()["PatientImage"],
+        patientName: name,
+        patientImage: image,
         answers: quest.data()["Answers"],
         content: quest.data()["Content"],
         date: quest.data()["Date"],
@@ -106,6 +116,15 @@ GetAnswersCount(questionId) async {
 
 GetPatientQuestions(patientId) async {
   List<Question> questions = [];
+  var name, image;
+  await FirebaseFirestore.instance
+      .collection("Patients")
+      .doc(patientId)
+      .get()
+      .then((value) {
+    name = value.data()!["FullName"];
+    image = value.data()!["Image"];
+  });
   await FirebaseFirestore.instance
       .collection("Questions")
       .where("PatientId", isEqualTo: patientId)
@@ -115,8 +134,8 @@ GetPatientQuestions(patientId) async {
       Question q = Question(
         questionId: quest.id,
         patientId: quest.data()["PatientId"],
-        patientName: quest.data()["PatientName"],
-        patientImage: quest.data()["PatientImage"],
+        patientImage: image,
+        patientName: name,
         answers: quest.data()["Answers"],
         content: quest.data()["Content"],
         date: quest.data()["Date"],

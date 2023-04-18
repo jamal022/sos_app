@@ -100,13 +100,12 @@ class _NewQuestionScreenState extends State<NewQuestionScreen> {
                               ),
                               onPressed: () async {
                                 Question question = Question(
-                                    answers: 0,
-                                    content: contentController.text,
-                                    date:
-                                        "${DateTime.now().day} / ${DateTime.now().month} / ${DateTime.now().year}",
-                                    patientId: widget.id,
-                                    patientImage: widget.image,
-                                    patientName: widget.name);
+                                  answers: 0,
+                                  content: contentController.text,
+                                  date:
+                                      "${DateTime.now().day} / ${DateTime.now().month} / ${DateTime.now().year}",
+                                  patientId: widget.id,
+                                );
 
                                 var result =
                                     await AddQuestion(question, context);

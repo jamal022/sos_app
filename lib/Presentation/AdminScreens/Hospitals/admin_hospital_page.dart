@@ -124,7 +124,9 @@ class _AdminHospitalPageScreenState extends State<AdminHospitalPageScreen> {
                                 color: Colors.redAccent,
                                 onPressed: () async {
                                   var res = await DeleteHospital(
-                                      widget.hospital.hospitalId, context);
+                                      widget.hospital.hospitalId,
+                                      widget.hospital.image,
+                                      context);
                                   if (res == "deleted") {
                                     Navigator.pop(context, "refresh");
                                   }

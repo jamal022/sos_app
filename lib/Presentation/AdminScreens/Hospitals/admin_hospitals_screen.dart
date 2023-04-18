@@ -138,25 +138,13 @@ class _AdminHospitalsScreenState extends State<AdminHospitalsScreen> {
                                                       height: 10,
                                                     ), //SizedBox
                                                     Text(
-                                                      "Location:  ${placemarks[i][0].locality}",
+                                                      "${placemarks[i][0].locality}",
                                                       style: const TextStyle(
                                                         fontSize: 17,
                                                         color: Color.fromARGB(
                                                             255, 90, 84, 84),
                                                       ), //Textstyle
                                                     ), //Text
-                                                    const SizedBox(
-                                                      height: 5,
-                                                    ),
-
-                                                    Text(
-                                                      "Country:  ${placemarks[i][0].country}",
-                                                      style: const TextStyle(
-                                                        fontSize: 17,
-                                                        color: Color.fromARGB(
-                                                            255, 90, 84, 84),
-                                                      ), //Textstyle
-                                                    ),
                                                   ],
                                                 ),
                                               ),

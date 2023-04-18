@@ -157,8 +157,6 @@ class _SpecificQuestionScreenState extends State<SpecificQuestionScreen> {
                                     Answer answer = Answer(
                                         questionId: widget.question.questionId,
                                         userId: id,
-                                        UserName: name,
-                                        userImage: image,
                                         content: answerController.text,
                                         role: role);
                                     var result =

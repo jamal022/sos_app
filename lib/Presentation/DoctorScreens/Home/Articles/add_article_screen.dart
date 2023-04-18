@@ -64,8 +64,6 @@ class _NewArticlesScreenState extends State<NewArticlesScreen> {
                         ),
                       ),
                       Container(
-                          width: size.width / 0.4,
-                          height: size.height / 5.4,
                           decoration: const BoxDecoration(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25.0)),
@@ -105,9 +103,6 @@ class _NewArticlesScreenState extends State<NewArticlesScreen> {
                               onPressed: () async {
                                 Article article = Article(
                                     doctorId: widget.id,
-                                    doctorName: widget.name,
-                                    doctorField: widget.field,
-                                    doctorImage: widget.image,
                                     content: contentController.text,
                                     likes: 0,
                                     dislikes: 0);

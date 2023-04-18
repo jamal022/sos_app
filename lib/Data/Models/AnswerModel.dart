@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sos_app/Data/Models/NotificationModel.dart';
 import 'package:sos_app/Data/Models/QuestionModel.dart';
@@ -18,8 +19,8 @@ class Answer {
     this.answerId,
     required this.questionId,
     required this.userId,
-    required this.UserName,
-    required this.userImage,
+    this.UserName,
+    this.userImage,
     required this.content,
     required this.role,
   });
@@ -30,8 +31,6 @@ AddAnswer(Answer answer, context) async {
   await FirebaseFirestore.instance.collection("Answers").add({
     "QuestionId": answer.questionId,
     "UserId": answer.userId,
-    "UserName": answer.UserName,
-    "UserImage": answer.userImage,
     "Content": answer.content,
     "Role": answer.role,
   }).then((value) async {
@@ -79,15 +78,35 @@ GetQuestionAnswers(questionId) async {
       .collection("Answers")
       .where("QuestionId", isEqualTo: questionId)
       .get()
-      .then((value) {
+      .then((value) async {
     for (var an in value.docs) {
+      var name, image;
+      if (an.data()["Role"] == "Patient") {
+        await FirebaseFirestore.instance
+            .collection("Patients")
+            .doc(an.data()["UserId"])
+            .get()
+            .then((value) {
+          name = value.data()!["FullName"];
+          image = value.data()!["Image"];
+        });
+      } else if (an.data()["Role"] == "Doctor") {
+        await FirebaseFirestore.instance
+            .collection("Doctors")
+            .doc(an.data()["UserId"])
+            .get()
+            .then((value) {
+          name = value.data()!["FullName"];
+          image = value.data()!["Image"];
+        });
+      }
       Answer a = Answer(
         answerId: an.id,
         questionId: an.data()["QuestionId"],
         userId: an.data()["UserId"],
-        UserName: an.data()["UserName"],
-        userImage: an.data()["UserImage"],
         content: an.data()["Content"],
+        UserName: name,
+        userImage: image,
         role: an.data()["Role"],
       );
       answers.add(a);

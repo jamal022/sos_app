@@ -16,9 +16,9 @@ class Article {
   Article({
     this.articleId,
     required this.doctorId,
-    required this.doctorName,
-    required this.doctorField,
-    required this.doctorImage,
+    this.doctorName,
+    this.doctorField,
+    this.doctorImage,
     required this.content,
     required this.likes,
     required this.dislikes,
@@ -29,9 +29,6 @@ AddArticle(Article article, context) async {
   showLoading(context);
   await FirebaseFirestore.instance.collection("Articles").add({
     "DoctorId": article.doctorId,
-    "DoctorName": article.doctorName,
-    "DoctorField": article.doctorField,
-    "DoctorImage": article.doctorImage,
     "Content": article.content,
     "Likes": article.likes,
     "Dislikes": article.dislikes,
@@ -42,14 +39,28 @@ AddArticle(Article article, context) async {
 
 GetAllArticles() async {
   List<Article> articles = [];
-  await FirebaseFirestore.instance.collection("Articles").get().then((value) {
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .orderBy("Likes", descending: true)
+      .get()
+      .then((value) async {
     for (var art in value.docs) {
+      var name, field, image;
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(art.data()["DoctorId"])
+          .get()
+          .then((value) {
+        name = value.data()!["FullName"];
+        image = value.data()!["Image"];
+        field = value.data()!["Field"];
+      });
       Article a = Article(
           articleId: art.id,
           doctorId: art.data()["DoctorId"],
-          doctorName: art.data()["DoctorName"],
-          doctorImage: art.data()["DoctorImage"],
-          doctorField: art.data()["DoctorField"],
+          doctorField: field,
+          doctorImage: image,
+          doctorName: name,
           content: art.data()["Content"],
           likes: art.data()["Likes"],
           dislikes: art.data()["Dislikes"]);
@@ -193,14 +204,24 @@ GetSpecificDoctorArticles(doctorId) async {
       .collection("Articles")
       .where("DoctorId", isEqualTo: doctorId)
       .get()
-      .then((value) {
+      .then((value) async {
     for (var art in value.docs) {
+      var name, field, image;
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(art.data()["DoctorId"])
+          .get()
+          .then((value) {
+        name = value.data()!["FullName"];
+        image = value.data()!["Image"];
+        field = value.data()!["Field"];
+      });
       Article a = Article(
           articleId: art.id,
           doctorId: art.data()["DoctorId"],
-          doctorName: art.data()["DoctorName"],
-          doctorImage: art.data()["DoctorImage"],
-          doctorField: art.data()["DoctorField"],
+          doctorName: name,
+          doctorImage: image,
+          doctorField: field,
           content: art.data()["Content"],
           likes: art.data()["Likes"],
           dislikes: art.data()["Dislikes"]);

@@ -21,12 +21,32 @@ GetAnswersWithQuestion(userId) async {
       .then((value) async {
     for (var answer in value.docs) {
       QuestionAnswer qa = QuestionAnswer();
+      var name, image;
+      if (answer.data()["Role"] == "Patient") {
+        await FirebaseFirestore.instance
+            .collection("Patients")
+            .doc(answer.data()["UserId"])
+            .get()
+            .then((value) {
+          name = value.data()!["FullName"];
+          image = value.data()!["Image"];
+        });
+      } else if (answer.data()["Role"] == "Doctor") {
+        await FirebaseFirestore.instance
+            .collection("Doctors")
+            .doc(answer.data()["UserId"])
+            .get()
+            .then((value) {
+          name = value.data()!["FullName"];
+          image = value.data()!["Image"];
+        });
+      }
       Answer a = Answer(
           answerId: answer.id,
           questionId: answer.data()["QuestionId"],
           userId: answer.data()["UserId"],
-          UserName: answer.data()["UserName"],
-          userImage: answer.data()["UserImage"],
+          UserName: name,
+          userImage: image,
           content: answer.data()["Content"],
           role: answer.data()["Role"]);
       qa.answer = a;
@@ -34,15 +54,24 @@ GetAnswersWithQuestion(userId) async {
           .collection("Questions")
           .doc(answer.data()["QuestionId"])
           .get()
-          .then((value) {
+          .then((value) async {
         Question question = Question(
             questionId: value.id,
             patientId: value.data()!["PatientId"],
-            patientName: value.data()!["PatientName"],
-            patientImage: value.data()!["PatientImage"],
             content: value.data()!["Content"],
             answers: value.data()!["Answers"],
             date: value.data()!["Date"]);
+        var patientName, patientImage;
+        await FirebaseFirestore.instance
+            .collection("Patients")
+            .doc(value.data()!["PatientId"])
+            .get()
+            .then((value) {
+          patientName = value.data()!["FullName"];
+          patientImage = value.data()!["Image"];
+        });
+        question.patientName = patientName;
+        question.patientImage = patientImage;
         qa.question = question;
       });
       qaList.add(qa);

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Hospital {
@@ -91,8 +92,11 @@ AddHospital(Hospital hospital, context) async {
   return "Added";
 }
 
-DeleteHospital(id, context) async {
-  await FirebaseFirestore.instance.collection("Hospitals").doc(id).delete();
-  Navigator.pop(context);
+DeleteHospital(id, image, context) async {
+  await FirebaseStorage.instance.refFromURL(image).delete().then((value) async {
+    await FirebaseFirestore.instance.collection("Hospitals").doc(id).delete();
+    Navigator.pop(context);
+  });
+
   return "deleted";
 }

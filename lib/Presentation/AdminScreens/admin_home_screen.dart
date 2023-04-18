@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Presentation/AdminScreens/Community/admin_community_screens.dart';
 import 'package:sos_app/Presentation/AdminScreens/Articles/admin_articles_screen.dart';
 import 'package:sos_app/Presentation/AdminScreens/Hospitals/admin_hospitals_screen.dart';
@@ -142,6 +143,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                   elevation: 6.0,
                                   color: black,
                                   onPressed: () async {
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.clear();
                                     await FirebaseAuth.instance
                                         .signOut()
                                         .then((value) {

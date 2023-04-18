@@ -19,3 +19,10 @@ const Color bubbles = Color.fromARGB(237, 241, 174, 145);
 const Color back = Color(0xFCF3DEC3);
 const Color admincard = Color.fromARGB(255, 241, 238, 238);
 const Color adminback = Color.fromARGB(249, 220, 212, 200);
+const Color backback = Color.fromARGB(251, 241, 234, 225);
+
+const Color logoBlue = Color.fromARGB(255, 62, 181, 243);
+const Color logoOrange = Color.fromARGB(255, 253, 117, 31);
+const Color logoLigtBlue = Color.fromARGB(255, 55, 201, 242);
+const Color logoLigtOrange = Color.fromARGB(255, 255, 178, 74);
+const Color logoBack = Color.fromARGB(255, 255, 175, 62);
