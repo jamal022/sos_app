@@ -37,6 +37,7 @@ AddArticle(Article article, context) async {
   return "Added";
 }
 
+//remove
 GetAllArticles() async {
   List<Article> articles = [];
   await FirebaseFirestore.instance
@@ -174,6 +175,7 @@ DeleteDislikeFromArticle(articleId) async {
   });
 }
 
+//remove
 GetLikes(articleId) async {
   var likes = 0;
   await FirebaseFirestore.instance
@@ -186,6 +188,7 @@ GetLikes(articleId) async {
   return likes;
 }
 
+//remove
 GetDislikes(articleId) async {
   var dislikes = 0;
   await FirebaseFirestore.instance
