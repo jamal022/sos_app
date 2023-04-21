@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sos_app/Data/Models/ArticlesModel.dart';
 
 class ArticleLikes {
+  var likeId;
   var articleId;
   Article? article;
   var userId;
   var like; // 1 (like)  -  0  (dislike)
 
   ArticleLikes({
+    this.likeId,
     this.articleId,
     this.article,
     this.userId,
@@ -16,75 +18,63 @@ class ArticleLikes {
 }
 
 AddLike(ArticleLikes like) async {
-  await FirebaseFirestore.instance
-      .collection("ArticleLikes")
-      .where("UserId", isEqualTo: like.userId)
-      .where("ArticleId", isEqualTo: like.articleId)
-      .get()
-      .then((value) async {
-    if (value.docs.isEmpty) {
-      await FirebaseFirestore.instance.collection("ArticleLikes").add({
-        "ArticleId": like.articleId,
-        "UserId": like.userId,
-        "Like": like.like,
-      });
-    } else {
-      await FirebaseFirestore.instance
-          .collection("ArticleLikes")
-          .doc(value.docs.first.id)
-          .update({"Like": like.like});
-      await DeleteDislikeFromArticle(like.articleId);
-    }
+  await FirebaseFirestore.instance.collection("ArticleLikes").add({
+    "ArticleId": like.articleId,
+    "UserId": like.userId,
+    "Like": like.like,
+  }).then((value) async {
     await AddLikeToArticle(like.articleId);
   });
-
-  return "added";
+  return "done";
 }
 
 AddDislike(ArticleLikes dislike) async {
-  await FirebaseFirestore.instance
-      .collection("ArticleLikes")
-      .where("UserId", isEqualTo: dislike.userId)
-      .where("ArticleId", isEqualTo: dislike.articleId)
-      .get()
-      .then((value) async {
-    if (value.docs.isEmpty) {
-      await FirebaseFirestore.instance.collection("ArticleLikes").add({
-        "ArticleId": dislike.articleId,
-        "UserId": dislike.userId,
-        "Like": dislike.like,
-      });
-    } else {
-      await FirebaseFirestore.instance
-          .collection("ArticleLikes")
-          .doc(value.docs.first.id)
-          .update({"Like": dislike.like});
-      await DeleteLikeFromArticle(dislike.articleId);
-    }
+  await FirebaseFirestore.instance.collection("ArticleLikes").add({
+    "ArticleId": dislike.articleId,
+    "UserId": dislike.userId,
+    "Like": dislike.like,
+  }).then((value) async {
     await AddDislikeToArticle(dislike.articleId);
   });
-
-  return "added";
+  return "done";
 }
 
-DeleteLike(ArticleLikes likes) async {
+DeleteLike(ArticleLikes like) async {
   await FirebaseFirestore.instance
       .collection("ArticleLikes")
-      .where("UserId", isEqualTo: likes.userId)
-      .where("ArticleId", isEqualTo: likes.articleId)
-      .get()
+      .doc(like.likeId)
+      .delete()
       .then((value) async {
-    await FirebaseFirestore.instance
-        .collection("ArticleLikes")
-        .doc(value.docs.first.id)
-        .delete();
+    await DeleteLikeFromArticle(like.articleId);
   });
-  if (likes.like == 0) {
-    DeleteDislikeFromArticle(likes.articleId);
-  } else if (likes.like == 1) {
-    DeleteLikeFromArticle(likes.articleId);
-  }
-  return "deleted";
+  return "done";
+}
+
+DeleteDislike(ArticleLikes dislike) async {
+  await FirebaseFirestore.instance
+      .collection("ArticleLikes")
+      .doc(dislike.likeId)
+      .delete()
+      .then((value) async {
+    await DeleteDislikeFromArticle(dislike.articleId);
+  });
+  return "done";
+}
+
+UpdateLike(ArticleLikes like) async {
+  await FirebaseFirestore.instance
+      .collection("ArticleLikes")
+      .doc(like.likeId)
+      .update({"Like": like.like}).then((value) async {
+    if (like.like == 0) {
+      await DeleteLikeFromArticle(like.articleId);
+      await AddDislikeToArticle(like.articleId);
+    } else if (like.like == 1) {
+      await DeleteDislikeFromArticle(like.articleId);
+      await AddLikeToArticle(like.articleId);
+    }
+  });
+  return "done";
 }
 
 DeleteAllArticleLikes(articleId) async {
@@ -103,31 +93,10 @@ DeleteAllArticleLikes(articleId) async {
   return "deleted";
 }
 
-//remove
-GetLike({userId, articleId}) async {
-  var like;
-  await FirebaseFirestore.instance
-      .collection("ArticleLikes")
-      .where("UserId", isEqualTo: userId)
-      .where("ArticleId", isEqualTo: articleId)
-      .get()
-      .then((value) {
-    if (value.docs.isNotEmpty) {
-      if (value.docs.first.data()["Like"] == 1) {
-        like = "like";
-      } else if (value.docs.first.data()["Like"] == 0) {
-        like = "dislike";
-      }
-    }
-  });
-  return like;
-}
-
 GetArticlesWithLikes(userId) async {
   List<ArticleLikes> articles = [];
   await FirebaseFirestore.instance
       .collection("Articles")
-      .orderBy("Likes", descending: true)
       .get()
       .then((value) async {
     for (var art in value.docs) {
@@ -142,7 +111,7 @@ GetArticlesWithLikes(userId) async {
         field = value.data()!["Field"];
       });
 
-      var like;
+      var like, likeId;
       await FirebaseFirestore.instance
           .collection("ArticleLikes")
           .where("UserId", isEqualTo: userId)
@@ -150,6 +119,7 @@ GetArticlesWithLikes(userId) async {
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
+          likeId = value.docs.first.id;
           like = value.docs.first.data()["Like"];
         } else {
           like = null;
@@ -165,7 +135,64 @@ GetArticlesWithLikes(userId) async {
           likes: art.data()["Likes"],
           dislikes: art.data()["Dislikes"]);
       articles.add(ArticleLikes(
-          article: a, like: like, articleId: art.id, userId: userId));
+          likeId: likeId,
+          article: a,
+          like: like,
+          articleId: art.id,
+          userId: userId));
+    }
+  });
+  return articles;
+}
+
+GetSpecificDoctorArticlesWithLikes(userId, doctorId) async {
+  List<ArticleLikes> articles = [];
+  await FirebaseFirestore.instance
+      .collection("Articles")
+      .where("DoctorId", isEqualTo: doctorId)
+      .get()
+      .then((value) async {
+    for (var art in value.docs) {
+      var name, field, image;
+      await FirebaseFirestore.instance
+          .collection("Doctors")
+          .doc(art.data()["DoctorId"])
+          .get()
+          .then((value) {
+        name = value.data()!["FullName"];
+        image = value.data()!["Image"];
+        field = value.data()!["Field"];
+      });
+
+      var like, likeId;
+      await FirebaseFirestore.instance
+          .collection("ArticleLikes")
+          .where("UserId", isEqualTo: userId)
+          .where("ArticleId", isEqualTo: art.id)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          likeId = value.docs.first.id;
+          like = value.docs.first.data()["Like"];
+        } else {
+          like = null;
+        }
+      });
+      Article a = Article(
+          articleId: art.id,
+          doctorId: art.data()["DoctorId"],
+          doctorField: field,
+          doctorImage: image,
+          doctorName: name,
+          content: art.data()["Content"],
+          likes: art.data()["Likes"],
+          dislikes: art.data()["Dislikes"]);
+      articles.add(ArticleLikes(
+          likeId: likeId,
+          article: a,
+          like: like,
+          articleId: art.id,
+          userId: userId));
     }
   });
   return articles;

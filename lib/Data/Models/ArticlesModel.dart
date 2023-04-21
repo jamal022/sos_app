@@ -37,7 +37,6 @@ AddArticle(Article article, context) async {
   return "Added";
 }
 
-//remove
 GetAllArticles() async {
   List<Article> articles = [];
   await FirebaseFirestore.instance
@@ -175,32 +174,6 @@ DeleteDislikeFromArticle(articleId) async {
   });
 }
 
-//remove
-GetLikes(articleId) async {
-  var likes = 0;
-  await FirebaseFirestore.instance
-      .collection("Articles")
-      .doc(articleId)
-      .get()
-      .then((value) {
-    likes = value.data()!["Likes"];
-  });
-  return likes;
-}
-
-//remove
-GetDislikes(articleId) async {
-  var dislikes = 0;
-  await FirebaseFirestore.instance
-      .collection("Articles")
-      .doc(articleId)
-      .get()
-      .then((value) {
-    dislikes = value.data()!["Dislikes"];
-  });
-  return dislikes;
-}
-
 GetSpecificDoctorArticles(doctorId) async {
   List<Article> articles = [];
   await FirebaseFirestore.instance
@@ -209,22 +182,9 @@ GetSpecificDoctorArticles(doctorId) async {
       .get()
       .then((value) async {
     for (var art in value.docs) {
-      var name, field, image;
-      await FirebaseFirestore.instance
-          .collection("Doctors")
-          .doc(art.data()["DoctorId"])
-          .get()
-          .then((value) {
-        name = value.data()!["FullName"];
-        image = value.data()!["Image"];
-        field = value.data()!["Field"];
-      });
       Article a = Article(
           articleId: art.id,
           doctorId: art.data()["DoctorId"],
-          doctorName: name,
-          doctorImage: image,
-          doctorField: field,
           content: art.data()["Content"],
           likes: art.data()["Likes"],
           dislikes: art.data()["Dislikes"]);

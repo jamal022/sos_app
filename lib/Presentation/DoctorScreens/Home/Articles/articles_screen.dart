@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sos_app/Data/Models/ArticlesLikesModel.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Articles/add_article_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
-
-import '../../../../Data/Models/ArticlesModel.dart';
+import 'package:sos_app/Presentation/Widgets/loading_widget.dart';
 
 class ArticlesScreen extends StatefulWidget {
   const ArticlesScreen({Key? key}) : super(key: key);
@@ -25,6 +23,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
     articles = await GetArticlesWithLikes(id);
     _flag = true;
     setState(() {});
+    return "refresh";
   }
 
   @override
@@ -234,23 +233,27 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                               ),
                                             ),
                                             onPressed: () async {
-                                              ArticleLikes l = ArticleLikes(
+                                              showLoading(context);
+                                              var result;
+                                              ArticleLikes like = ArticleLikes(
+                                                  likeId: articles[i].likeId,
                                                   articleId:
                                                       articles[i].articleId,
                                                   userId: id,
                                                   like: 1);
-                                              if (articles[i].like == 0 ||
-                                                  articles[i].like == null) {
-                                                var result = await AddLike(l);
-                                                if (result == "added") {
-                                                  _getArticles();
-                                                }
+                                              if (articles[i].like == null) {
+                                                result = await AddLike(like);
                                               } else if (articles[i].like ==
                                                   1) {
-                                                var result =
-                                                    await DeleteLike(l);
-                                                if (result == "deleted") {
-                                                  _getArticles();
+                                                result = await DeleteLike(like);
+                                              } else if (articles[i].like ==
+                                                  0) {
+                                                result = await UpdateLike(like);
+                                              }
+                                              if (result == "done") {
+                                                var r = await _getArticles();
+                                                if (r == "refresh") {
+                                                  Navigator.pop(context);
                                                 }
                                               }
                                             },
@@ -308,24 +311,32 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                               ),
                                             ),
                                             onPressed: () async {
-                                              ArticleLikes l = ArticleLikes(
-                                                  articleId:
-                                                      articles[i].articleId,
-                                                  userId: id,
-                                                  like: 0);
-                                              if (articles[i].like == 1 ||
-                                                  articles[i].like == null) {
-                                                var result =
-                                                    await AddDislike(l);
-                                                if (result == "added") {
-                                                  _getArticles();
-                                                }
+                                              showLoading(context);
+                                              var result;
+                                              ArticleLikes dislike =
+                                                  ArticleLikes(
+                                                      likeId:
+                                                          articles[i].likeId,
+                                                      articleId:
+                                                          articles[i].articleId,
+                                                      userId: id,
+                                                      like: 0);
+                                              if (articles[i].like == null) {
+                                                result =
+                                                    await AddDislike(dislike);
                                               } else if (articles[i].like ==
                                                   0) {
-                                                var result =
-                                                    await DeleteLike(l);
-                                                if (result == "deleted") {
-                                                  _getArticles();
+                                                result = await DeleteDislike(
+                                                    dislike);
+                                              } else if (articles[i].like ==
+                                                  1) {
+                                                result =
+                                                    await UpdateLike(dislike);
+                                              }
+                                              if (result == "done") {
+                                                var r = await _getArticles();
+                                                if (r == "refresh") {
+                                                  Navigator.pop(context);
                                                 }
                                               }
                                             },

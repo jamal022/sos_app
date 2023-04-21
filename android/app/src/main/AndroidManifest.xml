@@ -6,7 +6,7 @@
    <application
         android:label="sos_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyDlXbWtKOdEqTSRVgaeL6SqN5cB_Dedd8I"/>
         <activity
