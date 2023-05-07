@@ -141,7 +141,7 @@ class _PatientProfileScreen extends State<PatientProfileScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: size.height / 15),
+                        SizedBox(height: size.height / 6),
                         Container(
                           width: size.width / 1.2,
                           height: size.height / 18,

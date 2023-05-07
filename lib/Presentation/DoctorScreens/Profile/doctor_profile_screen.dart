@@ -49,10 +49,9 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
     doctor.addressLat = prefs.getDouble("AddressLatitude");
     doctor.addressLong = prefs.getDouble("AddressLongitude");
     doctor.rate = prefs.getString("Rate");
-    doctor.verified = prefs.getInt("Verified");
     doctor.idImage = prefs.getString("IdImage");
-
-    setState(() {});
+    doctor.verified = await GetVerifiedFromDoctorById(doctor.id);
+    _flag = true;
     placemarks =
         await placemarkFromCoordinates(doctor.addressLat, doctor.addressLong);
     setState(() {});
@@ -63,7 +62,7 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
   Reference? ref;
   File? file;
   String? imageurl;
-  bool flag = false;
+  bool _flag = false;
 
   _addImage() async {
     if (picker != null) {
@@ -151,379 +150,395 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: back,
-      body: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 0.0),
-          child: doctor.addressLat != null
-              ? Column(children: [
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(0, 0.0, 0.0, 0.0),
-                            child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  doctor.image,
-                                ),
-                                maxRadius: 70,
-                                backgroundColor: primaryColor),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          RatingBar(
-                            ignoreGestures: true,
-                            initialRating: double.parse(doctor.rate),
-                            itemSize: 25,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            tapOnlyMode: true,
-                            ratingWidget: RatingWidget(
-                                full:
-                                    const Icon(Icons.star, color: primaryColor),
-                                half: const Icon(
-                                  Icons.star_half,
-                                  color: primaryColor,
-                                ),
-                                empty: const Icon(
-                                  Icons.star_outline,
-                                  color: primaryColor,
-                                )),
-                            onRatingUpdate: ((value) {}),
-                          )
-                        ],
-                      ),
-                      Container(
-                        width: 200,
-                        height: 200,
-                        margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: Column(
+        backgroundColor: back,
+        body: _flag == true
+            ? SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 0.0),
+                child: doctor.addressLat != null
+                    ? Column(children: [
+                        Row(
                           children: [
-                            Row(
+                            Column(
                               children: [
-                                Text(
-                                  '\n       ${doctor.username}\n',
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      0, 0.0, 0.0, 0.0),
+                                  child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        doctor.image,
+                                      ),
+                                      maxRadius: 70,
+                                      backgroundColor: primaryColor),
                                 ),
-                                doctor.verified == 1
-                                    ? IconButton(
-                                        icon: const Icon(Icons.verified),
-                                        onPressed: () {},
-                                        tooltip: "Your account is verified",
-                                        color: Colors.lightBlueAccent.shade700,
-                                      )
-                                    : IconButton(
-                                        icon: const Icon(
-                                            Icons.do_not_disturb_alt_sharp),
-                                        onPressed: () {},
-                                        tooltip:
-                                            "Your account isn't verified yet",
-                                        color: Colors.redAccent.shade700,
-                                      )
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                RatingBar(
+                                  ignoreGestures: true,
+                                  initialRating: double.parse(doctor.rate),
+                                  itemSize: 25,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  tapOnlyMode: true,
+                                  ratingWidget: RatingWidget(
+                                      full: const Icon(Icons.star,
+                                          color: primaryColor),
+                                      half: const Icon(
+                                        Icons.star_half,
+                                        color: primaryColor,
+                                      ),
+                                      empty: const Icon(
+                                        Icons.star_outline,
+                                        color: primaryColor,
+                                      )),
+                                  onRatingUpdate: ((value) {}),
+                                )
                               ],
                             ),
-                            Text(
-                              doctor.field,
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            MaterialButton(
-                              elevation: 4.0,
-                              color: Colors.white,
-                              shape: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide.none,
+                            Container(
+                              width: 200,
+                              height: 200,
+                              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '\n       ${doctor.username}\n',
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      doctor.verified == 1
+                                          ? IconButton(
+                                              icon: const Icon(Icons.verified),
+                                              onPressed: () {},
+                                              tooltip:
+                                                  "Your account is verified",
+                                              color: Colors
+                                                  .lightBlueAccent.shade700,
+                                            )
+                                          : IconButton(
+                                              icon: const Icon(Icons
+                                                  .do_not_disturb_alt_sharp),
+                                              onPressed: () {},
+                                              tooltip:
+                                                  "Your account isn't verified yet",
+                                              color: Colors.redAccent.shade700,
+                                            )
+                                    ],
+                                  ),
+                                  Text(
+                                    doctor.field,
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  MaterialButton(
+                                    elevation: 4.0,
+                                    color: Colors.white,
+                                    shape: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    onPressed: () async {
+                                      var result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DoctorEditScreen(
+                                                  doctor: doctor,
+                                                )),
+                                      );
+                                      if (result == "refresh") {
+                                        _getPrefs();
+                                      }
+                                    },
+                                    child: const Text(
+                                      'Edit Profile',
+                                      style: TextStyle(
+                                        color: black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onPressed: () async {
-                                var result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DoctorEditScreen(
-                                            doctor: doctor,
-                                          )),
-                                );
-                                if (result == "refresh") {
-                                  _getPrefs();
-                                }
-                              },
-                              child: const Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  color: black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  doctor.verified == 2 && flag == false
-                      ? Column(
-                          children: [
-                            Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white60,
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        doctor.verified == 2
+                            ? Column(
+                                children: [
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Colors.white60,
+                                      ),
+                                      width: size.width / 0.7,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            20, 20, 20, 20),
+                                        child: Column(
+                                          children: [
+                                            const Text(
+                                              "Update your ID card to verify your account",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.black,
+                                              ),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Stack(children: [
+                                                  cardImage == null
+                                                      ? CircleAvatar(
+                                                          maxRadius: 60,
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  doctor
+                                                                      .idImage),
+                                                        )
+                                                      : CircleAvatar(
+                                                          maxRadius: 60,
+                                                          backgroundImage:
+                                                              FileImage(
+                                                            File(
+                                                              cardImage!.path,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                  Positioned(
+                                                    bottom: 10,
+                                                    right: 25,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        showModalBottomSheet(
+                                                            context: context,
+                                                            builder: ((context) =>
+                                                                bottomSheet(
+                                                                    context)));
+                                                      },
+                                                      child: const Icon(
+                                                        Icons
+                                                            .camera_alt_rounded,
+                                                        color: white,
+                                                        size: 28,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]),
+                                                const SizedBox(
+                                                  width: 20,
+                                                ),
+                                                MaterialButton(
+                                                  elevation: 4.0,
+                                                  color: Colors.white,
+                                                  shape: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide: BorderSide.none,
+                                                  ),
+                                                  onPressed: () async {
+                                                    if (cardImage != null) {
+                                                      showLoading(context);
+                                                      await DeleteDoctorProfile(
+                                                          doctor.idImage);
+                                                      var doctorCardImage =
+                                                          await _addImage();
+                                                      var result =
+                                                          await UpdateDoctorIdCard(
+                                                              doctor.id,
+                                                              doctorCardImage,
+                                                              context);
+                                                      if (result == "updated") {
+                                                        _getPrefs();
+                                                      }
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                    'Update',
+                                                    style: TextStyle(
+                                                      color: black,
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                  const SizedBox(
+                                    height: 20,
+                                  )
+                                ],
+                              )
+                            : Container(),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white60,
+                            ),
+                            width: size.width / 0.7,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                              child: Text(
+                                doctor.bio,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
                                 ),
-                                width: size.width / 0.7,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                                  child: Column(
+                                textAlign: TextAlign.left,
+                              ),
+                            )),
+                        const SizedBox(height: 20),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white60,
+                            ),
+                            width: size.width / 0.7,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
-                                        "Update your ID card to verify your account",
+                                        "Address: ",
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),
                                         textAlign: TextAlign.left,
                                       ),
                                       const SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
-                                      Row(
-                                        children: [
-                                          Stack(children: [
-                                            cardImage == null
-                                                ? CircleAvatar(
-                                                    maxRadius: 60,
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                            doctor.idImage),
-                                                  )
-                                                : CircleAvatar(
-                                                    maxRadius: 60,
-                                                    backgroundImage: FileImage(
-                                                      File(
-                                                        cardImage!.path,
-                                                      ),
-                                                    ),
-                                                  ),
-                                            Positioned(
-                                              bottom: 10,
-                                              right: 25,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  showModalBottomSheet(
-                                                      context: context,
-                                                      builder: ((context) =>
-                                                          bottomSheet(
-                                                              context)));
-                                                },
-                                                child: const Icon(
-                                                  Icons.camera_alt_rounded,
-                                                  color: white,
-                                                  size: 28,
-                                                ),
-                                              ),
-                                            ),
-                                          ]),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          MaterialButton(
-                                            elevation: 4.0,
-                                            color: Colors.white,
-                                            shape: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            onPressed: () async {
-                                              if (cardImage != null) {
-                                                showLoading(context);
-                                                await DeleteDoctorProfile(
-                                                    doctor.idImage);
-                                                var doctorCardImage =
-                                                    await _addImage();
-                                                var result =
-                                                    await UpdateDoctorIdCard(
-                                                        doctor.id,
-                                                        doctorCardImage,
-                                                        context);
-                                                if (result == "updated") {
-                                                  _getPrefs();
-                                                }
-                                              }
-                                            },
-                                            child: const Text(
-                                              'Update',
-                                              style: TextStyle(
-                                                color: black,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      Container(
+                                        height: 50,
+                                        width: 200,
+                                        child: placemarks.length != 0
+                                            ? Text(
+                                                "${placemarks[0].street} ,${placemarks[0].administrativeArea}")
+                                            : Text(""),
+                                      )
                                     ],
                                   ),
-                                )),
+                                  IconButton(
+                                      onPressed: () async {
+                                        var result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  UpdateAddressScreen(
+                                                    doctor: doctor,
+                                                    lat: doctor.addressLat,
+                                                    long: doctor.addressLong,
+                                                  )),
+                                        );
+                                        if (result == "refresh") {
+                                          _getPrefs();
+                                        }
+                                      },
+                                      icon: const Icon(Icons.edit)),
+                                ],
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: size.height / 17,
+                              width: size.width / 1.3,
+                              child: MaterialButton(
+                                  elevation: 6.0,
+                                  color: Colors.white,
+                                  shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CommunityHistoryScreen()),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Q/A  History',
+                                    style: TextStyle(
+                                      color: black,
+                                      fontSize: formButtonFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
+                            ),
                             const SizedBox(
                               height: 20,
-                            )
-                          ],
-                        )
-                      : Container(),
-                  Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white60,
-                      ),
-                      width: size.width / 0.7,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: Text(
-                          doctor.bio,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                      )),
-                  const SizedBox(height: 20),
-                  Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white60,
-                      ),
-                      width: size.width / 0.7,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Address: ",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                            ),
+                            SizedBox(
+                              height: size.height / 17,
+                              width: size.width / 1.3,
+                              child: MaterialButton(
+                                  elevation: 6.0,
+                                  color: Colors.white,
+                                  shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide.none,
                                   ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Container(
-                                  height: 50,
-                                  width: 200,
-                                  child: placemarks.length != 0
-                                      ? Text(
-                                          "${placemarks[0].street} ,${placemarks[0].administrativeArea}")
-                                      : Text(""),
-                                )
-                              ],
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ArticlesHistoryScreen(
+                                                doctor: doctor,
+                                              )),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Articles  History',
+                                    style: TextStyle(
+                                      color: black,
+                                      fontSize: formButtonFont,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
                             ),
-                            IconButton(
-                                onPressed: () async {
-                                  var result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            UpdateAddressScreen(
-                                              doctor: doctor,
-                                              lat: doctor.addressLat,
-                                              long: doctor.addressLong,
-                                            )),
-                                  );
-                                  if (result == "refresh") {
-                                    _getPrefs();
-                                  }
-                                },
-                                icon: const Icon(Icons.edit)),
+                            const SizedBox(
+                              height: 20,
+                            ),
                           ],
                         ),
-                      )),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: size.height / 17,
-                        width: size.width / 1.3,
-                        child: MaterialButton(
-                            elevation: 6.0,
-                            color: Colors.white,
-                            shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CommunityHistoryScreen()),
-                              );
-                            },
-                            child: const Text(
-                              'Q/A  History',
-                              style: TextStyle(
-                                color: black,
-                                fontSize: formButtonFont,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: size.height / 17,
-                        width: size.width / 1.3,
-                        child: MaterialButton(
-                            elevation: 6.0,
-                            color: Colors.white,
-                            shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ArticlesHistoryScreen(
-                                          doctor: doctor,
-                                        )),
-                              );
-                            },
-                            child: const Text(
-                              'Articles  History',
-                              style: TextStyle(
-                                color: black,
-                                fontSize: formButtonFont,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ])
-              : Center()),
-    );
+                      ])
+                    : Center())
+            : Center(
+                child: CircularProgressIndicator(),
+              ));
   }
 }

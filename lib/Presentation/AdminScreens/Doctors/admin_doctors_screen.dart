@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sos_app/Data/Models/doctor.dart';
+import 'package:sos_app/Presentation/AdminScreens/Doctors/admin_doctor_page.dart';
 import '../../Styles/colors.dart';
 import '../../Styles/fonts.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -146,11 +147,13 @@ class _AdminDoctorsScreenState extends State<AdminDoctorsScreen> {
                                         color: black,
                                       ),
                                       onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder: (context) => const DocInfoScreen(),
-                                        //     ));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AdminDoctorPage(
+                                                      doctor: doctors[i]),
+                                            ));
                                       },
                                     ),
                                   ),

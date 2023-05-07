@@ -16,7 +16,7 @@ class _StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backback,
+        backgroundColor: back,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
@@ -41,7 +41,7 @@ class _StartScreenState extends State<StartScreen> {
                 const Spacer(),
                 MaterialButton(
                     elevation: 6.0,
-                    color: logoBlue,
+                    color: primaryColor,
                     shape: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide.none,
@@ -66,7 +66,7 @@ class _StartScreenState extends State<StartScreen> {
                 ),
                 MaterialButton(
                     elevation: 6.0,
-                    color: logoLigtOrange,
+                    color: blueColor,
                     shape: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide.none,

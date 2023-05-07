@@ -270,3 +270,15 @@ GetRecommendedDoctors(lat, long) async {
   });
   return doctors;
 }
+
+GetVerifiedFromDoctorById(id) async {
+  var verified;
+  await FirebaseFirestore.instance
+      .collection("Doctors")
+      .doc(id)
+      .get()
+      .then((value) {
+    verified = value.data()!["Verified"];
+  });
+  return verified;
+}
