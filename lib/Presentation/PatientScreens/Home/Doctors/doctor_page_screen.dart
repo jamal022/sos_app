@@ -310,68 +310,75 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Row(children: [
-                        SizedBox(width: size.width / 18),
-                        Column(
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                              'Experience',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            SizedBox(width: size.width / 25),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Experience',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Text(widget.doctor.experience,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                        color: Colors.black.withOpacity(0.5)))
+                              ],
                             ),
-                            Text(widget.doctor.experience,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
-                                    color: Colors.black.withOpacity(0.5)))
-                          ],
-                        ),
-                        SizedBox(width: size.width / 25),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          color: Colors.grey.withOpacity(0.4),
-                          width: 1,
-                        ),
-                        SizedBox(width: size.width / 10),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Price',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            SizedBox(width: size.width / 25),
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              color: Colors.grey.withOpacity(0.4),
+                              width: 1,
                             ),
-                            Text('\$${widget.doctor.price}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
-                                    color: Colors.black.withOpacity(0.5)))
-                          ],
-                        ),
-                        SizedBox(width: size.width / 10),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          color: Colors.grey.withOpacity(0.4),
-                          width: 1,
-                        ),
-                        SizedBox(width: size.width / 25),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Articles',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            SizedBox(width: size.width / 25),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Price',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Text('\$${widget.doctor.price}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                        color: Colors.black.withOpacity(0.5)))
+                              ],
                             ),
-                            Text('${articlesNb}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
-                                    color: Colors.black.withOpacity(0.5)))
-                          ],
-                        ),
-                      ])),
+                            SizedBox(width: size.width / 25),
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              color: Colors.grey.withOpacity(0.4),
+                              width: 1,
+                            ),
+                            SizedBox(width: size.width / 25),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Articles',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Text('${articlesNb}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                        color: Colors.black.withOpacity(0.5)))
+                              ],
+                            ),
+                            SizedBox(width: size.width / 25),
+                          ])),
                   const SizedBox(height: 20),
                   Container(
                     child: MaterialButton(
