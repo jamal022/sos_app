@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:printing/printing.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 
 import '../../../Data/Models/doctor.dart';
@@ -185,7 +184,7 @@ class _AdminDoctorPageState extends State<AdminDoctorPage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(
-                                    width: size.width / 15,
+                                    width: size.width / 22,
                                   ),
                                   Text(
                                     '${widget.doctor.phoneNumber}',
