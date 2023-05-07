@@ -150,8 +150,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextSpan(
                               text: 'Register!',
-                              style: const TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0)),
+                              style: TextStyle(
+                                color: black,
+                              ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   Navigator.pushAndRemoveUntil(

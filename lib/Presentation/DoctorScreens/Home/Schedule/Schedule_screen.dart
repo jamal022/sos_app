@@ -181,11 +181,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             scrollable: true,
                             showColorTip: false,
                             colorsets: const {
-                              1: Color.fromRGBO(237, 96, 35, 0.922),
-                              2: Color.fromRGBO(237, 96, 40, 0.922),
-                              3: Color.fromRGBO(237, 96, 45, 0.922),
-                              4: Color.fromRGBO(237, 96, 50, 0.922),
-                              5: Color.fromRGBO(237, 96, 55, 0.922),
+                              1: Color.fromARGB(255, 253, 117, 31),
                             },
                             //Navigate the date you choose
                             onClick: (value) async {

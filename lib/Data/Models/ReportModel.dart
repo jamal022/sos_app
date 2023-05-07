@@ -137,11 +137,13 @@ Future<void> printReport(Report report) async {
   var image = await networkImage(
     report.image,
   );
+  var logo = await networkImage(
+      "https://firebasestorage.googleapis.com/v0/b/sos-app-9e30f.appspot.com/o/Profiles%2Flogo.png?alt=media&token=1136f3e7-9475-4754-96dd-6adfd49ea44b");
   final doc = pw.Document();
   doc.addPage(pw.Page(
       pageFormat: PdfPageFormat.a4,
       build: (pw.Context context) {
-        return buildPrintableData(report, image);
+        return buildPrintableData(report, image, logo);
       }));
   await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => doc.save());

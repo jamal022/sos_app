@@ -1,5 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Articles/articles_screen.dart';
 import 'package:sos_app/Presentation/DoctorScreens/Home/Community/community_screen.dart';
@@ -35,7 +33,6 @@ List<Widget> screens = [
 class _DoctorHomeScreen extends State<DoctorHomeScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

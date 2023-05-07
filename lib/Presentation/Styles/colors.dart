@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const Color primaryColor = Color(0xEBED6023);
+//const Color primaryColor = Color(0xEBED6023);
 const Color orange = Color(0xFFFF8C00);
 const Color transparentColor = Colors.transparent;
 const Color wordColor = Color.fromARGB(240, 248, 242, 242);
@@ -22,7 +22,8 @@ const Color adminback = Color.fromARGB(249, 220, 212, 200);
 const Color backback = Color.fromARGB(251, 241, 234, 225);
 
 const Color logoBlue = Color.fromARGB(255, 62, 181, 243);
-const Color logoOrange = Color.fromARGB(255, 253, 117, 31);
+const Color primaryColor = Color.fromARGB(255, 253, 117, 31);
 const Color logoLigtBlue = Color.fromARGB(255, 55, 201, 242);
 const Color logoLigtOrange = Color.fromARGB(255, 255, 178, 74);
 const Color logoBack = Color.fromARGB(255, 255, 175, 62);
+const Color blackPrimaryColor = Color.fromARGB(235, 177, 71, 26);

@@ -139,6 +139,7 @@ class _DoctorEditScreen extends State<DoctorEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: back,
         appBar: AppBar(
           title: const Text(
             "Edit Profile",

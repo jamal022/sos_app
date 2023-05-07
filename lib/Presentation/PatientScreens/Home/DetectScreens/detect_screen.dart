@@ -143,16 +143,7 @@ class _DetectScreenState extends State<DetectScreen> {
                               height: 20,
                             ),
                             _output != null
-                                ?
-                                // Text(
-                                //     'The degree is: ${_output[0]['label']} - ${_output[0]['confidence'] * 100}%',
-                                //     style: const TextStyle(
-                                //         color: primaryColor,
-                                //         fontSize: 18,
-                                //         fontWeight: FontWeight.w400),
-                                //   )
-
-                                MaterialButton(
+                                ? MaterialButton(
                                     color: primaryColor,
                                     elevation: 3.0,
                                     onPressed: () {

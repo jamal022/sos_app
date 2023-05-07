@@ -77,7 +77,6 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: const Color.fromARGB(255, 254, 238, 217),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
@@ -89,13 +88,13 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               backgroundImage: NetworkImage(
                                 widget.doctor.image,
                               ),
-                              maxRadius: 25,
+                              maxRadius: 30,
                               backgroundColor: white),
                           SizedBox(
-                            width: size.width / 10,
+                            width: size.width / 15,
                           ),
                           Text(
-                            '${widget.doctor.username}',
+                            '${widget.doctor.username}, ${widget.doctor.age}',
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),

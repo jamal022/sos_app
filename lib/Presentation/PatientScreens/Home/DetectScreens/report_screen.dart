@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sos_app/Data/Models/doctor.dart';
 import 'package:sos_app/Presentation/PatientScreens/Home/DetectScreens/recommended_doctors_screen.dart';
 import 'package:sos_app/Presentation/Styles/colors.dart';
 import '../../../../Data/Models/ReportModel.dart';

@@ -82,14 +82,14 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                       children: [
                         for (var i = 0; i < articles.length; i++)
                           Card(
-                              margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                              margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                               elevation: 7,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               color: containerColor,
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(15, 5, 15, 15),
+                                    const EdgeInsets.fromLTRB(15, 5, 5, 15),
                                 child: Column(children: <Widget>[
                                   Container(
                                     width: size.width / 0.5,
@@ -101,7 +101,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                               articles[i].article!.doctorImage),
                                           backgroundColor: const Color.fromARGB(
                                               255, 255, 255, 255),
-                                          radius: 28,
+                                          radius: 24,
                                         ),
                                         Column(
                                             mainAxisAlignment:
@@ -110,7 +110,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                               Text(
                                                   '  ${articles[i].article!.doctorName}',
                                                   style: const TextStyle(
-                                                      fontSize: 20,
+                                                      fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.bold)),
                                               Text(
@@ -177,172 +177,152 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: size.width / 3.0,
-                                          height: size.height / 19,
-                                          alignment: Alignment.bottomLeft,
-                                          child: CupertinoButton(
-                                            minSize: 20,
-                                            padding: const EdgeInsets.all(
-                                                0), // remove button padding
-                                            color: CupertinoColors.white
-                                                .withOpacity(
-                                                    0), // use this to make default color to transparent
-                                            child: Container(
-                                              // wrap the text/widget using container
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 9,
-                                                      horizontal:
-                                                          30), // add padding
-                                              decoration: BoxDecoration(
-                                                color: articles[i].like == 1
-                                                    ? const Color.fromARGB(
-                                                        255, 2, 106, 218)
-                                                    : white,
-                                                border: Border.all(
-                                                  color: const Color.fromARGB(
-                                                      255, 0, 122, 255),
-                                                  width: 1,
-                                                ),
-                                                borderRadius: const BorderRadius
-                                                        .all(
-                                                    Radius.circular(
-                                                        50)), // radius as you wish
-                                              ),
-                                              child: Row(
-                                                children: const [
-                                                  Icon(
-                                                    size: 18,
-                                                    CupertinoIcons
-                                                        .hand_thumbsup_fill,
-                                                    color:
-                                                        CupertinoColors.black,
-                                                  ),
-                                                  Text(
-                                                    " Like",
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: black),
-                                                  )
-                                                ],
-                                              ),
+                                  Row(children: [
+                                    Container(
+                                      width: size.width / 3.0,
+                                      height: size.height / 19,
+                                      alignment: Alignment.bottomLeft,
+                                      child: CupertinoButton(
+                                        minSize: 20,
+                                        padding: const EdgeInsets.all(
+                                            0), // remove button padding
+                                        color: CupertinoColors.white.withOpacity(
+                                            0), // use this to make default color to transparent
+                                        child: Container(
+                                          // wrap the text/widget using container
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 9,
+                                              horizontal: 30), // add padding
+                                          decoration: BoxDecoration(
+                                            color: articles[i].like == 1
+                                                ? const Color.fromARGB(
+                                                    255, 2, 106, 218)
+                                                : white,
+                                            border: Border.all(
+                                              color: const Color.fromARGB(
+                                                  255, 0, 122, 255),
+                                              width: 1,
                                             ),
-                                            onPressed: () async {
-                                              showLoading(context);
-                                              var result;
-                                              ArticleLikes like = ArticleLikes(
-                                                  likeId: articles[i].likeId,
-                                                  articleId:
-                                                      articles[i].articleId,
-                                                  userId: id,
-                                                  like: 1);
-                                              if (articles[i].like == null) {
-                                                result = await AddLike(like);
-                                              } else if (articles[i].like ==
-                                                  1) {
-                                                result = await DeleteLike(like);
-                                              } else if (articles[i].like ==
-                                                  0) {
-                                                result = await UpdateLike(like);
-                                              }
-                                              if (result == "done") {
-                                                var r = await _getArticles();
-                                                if (r == "refresh") {
-                                                  Navigator.pop(context);
-                                                }
-                                              }
-                                            },
+                                            borderRadius: const BorderRadius
+                                                    .all(
+                                                Radius.circular(
+                                                    50)), // radius as you wish
+                                          ),
+                                          child: Row(
+                                            children: const [
+                                              Icon(
+                                                size: 18,
+                                                CupertinoIcons
+                                                    .hand_thumbsup_fill,
+                                                color: CupertinoColors.black,
+                                              ),
+                                              Text(
+                                                " Like",
+                                                style: TextStyle(
+                                                    fontSize: 18, color: black),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                        Container(
-                                          width: size.width / 3.0,
-                                          height: size.height / 19,
-                                          alignment: Alignment.bottomRight,
-                                          child: CupertinoButton(
-                                            minSize: 20,
-                                            padding: const EdgeInsets.all(
-                                                0), // remove button padding
-                                            color: CupertinoColors.white
-                                                .withOpacity(
-                                                    0), // use this to make default color to transparent
-                                            child: Container(
-                                              // wrap the text/widget using container
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 9,
-                                                      horizontal:
-                                                          20), // add padding
-                                              decoration: BoxDecoration(
-                                                color: articles[i].like == 0
-                                                    ? const Color.fromRGBO(
-                                                        255, 45, 85, 1)
-                                                    : white,
-                                                border: Border.all(
-                                                  color: const Color.fromRGBO(
-                                                      255, 45, 85, 1),
-                                                  width: 1,
-                                                ),
-                                                borderRadius: const BorderRadius
-                                                        .all(
-                                                    Radius.circular(
-                                                        50)), // radius as you wish
-                                              ),
-                                              child: Row(
-                                                children: const [
-                                                  Icon(
-                                                    size: 18,
-                                                    CupertinoIcons
-                                                        .hand_thumbsdown_fill,
-                                                    color:
-                                                        CupertinoColors.black,
-                                                  ),
-                                                  Text(
-                                                    " DisLike",
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: black),
-                                                  )
-                                                ],
-                                              ),
+                                        onPressed: () async {
+                                          showLoading(context);
+                                          var result;
+                                          ArticleLikes like = ArticleLikes(
+                                              likeId: articles[i].likeId,
+                                              articleId: articles[i].articleId,
+                                              userId: id,
+                                              like: 1);
+                                          if (articles[i].like == null) {
+                                            result = await AddLike(like);
+                                          } else if (articles[i].like == 1) {
+                                            result = await DeleteLike(like);
+                                          } else if (articles[i].like == 0) {
+                                            result = await UpdateLike(like);
+                                          }
+                                          if (result == "done") {
+                                            var r = await _getArticles();
+                                            if (r == "refresh") {
+                                              Navigator.pop(context);
+                                            }
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: size.width / 8,
+                                    ),
+                                    Container(
+                                      width: size.width / 3.0,
+                                      height: size.height / 19,
+                                      alignment: Alignment.bottomRight,
+                                      child: CupertinoButton(
+                                        minSize: 20,
+                                        padding: const EdgeInsets.all(
+                                            0), // remove button padding
+                                        color: CupertinoColors.white.withOpacity(
+                                            0), // use this to make default color to transparent
+                                        child: Container(
+                                          // wrap the text/widget using container
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 9,
+                                              horizontal: 20), // add padding
+                                          decoration: BoxDecoration(
+                                            color: articles[i].like == 0
+                                                ? const Color.fromRGBO(
+                                                    255, 45, 85, 1)
+                                                : white,
+                                            border: Border.all(
+                                              color: const Color.fromRGBO(
+                                                  255, 45, 85, 1),
+                                              width: 1,
                                             ),
-                                            onPressed: () async {
-                                              showLoading(context);
-                                              var result;
-                                              ArticleLikes dislike =
-                                                  ArticleLikes(
-                                                      likeId:
-                                                          articles[i].likeId,
-                                                      articleId:
-                                                          articles[i].articleId,
-                                                      userId: id,
-                                                      like: 0);
-                                              if (articles[i].like == null) {
-                                                result =
-                                                    await AddDislike(dislike);
-                                              } else if (articles[i].like ==
-                                                  0) {
-                                                result = await DeleteDislike(
-                                                    dislike);
-                                              } else if (articles[i].like ==
-                                                  1) {
-                                                result =
-                                                    await UpdateLike(dislike);
-                                              }
-                                              if (result == "done") {
-                                                var r = await _getArticles();
-                                                if (r == "refresh") {
-                                                  Navigator.pop(context);
-                                                }
-                                              }
-                                            },
+                                            borderRadius: const BorderRadius
+                                                    .all(
+                                                Radius.circular(
+                                                    50)), // radius as you wish
+                                          ),
+                                          child: Row(
+                                            children: const [
+                                              Icon(
+                                                size: 18,
+                                                CupertinoIcons
+                                                    .hand_thumbsdown_fill,
+                                                color: CupertinoColors.black,
+                                              ),
+                                              Text(
+                                                " DisLike",
+                                                style: TextStyle(
+                                                    fontSize: 18, color: black),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                      ]),
+                                        onPressed: () async {
+                                          showLoading(context);
+                                          var result;
+                                          ArticleLikes dislike = ArticleLikes(
+                                              likeId: articles[i].likeId,
+                                              articleId: articles[i].articleId,
+                                              userId: id,
+                                              like: 0);
+                                          if (articles[i].like == null) {
+                                            result = await AddDislike(dislike);
+                                          } else if (articles[i].like == 0) {
+                                            result =
+                                                await DeleteDislike(dislike);
+                                          } else if (articles[i].like == 1) {
+                                            result = await UpdateLike(dislike);
+                                          }
+                                          if (result == "done") {
+                                            var r = await _getArticles();
+                                            if (r == "refresh") {
+                                              Navigator.pop(context);
+                                            }
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ]),
                                 ]),
                               ))
                       ],

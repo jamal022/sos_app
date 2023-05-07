@@ -243,10 +243,7 @@ GetRecommendedDoctors(lat, long) async {
     for (var doc in value.docs) {
       var distance = await Geolocator.distanceBetween(lat, long,
           doc.data()["AddressLatitude"], doc.data()['AddressLongitude']);
-      if (double.parse(doc.data()["Rate"]) >= 4 &&
-          double.parse(doc.data()["Rate"]) <= 5 &&
-          int.parse(doc.data()["YearsOfExperience"]) >= 4 &&
-          distance <= 3000) {
+      if (distance <= 3000 && doc.data()["Verified"] == 1) {
         doctors.add(Doctor(
             id: doc.id,
             username: doc.data()['FullName'],

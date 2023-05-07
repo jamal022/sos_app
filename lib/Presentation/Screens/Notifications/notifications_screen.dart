@@ -32,7 +32,7 @@ class _NotificationsScreen extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(253, 243, 222, 195),
+      backgroundColor: back,
       body: StreamBuilder(
         stream: getNotifications(id),
         builder: (context, snapshot) {

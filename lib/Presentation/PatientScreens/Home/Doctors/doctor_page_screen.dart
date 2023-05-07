@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -52,11 +53,9 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
           double.parse(widget.doctor.addressLong.toString())),
     ));
 
-    setState(() async {
-      placemarks = await placemarkFromCoordinates(
-          double.parse(widget.doctor.addressLat.toString()),
-          double.parse(widget.doctor.addressLong.toString()));
-    });
+    placemarks = await placemarkFromCoordinates(
+        widget.doctor.addressLat, widget.doctor.addressLong);
+    setState(() {});
   }
 
   @override
@@ -81,7 +80,7 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    //height: size. height /4
+
     return Scaffold(
         backgroundColor: const Color.fromARGB(253, 243, 222, 195),
         appBar: AppBar(
@@ -109,31 +108,26 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                       ),
                     ),
                   ),
-                  // Container(
-                  //   width: double.infinity,
-                  //   child: Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       const Text(
-                  //         "Field:",
-                  //         style: TextStyle(
-                  //           fontWeight: FontWeight.bold,
-                  //           fontSize: 20,
-                  //         ),
-                  //       ),
-                  //       const SizedBox(
-                  //         width: 10,
-                  //       ),
-                  //       Text(widget.doctor.field,
-                  //           style: TextStyle(
-                  //               fontWeight: FontWeight.w800,
-                  //               fontSize: 18,
-                  //               color: Colors.black.withOpacity(0.5)))
-                  //     ],
-                  //   ),
-                  // ),
-
+                  RatingBar(
+                    ignoreGestures: true,
+                    initialRating: double.parse(widget.doctor.rate),
+                    itemSize: 30,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    tapOnlyMode: true,
+                    ratingWidget: RatingWidget(
+                        full: const Icon(Icons.star, color: primaryColor),
+                        half: const Icon(
+                          Icons.star_half,
+                          color: primaryColor,
+                        ),
+                        empty: const Icon(
+                          Icons.star_outline,
+                          color: primaryColor,
+                        )),
+                    onRatingUpdate: ((value) {}),
+                  ),
                   Container(
                       height: 80,
                       child: Row(
@@ -228,8 +222,8 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                       )),
                   Container(
                       height: size.height / 11,
-                      width: size.width / 1.2,
-                      margin: const EdgeInsets.symmetric(horizontal: 35),
+                      width: size.width / 1.1,
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -292,8 +286,8 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                   ),
                   Container(
                     height: size.height / 6,
-                    width: size.width / 1.2,
-                    margin: const EdgeInsets.symmetric(horizontal: 35),
+                    width: size.width / 1.1,
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -310,78 +304,72 @@ class _DoctorPageScreen extends State<DoctorPageScreen> {
                   const SizedBox(height: 15),
                   Container(
                       height: size.height / 11,
-                      width: size.width / 1.2,
-                      margin: const EdgeInsets.symmetric(horizontal: 35),
+                      width: size.width / 1.1,
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Experience',
+                        SizedBox(width: size.width / 18),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Experience',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            Text(widget.doctor.experience,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              Text(widget.doctor.experience,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 16,
-                                      color: Colors.black.withOpacity(0.5)))
-                            ],
-                          ),
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    color: Colors.black.withOpacity(0.5)))
+                          ],
                         ),
+                        SizedBox(width: size.width / 25),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           color: Colors.grey.withOpacity(0.4),
                           width: 1,
                         ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Price',
+                        SizedBox(width: size.width / 10),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Price',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            Text('\$${widget.doctor.price}',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              Text('\$${widget.doctor.price}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 16,
-                                      color: Colors.black.withOpacity(0.5)))
-                            ],
-                          ),
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    color: Colors.black.withOpacity(0.5)))
+                          ],
                         ),
+                        SizedBox(width: size.width / 10),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           color: Colors.grey.withOpacity(0.4),
                           width: 1,
                         ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Articles',
+                        SizedBox(width: size.width / 25),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Articles',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            Text('${articlesNb}',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              Text('${articlesNb}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 16,
-                                      color: Colors.black.withOpacity(0.5)))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          color: Colors.grey.withOpacity(0.4),
-                          width: 1,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    color: Colors.black.withOpacity(0.5)))
+                          ],
                         ),
                       ])),
                   const SizedBox(height: 20),

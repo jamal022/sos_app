@@ -153,23 +153,19 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
         backgroundColor: back,
         body: _flag == true
             ? SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(15.0, 40.0, 15.0, 10.0),
                 child: doctor.addressLat != null
                     ? Column(children: [
                         Row(
                           children: [
                             Column(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0, 0.0, 0.0, 0.0),
-                                  child: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        doctor.image,
-                                      ),
-                                      maxRadius: 70,
-                                      backgroundColor: primaryColor),
-                                ),
+                                CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      doctor.image,
+                                    ),
+                                    maxRadius: 60,
+                                    backgroundColor: primaryColor),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -197,15 +193,14 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                               ],
                             ),
                             Container(
-                              width: 200,
-                              height: 200,
-                              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              height: size.height / 4,
+                              margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                               child: Column(
                                 children: [
                                   Row(
                                     children: [
                                       Text(
-                                        '\n       ${doctor.username}\n',
+                                        '\n  ${doctor.username}\n',
                                         style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
@@ -302,25 +297,29 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                                               children: [
                                                 Stack(children: [
                                                   cardImage == null
-                                                      ? CircleAvatar(
-                                                          maxRadius: 60,
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  doctor
-                                                                      .idImage),
+                                                      ? Container(
+                                                          width: size.width / 3,
+                                                          height:
+                                                              size.height / 8,
+                                                          child: Image.network(
+                                                            doctor.idImage,
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                         )
-                                                      : CircleAvatar(
-                                                          maxRadius: 60,
-                                                          backgroundImage:
-                                                              FileImage(
+                                                      : Container(
+                                                          width: size.width / 3,
+                                                          height:
+                                                              size.height / 8,
+                                                          child: Image.file(
                                                             File(
                                                               cardImage!.path,
                                                             ),
+                                                            fit: BoxFit.cover,
                                                           ),
                                                         ),
                                                   Positioned(
-                                                    bottom: 10,
-                                                    right: 25,
+                                                    bottom: 8,
+                                                    right: 10,
                                                     child: InkWell(
                                                       onTap: () {
                                                         showModalBottomSheet(
@@ -332,14 +331,14 @@ class _DoctorProfileScreen extends State<DoctorProfileScreen> {
                                                       child: const Icon(
                                                         Icons
                                                             .camera_alt_rounded,
-                                                        color: white,
+                                                        color: black,
                                                         size: 28,
                                                       ),
                                                     ),
                                                   ),
                                                 ]),
-                                                const SizedBox(
-                                                  width: 20,
+                                                SizedBox(
+                                                  width: size.width / 5,
                                                 ),
                                                 MaterialButton(
                                                   elevation: 4.0,

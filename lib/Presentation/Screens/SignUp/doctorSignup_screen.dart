@@ -328,7 +328,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                 ),
                 MaterialButton(
                     elevation: 5.0,
-                    color: const Color.fromARGB(238, 237, 96, 35),
+                    color: primaryColor,
                     padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                     shape: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50),

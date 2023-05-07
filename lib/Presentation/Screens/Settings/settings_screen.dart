@@ -43,7 +43,6 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    //bool shadowColor = false;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: primaryColor,

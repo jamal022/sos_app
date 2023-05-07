@@ -29,7 +29,7 @@ class _StartScreenState extends State<StartScreen> {
                 ),
                 const Spacer(),
                 const Text(
-                  "Automatic burn degree detection which help you to detect your burn degree",
+                  "Skin Burn Degree Classifier to help you detecting your burn degree.",
                   style: TextStyle(
                     fontWeight: FontWeight.w300,
                     fontSize: 19,
@@ -66,7 +66,7 @@ class _StartScreenState extends State<StartScreen> {
                 ),
                 MaterialButton(
                     elevation: 6.0,
-                    color: blueColor,
+                    color: logoBlue,
                     shape: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide.none,

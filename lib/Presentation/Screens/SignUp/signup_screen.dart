@@ -13,7 +13,6 @@ import 'package:sos_app/Presentation/Widgets/textFormField_widget.dart';
 import '../../../Data/Authentication/signup.dart';
 import '../../../Data/Models/patient.dart';
 import '../../Styles/fonts.dart';
-import 'doctorSignup_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -406,7 +405,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 MaterialButton(
                     elevation: 5.0,
-                    color: const Color.fromARGB(238, 237, 96, 35),
+                    color: primaryColor,
                     padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                     shape: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50),

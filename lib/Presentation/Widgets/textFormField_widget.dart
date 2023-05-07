@@ -40,7 +40,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           filled: true,
           fillColor: white,
           hintText: widget.hintText,
-          prefixIcon: Icon(widget.icon, color: orange),
+          prefixIcon: Icon(widget.icon, color: primaryColor),
           suffixIcon: (widget.type == TextInputType.visiblePassword)
               ? IconButton(
                   icon: (isPasswordShow == true)
@@ -61,7 +61,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: const BorderSide(
-              color: orange,
+              color: primaryColor,
             ),
           ),
         ),
