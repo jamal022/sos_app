@@ -42,20 +42,23 @@ class DoctorSearchDelegate extends SearchDelegate {
 
           for (var doc in snapshot.data!.docs) {
             Doctor doctor = Doctor(
-                username: doc.data()["FullName"],
-                email: doc.data()["Email"],
-                phoneNumber: doc.data()["PhoneNumber"],
-                password: doc.data()["Password"],
-                age: doc.data()["Age"],
-                gender: doc.data()["Gender"],
-                image: doc.data()["Image"],
-                addressLat: doc.data()["AddressLatitude"],
-                addressLong: doc.data()["AddressLongitude"],
-                bio: doc.data()["Bio"],
-                experience: doc.data()["YearsOfExperience"],
-                field: doc.data()["Field"],
-                id: doc.id,
-                price: doc.data()["TicketPrice"]);
+              id: doc.id,
+              username: doc.data()['FullName'],
+              email: doc.data()['Email'],
+              phoneNumber: doc.data()['PhoneNumber'],
+              age: doc.data()['Age'],
+              gender: doc.data()['Gender'],
+              image: doc.data()['Image'],
+              field: doc.data()['Field'],
+              addressLat: doc.data()['AddressLatitude'],
+              addressLong: doc.data()['AddressLongitude'],
+              bio: doc.data()['Bio'],
+              experience: doc.data()['YearsOfExperience'],
+              price: doc.data()['TicketPrice'],
+              verified: doc.data()["Verified"],
+              rate: doc.data()["Rate"],
+              idImage: doc.data()["IdImage"],
+            );
             doctors.add(doctor);
             names.add(doctor.username);
           }
@@ -86,7 +89,6 @@ class DoctorSearchDelegate extends SearchDelegate {
                                       email: element.email,
                                       gender: element.gender,
                                       image: element.image,
-                                      password: element.password,
                                       phoneNumber: element.phoneNumber,
                                       username: element.username,
                                       addressLat: element.addressLat,
@@ -94,7 +96,10 @@ class DoctorSearchDelegate extends SearchDelegate {
                                       bio: element.bio,
                                       experience: element.experience,
                                       field: element.field,
-                                      price: element.price),
+                                      price: element.price,
+                                      rate: element.rate,
+                                      verified: element.verified,
+                                      idImage: element.idImage),
                                 ),
                               ));
                         },
