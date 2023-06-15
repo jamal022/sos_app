@@ -7,4 +7,9 @@ After the burn degree is determined, the SOS app generates a comprehensive repor
 
 The application also includes a location-based feature that recommends the nearest doctors specialized in burn treatment. By utilizing the user's location data, the SOS app suggests qualified medical professionals who are in close proximity to the user. This functionality facilitates swift access to medical assistance, enhancing the overall user experience and ensuring prompt treatment for burn injuries.
 
+
 Moreover, the SOS app incorporates a chat feature, enabling patients to directly communicate with doctors. This real-time interaction allows users to seek professional advice, ask questions, and receive personalized guidance regarding their burn injuries. The app fosters a supportive environment by establishing a Q&A community, enabling patients to share their experiences and gain knowledge from others who have faced similar burn-related challenges.
+
+# Evolution of Models Utilized Throughout the Project Lifecycle
+
+![Screenshot (14)](https://github.com/jamal022/sos_app/assets/69757846/9ff6e287-73c1-498b-8faf-ba49de48bc39)
